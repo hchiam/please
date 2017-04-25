@@ -6,9 +6,11 @@ Python is great, but I want to experiment with parsing text that doesn't use spe
 
 I.e., use only letters and the space character (the word 'spacebar' is recognized by Mac Dictation).
 
-# Use (after download and folder navigation):
+Each new sentence starts with "please" and roughly corresponds to a new command in code.
 
-Open terminal and type:
+# Use:
+
+Download this project, open the folder in Terminal/Commandline, and type:
 
     python interpreter.py text.txt
 
