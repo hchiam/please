@@ -22,8 +22,8 @@ def get_sentences(text):
 
 def get_words_grouped_by_sentence(sentences):
     word_groups = [] # instead of "= sentences", which would pass by reference
-    for i in range(len(sentences)):
-        words = list(sentences[i].strip().split(' '))
+    for sentence in sentences:
+        words = list(sentence.strip().split(' '))
         word_groups.append(words)
     return word_groups
 
@@ -31,7 +31,7 @@ def run_commands(words_grouped):
     for sentence in words_grouped:
         # print('sentence = ' + str(sentence))
         words_count = len(sentence)
-        for i, word in enumerate(sentence):
+        for i, word in enumerate(sentence): # need to track number of words left in sentence
             words_left = words_count - i
             sentence_data = sentence_info(word, words_left)
             check_print(sentence_data)
