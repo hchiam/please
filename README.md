@@ -10,14 +10,18 @@ When you run that code, it prints out:
 
     this string of words
 
-Python has great readability, but I want to experiment with making it easier to generate code using speech recognition software. To make utterances short but easily understood by such software, I avoid:
+# Why?
 
-* Non-letter characters - so you don't have to say special keywords (like having to literally say "question mark" just to type out "?", which slow).
-* Special words or jargon - so you don't have to specifically train such software to recognize them.
+What if code could be easy to read like Python code? What if you could easily write code just by talking with speech recognition software? How might you combine these two things (easy-to-read and easy-to-say code)?
 
-I.e., use only letters and the space character (the word 'spacebar' is recognized by Mac Dictation).
+Please is an attempt at that.
 
-Each new sentence starts with "please" and roughly corresponds to a new command in code.
+To make utterances short but also easily understood by speech recognition software:
+
+* **No non-letter characters**. Why? Speed and recognition. Saying "question mark" just to type out "?" is slow and could be faulty if the speech recognition software thinks you literally want the words "question mark".
+* **No specialized words or jargon**. Why? So you don't have to specifically train the software to recognize uncommon words like "numpy" (mine thought I said "numb pie"). Workaround/trade-off: you have to spell it out, maybe using the first letters of more common words, like 'Neptune unicorn moose panda Yoda' --> 'numpy'.
+* **Just letters and the space character**. (The keyword "spacebar" is recognized by Mac Dictation.)
+* **"Be polite"**. Each new sentence starts with "please" and roughly marks out a new command/line in the code.
 
 # Use:
 
@@ -27,7 +31,7 @@ Download this project, open the folder in Terminal/Commandline, and type:
 
 # Ideas for Development:
 
-* ~~Try to be able to enter words that are likely to not be trained into Mac Dictation by default (like the word 'numpy'). How? Maybe use some kind of spelling convention, like using the first letters of the words 'neptune unicorn moose panda yak' --> 'numpy'.~~
+* ~~Try to be able to enter words that are likely to not be trained into Mac Dictation by default (like the word 'numpy'). How? Maybe use some kind of spelling convention, like using the first letters of the words 'Neptune unicorn moose panda Yoda' --> 'numpy'.~~
 
 * Try to map number strings to digits.
 
