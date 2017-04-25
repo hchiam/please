@@ -4,7 +4,7 @@ from sys import *
 # functions:
 
 def interpret():
-    text = open_file(argv[1]) # to use this Terminal command: python interpreter.py text.txt
+    text = open_file(argv[1]) # so you can use this Terminal command: python interpreter.py text.txt
     text = text.lower() # lowercase
     sentences = get_sentences(text)
     # print(sentences)
