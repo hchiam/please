@@ -4,6 +4,8 @@ Please is an experimental programming language that can read (i.e. parse) text g
 
 # Example code in "Please":
 
+First transcribe this code:
+
     Please print this string of words
 
 When you run that code, it prints out:
@@ -16,11 +18,10 @@ What if code could be easy to read like Python code? What if you could easily wr
 
 Please is an attempt at that.
 
-To make utterances short but also easily understood by speech recognition software:
+To make utterances short but also easy-to-understand for speech recognition software and the interpreter:
 
-* **No non-letter characters**. Why? Speed and recognition. Saying "question mark" just to type out "?" is slow and could be faulty if the speech recognition software thinks you literally want the words "question mark".
-* **No specialized words or jargon**. Why? So you don't have to specifically train the software to recognize uncommon words like "numpy" (mine thought I said "numb pie"). Workaround/trade-off: you have to spell it out, maybe using the first letters of more common words, like 'Neptune unicorn moose panda Yoda' --> 'numpy'.
-* **Just letters and the space character**. (The keyword "spacebar" is recognized by Mac Dictation.)
+* **Just your ABCs and spaces**. No special non-letter characters like "?". Why? Speed and recognition. Saying "question mark" just to type out "?" is slow and could be faulty if the speech recognition software thinks you literally want the words "question mark".
+* **No specialized words or jargon**. Why? So you don't have to specifically train the software to recognize uncommon words like "numpy" (mine thought I said "numb pie"). Workaround/trade-off: you have to spell it out, maybe using the first letters of more common words, like 'Neptune unicorn moose panda Yoda' to spell out 'numpy'.
 * **"Be polite"**. Each new sentence starts with "please" and roughly marks out a new command/line in the code.
 
 # Use:
@@ -28,6 +29,14 @@ To make utterances short but also easily understood by speech recognition softwa
 Download this project, open the folder in Terminal/Commandline, and type:
 
     python interpreter.py text.txt
+
+# Inspirations for "Please":
+
+https://github.com/hchiam/programmingByVoice
+
+https://github.com/AnotherTest/-English
+
+https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0
 
 # Ideas for Development:
 
@@ -41,12 +50,4 @@ Download this project, open the folder in Terminal/Commandline, and type:
 
 * Try embedded expressions. Maybe use "thanks" as a closing bracket of sorts?
 
-* Try trinket that loads most recent python code from github.
-
-# Inspirations for "Please":
-
-https://github.com/hchiam/programmingByVoice
-
-https://github.com/AnotherTest/-English
-
-https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0
+* Try in-browser trinket that loads most recent python code from github for you. No installation required.
