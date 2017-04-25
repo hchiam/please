@@ -16,4 +16,8 @@ https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0
 
 Open terminal and type:
 
-    python interpreter.py text.txt 
+    python interpreter.py text.txt
+
+# A Related Project:
+
+https://github.com/hchiam/programmingByVoice
