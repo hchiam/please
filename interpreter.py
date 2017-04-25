@@ -38,6 +38,10 @@ def run_commands(words_grouped):
             check_math(sentence_data)
             check_spell(sentence_data)
 
+"""
+example:
+please print this string of words
+"""
 def check_print(sentence_data):
     global print_state
     global print_string
@@ -58,6 +62,10 @@ def check_print(sentence_data):
             print_state = False
             print_string = ''
 
+"""
+example:
+please one plus two
+"""
 def check_math(sentence_data):
     global math_state
     global math_string
@@ -86,6 +94,11 @@ def check_math(sentence_data):
             math_state = False
             math_string = ''
 
+"""
+example:
+please spell with the first letters of
+neptune unicorn moose panda yak
+"""
 def check_spell(sentence_data):
     global spell_state
     global spell_string
