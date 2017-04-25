@@ -27,7 +27,7 @@ Please is an attempt at that.
 To make utterances short but also easy-to-understand for speech recognition software and Please's code interpreter:
 
 * **Just say words that use your ABCs and spaces between**. No special non-letter characters like "?". Why? Speed and recognition. Saying "question mark" just to type out "?" is slow and could be faulty if the speech recognition software thinks you literally want the words "question mark".
-* **No specialized words or jargon**. Why? So you don't have to specifically train the software to recognize uncommon words like "numpy" (mine thought I said "numb pie"). Workaround/trade-off: you have to spell it out, maybe using the first letters of more common words, like 'Neptune unicorn moose panda Yoda' to spell out 'numpy'.
+* **Avoid specialized words or names**. Why? So you don't have to specifically train the software to recognize uncommon words like "numpy" (mine thought I said "numb pie"). Workaround/trade-off: you have to spell it out, maybe using the first letters of more common words, like "Neptune unicorn moose panda Yoda" to spell out "numpy". Afterwards, you can reassign "numpy" to a shorter label that uses more common words, like "numb pie" or "pneumatic".
 * **"Be polite"**. Each new sentence starts with "please" and roughly marks out a new command/line in the code.
 
 # Inspirations for "Please":
