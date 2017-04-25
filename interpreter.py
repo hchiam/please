@@ -31,7 +31,7 @@ def run_commands(words_grouped):
     for sentence in words_grouped:
         # print('sentence = ' + str(sentence))
         words_count = len(sentence)
-        for i, word in enumerate(sentence): # need to track number of words left in sentence
+        for i, word in enumerate(sentence): # need to track number of words left in sentence while read each word
             words_left = words_count - i
             sentence_data = sentence_info(word, words_left)
             check_print(sentence_data)
