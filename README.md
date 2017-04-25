@@ -44,7 +44,7 @@ https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0
 
 * ~~Try to be able to enter words that are likely to not be trained into Mac Dictation by default (like the word 'numpy'). How? Maybe use some kind of spelling convention, like using the first letters of the words 'Neptune unicorn moose panda Yoda' --> 'numpy'.~~
 
-* Try to map number strings to digits.
+* ~~Try to map number strings to digits.~~
 
 * Try to import existing python libraries like numpy.
 
