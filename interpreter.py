@@ -82,17 +82,31 @@ def check_math(sentence_data):
             else:
                 math_string += word
         elif words_left > 1 and not uses_math_keyword:
-            print(math_string)
+            print(eval_math(translate_math(math_string)))
             # reset variables
             math_state = False
             math_string = ''
         elif words_left == 1:
             if uses_math_keyword:
                 math_string += ' ' + word
-            print(math_string)
+            print(eval_math(translate_math(math_string)))
             # reset variables
             math_state = False
             math_string = ''
+
+def translate_math(expression_string):
+    global math_words_numbers
+    output_string = ''
+    expression = expression_string.split(' ')
+    for word in expression:
+        if word in math_words_numbers:
+            output_string += str(math_words_numbers[word])
+        elif word in math_words_operators:
+            output_string += str(math_words_operators[word])
+    return output_string
+
+def eval_math(expression):
+    return eval(expression)
 
 """
 example:
