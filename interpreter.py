@@ -106,7 +106,7 @@ def translate_math(expression_string):
     return output_string
 
 def eval_math(expression):
-    return eval(expression)
+    return eval(expression,{"__builtins__":None},{}) # use ,{"__builtins__":None},{} to make eval function safer
 
 """
 example:
