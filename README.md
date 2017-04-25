@@ -20,7 +20,7 @@ Download this project, open the folder in Terminal/Commandline, and type:
 
 # Why?
 
-What if code could be easy to read like Python code? What if you could easily write code just by talking with speech recognition software? How might you combine these two things (easy-to-read and easy-to-say code)?
+What if code could be easy to read and be *more* like an English sentence? What if you could easily write code just by talking with speech recognition software? How might you combine these two things (easy-to-read and easy-to-say code)?
 
 Please is an attempt at that.
 
