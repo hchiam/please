@@ -37,6 +37,8 @@ def run_commands(words_grouped):
             check_print(sentence_data)
             check_math(sentence_data)
             check_spell(sentence_data)
+            check_import(sentence_data)
+            check_use(sentence_data)
 
 """
 example:
@@ -140,6 +142,54 @@ def check_spell(sentence_data):
             spell_string = ''
             spell_phrase_index = -1
 
+# TODO: make import also use 'import ... as ...' --> make use of check_spell() !!!
+def check_import(sentence_data):
+    global import_state
+    global import_string
+    global import_list
+    word = sentence_data.word
+    words_left = sentence_data.words_left
+    if import_state == False and word == 'import':
+        import_state = True
+    elif import_state == True:
+        if words_left > 1:
+            if import_string != '':
+                import_string += ' ' + word
+            else:
+                import_string += word
+        elif words_left == 1:
+            import_string += ' ' + word
+            print('import'+ import_string)
+            import_module = __import__(import_string.strip())
+            import_list.append(import_module)
+            # print(import_list)
+            # print(import_list[0].__version__)
+            # reset variables
+            import_state = False
+            import_string = ''
+
+def check_use(sentence_data):
+    global use_state
+    global use_string
+    word = sentence_data.word
+    words_left = sentence_data.words_left
+    if use_state == False and word == 'use':
+        use_state = True
+    elif use_state == True:
+        if words_left > 1:
+            if use_string != '':
+                use_string += ' ' + word
+            else:
+                use_string += word
+        elif words_left == 1:
+            use_string += ' ' + word
+            # print(use_string)
+            function_output = getattr(import_list[0], 'test')
+            # print(function_output)
+            # reset variables
+            use_state = False
+            use_string = ''
+
 
 # initialize global variables:
 print_state = False
@@ -153,6 +203,11 @@ spell_state = False
 spell_string = ''
 spell_phrase_index = 0
 spell_checkphrase = ['spell','with','the','first','letters','of']
+import_state = False
+import_string = ''
+import_list = []
+use_state = False
+use_string = ''
 class sentence_info():
     word = ''
     words_left = 0
