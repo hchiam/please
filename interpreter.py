@@ -54,7 +54,7 @@ def check_print(sentence_data):
         elif words_left == 1:
             print_string += ' ' + word
             print(print_string)
-            # reset print variables
+            # reset variables
             print_state = False
             print_string = ''
 
@@ -73,11 +73,16 @@ def check_math(sentence_data):
                 math_string += ' ' + word
             else:
                 math_string += word
+        elif words_left > 1 and not uses_math_keyword:
+            print(math_string)
+            # reset variables
+            math_state = False
+            math_string = ''
         elif words_left == 1:
             if uses_math_keyword:
                 math_string += ' ' + word
             print(math_string)
-            # reset print variables
+            # reset variables
             math_state = False
             math_string = ''
 
@@ -103,7 +108,7 @@ def check_spell(sentence_data):
         elif words_left == 1:
             spell_string += word[0]
             print(spell_string)
-            # reset print variables
+            # reset variables
             spell_state = False
             spell_string = ''
             spell_phrase_index = -1
