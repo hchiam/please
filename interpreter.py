@@ -42,7 +42,7 @@ def check_print(sentence_data):
     global print_string
     word = sentence_data.word
     words_left = sentence_data.words_left
-    if word == 'print':
+    if print_state == False and word == 'print':
         print_state = True
     elif print_state == True:
         if words_left > 1:
@@ -58,7 +58,26 @@ def check_print(sentence_data):
             print_string = ''
 
 def check_math(sentence_data):
-    pass
+    global math_state
+    global math_string
+    word = sentence_data.word
+    words_left = sentence_data.words_left
+    if math_state == False and word in math_keywords:
+        math_state = True
+        math_string += word
+    elif math_state == True:
+        if words_left > 1:
+            if math_string != '':
+                math_string += ' ' + word
+            else:
+                math_string += word
+        elif words_left == 1:
+            math_string += ' ' + word
+            print(math_string)
+            # reset print variables
+            math_state = False
+            math_string = ''
+        
 
 
 # initialize global variables:
@@ -66,6 +85,8 @@ print_state = False
 print_string = ''
 math_state = False
 math_string = ''
+math_result = ''
+math_keywords = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','hundred','thousand','million','billion','trillion']
 class sentence_info():
     word = ''
     words_left = 0
