@@ -34,6 +34,8 @@ This prints out:
 
 * Try embedded expressions. Maybe use "thanks" as a closing bracket of sorts?
 
+* Try trinket that loads most recent python code from github.
+
 # Inspirations for "Please":
 
 https://github.com/hchiam/programmingByVoice
