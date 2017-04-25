@@ -8,9 +8,9 @@ def interpret():
     text = open_file(argv[1]) # so you can use this Terminal command: python interpreter.py text.txt
     text = text.lower() # lowercase
     sentences = get_sentences(text)
-    # print(sentences)
+    # print('DEBUG OUTPUT: ' + sentences)
     words_grouped = get_words_grouped_by_sentence(sentences)
-    # print(words_grouped)
+    # print('DEBUG OUTPUT: ' + words_grouped)
     run_commands(words_grouped)
 
 def open_file(file_name):
@@ -30,7 +30,7 @@ def get_words_grouped_by_sentence(sentences):
 
 def run_commands(words_grouped):
     for sentence in words_grouped:
-        # print('sentence = ' + str(sentence))
+        # print('DEBUG OUTPUT: ' + 'sentence = ' + str(sentence))
         words_count = len(sentence)
         for i, word in enumerate(sentence): # need to track number of words left in sentence while read each word
             words_left = words_count - i
@@ -85,14 +85,16 @@ def check_math(sentence_data):
             else:
                 math_string += word
         elif words_left > 1 and not uses_math_keyword:
-            print(eval_math(translate_math(math_string)))
+            evaluated_expression = eval_math(translate_math(math_string))
+            print('DEBUG OUTPUT: ' + str(evaluated_expression))
             # reset variables
             math_state = False
             math_string = ''
         elif words_left == 1:
             if uses_math_keyword:
                 math_string += ' ' + word
-            print(eval_math(translate_math(math_string)))
+            evaluated_expression = eval_math(translate_math(math_string))
+            print('DEBUG OUTPUT: ' + str(evaluated_expression))
             # reset variables
             math_state = False
             math_string = ''
@@ -137,7 +139,7 @@ def check_spell(sentence_data):
             spell_string += word[0]
         elif words_left == 1:
             spell_string += word[0]
-            print(spell_string)
+            print('DEBUG OUTPUT: ' + spell_string)
             # reset variables
             spell_state = False
             spell_string = ''
@@ -160,11 +162,11 @@ def check_import(sentence_data):
                 import_string += word
         elif words_left == 1:
             import_string += ' ' + word
-            print('import'+ import_string)
+            print('DEBUG OUTPUT: ' + 'import'+ import_string)
             module = import_module(import_string.strip())
             import_list.append(module)
-            # print(import_list)
-            # print(import_list[0].__version__)
+            # print('DEBUG OUTPUT: ' + import_list)
+            # print('DEBUG OUTPUT: ' + import_list[0].__version__)
             # reset variables
             import_state = False
             import_string = ''
@@ -184,7 +186,7 @@ def check_use(sentence_data):
                 use_string += word
         elif words_left == 1:
             use_string += ' ' + word
-            print('use ' + use_string)
+            print('DEBUG OUTPUT: ' + 'use ' + use_string)
             function_imported = getattr(import_list[0], 'test_function')
             function_imported()
             # reset variables
