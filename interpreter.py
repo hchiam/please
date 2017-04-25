@@ -1,5 +1,10 @@
 from sys import *
 
+def interpret():
+    text = open_file(argv[1])
+    text = text.lower()
+    get_words(text)
+
 def open_file(file_name):
     text = open(file_name, 'r').read()
     return text
@@ -26,10 +31,5 @@ def get_words(text):
             # reset all variables?
             print_state = False
             print_string = ''
-
-def interpret():
-    text = open_file(argv[1])
-    text = text.lower()
-    get_words(text)
 
 interpret()
