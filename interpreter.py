@@ -62,17 +62,19 @@ def check_math(sentence_data):
     global math_string
     word = sentence_data.word
     words_left = sentence_data.words_left
-    if math_state == False and word in math_keywords:
+    uses_math_keyword = (word in math_words_numbers or word in math_words_operators)
+    if math_state == False and uses_math_keyword:
         math_state = True
         math_string += word
     elif math_state == True:
-        if words_left > 1:
+        if words_left > 1 and uses_math_keyword:
             if math_string != '':
                 math_string += ' ' + word
             else:
                 math_string += word
         elif words_left == 1:
-            math_string += ' ' + word
+            if uses_math_keyword:
+                math_string += ' ' + word
             print(math_string)
             # reset print variables
             math_state = False
@@ -86,7 +88,8 @@ print_string = ''
 math_state = False
 math_string = ''
 math_result = ''
-math_keywords = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','hundred','thousand','million','billion','trillion']
+math_words_numbers = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','hundred','thousand','million','billion','trillion']
+math_words_operators = ['plus','minus','times','divided']
 class sentence_info():
     word = ''
     words_left = 0
