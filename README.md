@@ -10,7 +10,10 @@ When you run that code, it prints out:
 
     this string of words
 
-Python has great readability, but I want to experiment with ease of code generation using speech recognition software. To make it utterances more natural yet concise, no special characters are necessary (like quotation marks) nor special keywords for special characters (like having to say "question mark" just to type out "?", which slow).
+Python has great readability, but I want to experiment with making it easier to generate code using speech recognition software. To make utterances short but easily understood by such software, I avoid:
+
+* Non-letter characters - so you don't have to say special keywords (like having to literally say "question mark" just to type out "?", which slow).
+* Special words or jargon - so you don't have to specifically train such software to recognize them.
 
 I.e., use only letters and the space character (the word 'spacebar' is recognized by Mac Dictation).
 
