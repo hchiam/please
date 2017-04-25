@@ -35,6 +35,7 @@ def run_commands(words_grouped):
             words_left = words_count - i
             sentence_data = sentence_info(word, words_left)
             check_print(sentence_data)
+            check_math(sentence_data)
 
 def check_print(sentence_data):
     global print_state
@@ -56,10 +57,15 @@ def check_print(sentence_data):
             print_state = False
             print_string = ''
 
+def check_math(sentence_data):
+    pass
+
 
 # initialize global variables:
 print_state = False
 print_string = ''
+math_state = False
+math_string = ''
 class sentence_info():
     word = ''
     words_left = 0
