@@ -18,6 +18,12 @@ Open terminal and type:
 
     python interpreter.py text.txt
 
+# Ideas:
+
+Try to import existing python libraries like numpy.
+
+Try to be able to enter words that are likely to not be trained into Mac Dictation by default (like the word 'numpy'). How? Maybe use some kind of spelling convention, like using the first letters of the words 'neptune unicorn moose panda yak' --> 'numpy'.
+
 # A Related Project:
 
 https://github.com/hchiam/programmingByVoice
