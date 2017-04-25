@@ -4,8 +4,8 @@ from sys import *
 # functions:
 
 def interpret():
-    text = open_file(argv[1])
-    text.lower()
+    text = open_file(argv[1]) # to use this Terminal command: python interpreter.py text.txt
+    text.lower() # lowercase
     sentences = get_sentences(text)
     # print(sentences)
     words_grouped = get_words_grouped_by_sentence(sentences)
