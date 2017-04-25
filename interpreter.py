@@ -5,7 +5,7 @@ from sys import *
 
 def interpret():
     text = open_file(argv[1]) # to use this Terminal command: python interpreter.py text.txt
-    text.lower() # lowercase
+    text = text.lower() # lowercase
     sentences = get_sentences(text)
     # print(sentences)
     words_grouped = get_words_grouped_by_sentence(sentences)
@@ -36,6 +36,7 @@ def run_commands(words_grouped):
             sentence_data = sentence_info(word, words_left)
             check_print(sentence_data)
             check_math(sentence_data)
+            check_spell(sentence_data)
 
 def check_print(sentence_data):
     global print_state
@@ -79,7 +80,33 @@ def check_math(sentence_data):
             # reset print variables
             math_state = False
             math_string = ''
-        
+
+def check_spell(sentence_data):
+    global spell_state
+    global spell_string
+    global spell_phrase_index
+    global spell_checkphrase
+    word = sentence_data.word
+    words_left = sentence_data.words_left
+    if spell_state == False:
+        checkword = spell_checkphrase[spell_phrase_index]
+        if word == checkword:
+            if spell_phrase_index == len(spell_checkphrase)-1:
+                spell_state = True
+            else:
+                spell_phrase_index += 1
+        else:
+            spell_phrase_index = 0
+    elif spell_state == True:
+        if words_left > 1:
+            spell_string += word[0]
+        elif words_left == 1:
+            spell_string += word[0]
+            print(spell_string)
+            # reset print variables
+            spell_state = False
+            spell_string = ''
+            spell_phrase_index = -1
 
 
 # initialize global variables:
@@ -90,6 +117,10 @@ math_string = ''
 math_result = ''
 math_words_numbers = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','hundred','thousand','million','billion','trillion']
 math_words_operators = ['plus','minus','times','divided']
+spell_state = False
+spell_string = ''
+spell_phrase_index = 0
+spell_checkphrase = ['spell','with','the','first','letters','of']
 class sentence_info():
     word = ''
     words_left = 0
