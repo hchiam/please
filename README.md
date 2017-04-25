@@ -46,7 +46,7 @@ https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0
 
 * Try to import existing python libraries like numpy.
 
-* Try variables. Maybe something like 'variable apple' and 'variable apple equals one'.
+* Try variables. Maybe something like 'variable apple' and 'variable apple equals one'. Also: enable remap 'numpy' to 'numb pie'.
 
 * Try embedded expressions. Maybe use "thanks" as a closing bracket of sorts?
 
