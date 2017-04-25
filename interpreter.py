@@ -97,7 +97,7 @@ def check_math(sentence_data):
 """
 example:
 please spell with the first letters of
-neptune unicorn moose panda yak
+Neptune unicorn moose panda Yoda
 """
 def check_spell(sentence_data):
     global spell_state
