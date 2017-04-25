@@ -30,7 +30,7 @@ This prints out:
 
 * Try variables. Maybe something like 'variable apple' and 'variable apple equals one'.
 
-* Try embedded expressions
+* Try embedded expressions. Maybe use "thanks" as a closing bracket of sorts?
 
 # Inspirations for "Please":
 
