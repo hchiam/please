@@ -24,9 +24,11 @@ This prints out:
 
 # Ideas for Development:
 
-* Try to be able to enter words that are likely to not be trained into Mac Dictation by default (like the word 'numpy'). How? Maybe use some kind of spelling convention, like using the first letters of the words 'neptune unicorn moose panda yak' --> 'numpy'.
+* ~~Try to be able to enter words that are likely to not be trained into Mac Dictation by default (like the word 'numpy'). How? Maybe use some kind of spelling convention, like using the first letters of the words 'neptune unicorn moose panda yak' --> 'numpy'.~~
 
 * Try to import existing python libraries like numpy.
+
+* Try variables. Maybe something like 'variable apple' and 'variable apple equals one'.
 
 * Try embedded expressions
 
