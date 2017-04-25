@@ -28,11 +28,9 @@ This prints out:
 
 * Try to be able to enter words that are likely to not be trained into Mac Dictation by default (like the word 'numpy'). How? Maybe use some kind of spelling convention, like using the first letters of the words 'neptune unicorn moose panda yak' --> 'numpy'.
 
-# A Related Project of Mine:
+# Inspirations for "Please":
 
 https://github.com/hchiam/programmingByVoice
-
-# Inspirations for "Please":
 
 https://github.com/AnotherTest/-English
 
