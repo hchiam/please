@@ -8,4 +8,4 @@ Python is great, but I want to experiment with using text that doesn't have use 
 
 https://github.com/AnotherTest/-English
 
-https://www.youtube.com/watch?v=LDDRn2f9fUk
+https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0
