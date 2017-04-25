@@ -10,7 +10,7 @@ def interpret():
     # print(sentences)
     words_grouped = get_words_grouped_by_sentence(sentences)
     # print(words_grouped)
-    check_commands(words_grouped)
+    run_commands(words_grouped)
 
 def open_file(file_name):
     text = open(file_name, 'r').read()
@@ -27,7 +27,7 @@ def get_words_grouped_by_sentence(sentences):
         word_groups.append(words)
     return word_groups
 
-def check_commands(words_grouped):
+def run_commands(words_grouped):
     for sentence in words_grouped:
         # print('sentence = ' + str(sentence))
         words_count = len(sentence)
