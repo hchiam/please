@@ -12,7 +12,7 @@ https://github.com/AnotherTest/-English
 
 https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0
 
-# Use:
+# Use (after download and folder navigation):
 
 Open terminal and type:
 
