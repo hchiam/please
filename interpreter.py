@@ -184,7 +184,7 @@ def check_use(sentence_data):
                 use_string += word
         elif words_left == 1:
             use_string += ' ' + word
-            print(use_string)
+            print('use ' + use_string)
             function_imported = getattr(import_list[0], 'test_function')
             function_imported()
             # reset variables
