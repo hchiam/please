@@ -1,18 +1,7 @@
 from sys import *
 
 
-# global variables
-print_state = False
-print_string = ''
-class sentence_info():
-    word = ''
-    words_left = 0
-    def __init__(self, word, words_left):
-        self.word = word
-        self.words_left = words_left
-
-
-# functions
+# functions:
 
 def interpret():
     text = open_file(argv[1])
@@ -55,5 +44,16 @@ def check_print(sentence_data):
             print_string = ''
 
 
-# run interpreter
+# initialize global variables:
+print_state = False
+print_string = ''
+class sentence_info():
+    word = ''
+    words_left = 0
+    def __init__(self, word, words_left):
+        self.word = word
+        self.words_left = words_left
+
+
+# run this interpreter:
 interpret()
