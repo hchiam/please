@@ -18,6 +18,8 @@ Download this project, open the folder in Terminal/Commandline, and type:
 
     python interpreter.py text.txt
 
+You can find the example "source code" in text.txt.
+
 # Why?
 
 What if code could be easy to read and be *more* like an English sentence? What if you could easily write code just by talking with speech recognition software? How might you combine these two things (easy-to-read and easy-to-say code)?
