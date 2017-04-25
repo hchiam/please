@@ -5,11 +5,12 @@ from sys import *
 
 def interpret():
     text = open_file(argv[1])
-    text = text.lower()
+    text.lower()
     sentences = get_sentences(text)
-    print(sentences)
-    words = get_words_grouped_by_sentence(sentences)
-    print(words)
+    # print(sentences)
+    words_grouped = get_words_grouped_by_sentence(sentences)
+    # print(words_grouped)
+    check_commands(words_grouped)
 
 def open_file(file_name):
     text = open(file_name, 'r').read()
@@ -25,12 +26,15 @@ def get_words_grouped_by_sentence(sentences):
         words = list(sentences[i].strip().split(' '))
         word_groups.append(words)
     return word_groups
-        # # print(words)
-        # words_count = len(words)
-        # for i, word in enumerate(words):
-        #     words_left = words_count - i
-        #     sentence_data = sentence_info(word, words_left)
-        #     check_print(sentence_data)
+
+def check_commands(words_grouped):
+    for sentence in words_grouped:
+        # print('sentence = ' + str(sentence))
+        words_count = len(sentence)
+        for i, word in enumerate(sentence):
+            words_left = words_count - i
+            sentence_data = sentence_info(word, words_left)
+            check_print(sentence_data)
 
 def check_print(sentence_data):
     global print_state
