@@ -1,4 +1,5 @@
 from sys import *
+from importlib import import_module
 
 
 # functions:
@@ -160,8 +161,8 @@ def check_import(sentence_data):
         elif words_left == 1:
             import_string += ' ' + word
             print('import'+ import_string)
-            import_module = __import__(import_string.strip())
-            import_list.append(import_module)
+            module = import_module(import_string.strip())
+            import_list.append(module)
             # print(import_list)
             # print(import_list[0].__version__)
             # reset variables
@@ -183,9 +184,9 @@ def check_use(sentence_data):
                 use_string += word
         elif words_left == 1:
             use_string += ' ' + word
-            # print(use_string)
-            function_output = getattr(import_list[0], 'test')
-            # print(function_output)
+            print(use_string)
+            function_imported = getattr(import_list[0], 'test_function')
+            function_imported()
             # reset variables
             use_state = False
             use_string = ''

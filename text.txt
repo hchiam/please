@@ -3,4 +3,5 @@ please one plus two
 please spell with the first letters of Neptune unicorn moose panda Yoda
 Please print this string of words please add one plus two and unwanted words
 please spell with the first letters of Neptune unicorn moose panda Yoda
-Please import test please use test of test
+Please print now test importing stuff
+Please import test please use test_function of test
