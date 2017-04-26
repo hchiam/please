@@ -179,26 +179,27 @@ def check_import(sentence_data):
         elif words_left > 1 and word == 'from' and from_state == False:
             from_state = True
         elif words_left == 1:
+            dictionary_key = import_string
             if as_state == False and from_state == False:
                 import_string += ' ' + word
-                as_string = import_string
+                dictionary_key = import_string
             elif as_state == True:
                 as_string += ' ' + word
-                as_string = spell_with_first_letters(as_string)
+                dictionary_key = spell_with_first_letters(as_string)
             elif from_state == True:
-                as_string += import_string
                 from_string += ' ' + word
                 #from_string = spell_with_first_letters(from_string)
+                dictionary_key = import_string
             import_string = import_string.strip()
-            as_string = as_string.strip()
+            dictionary_key = dictionary_key.strip()
             from_string = from_string.strip()
             print('  DEBUG IMPORT: import_string = ' + import_string)
-            print('  DEBUG IMPORT: as_string = ' + as_string)
+            print('  DEBUG IMPORT: dictionary_key = ' + dictionary_key)
             if from_state == True:
                 print('  DEBUG IMPORT: from_string = ' + from_string)
             module = import_module(import_string.strip())
-            import_dictionary[as_string] = module
-            # print('  DEBUG IMPORT: ' + str(import_dictionary))
+            import_dictionary[dictionary_key] = module
+            print('  DEBUG IMPORT: ' + str(import_dictionary))
             # reset variables
             import_state = False
             import_string = ''
