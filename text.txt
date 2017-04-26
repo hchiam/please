@@ -1,7 +1,12 @@
-Please print this string of words
+Please print this string of words please print this too
 please one plus two
-please spell with the first letters of Neptune unicorn moose panda Yoda
-Please print this string of words please add one plus two and unwanted words
-please spell with the first letters of Neptune unicorn moose panda Yoda
-Please print now test importing stuff
-Please import test please use test_function of test
+please 1 plus nine
+ please  1  plus    nine  
+Please spell with the first letters of Neptune unicorn moose panda Yoda
+please spell with the first letters of orange kiwi
+please add two hundred plus two and unwanted words please print testing
+Please print now print debug output for testing importing stuff
+please import test please use test_function of test
+Please import numpy please use __version__ from numpy
+please print print import numpy as nectarine pony
+please print import numpy as nectarine pony
