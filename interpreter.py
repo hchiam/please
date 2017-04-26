@@ -1,5 +1,6 @@
 from sys import *
 from importlib import import_module
+import importlib.util
 
 
 # functions:
@@ -196,8 +197,14 @@ def check_import(sentence_data):
             print('  DEBUG IMPORT: import_string = ' + import_string)
             print('  DEBUG IMPORT: dictionary_key = ' + dictionary_key)
             if from_state == True:
+                # importing from folder
                 print('  DEBUG IMPORT: from_string = ' + from_string)
-            module = import_module(import_string.strip())
+                # http://stackoverflow.com/questions/67631/how-to-import-a-module-given-the-full-path
+                spec = importlib.util.spec_from_file_location(import_string, from_string + '/' + import_string + '.py')
+                module = importlib.util.module_from_spec(spec) # get module
+                spec.loader.exec_module(module) # enables use of functions and variables from the module
+            elif from_state == False:
+                module = import_module(import_string)
             import_dictionary[dictionary_key] = module
             print('  DEBUG IMPORT: ' + str(import_dictionary))
             # reset variables
