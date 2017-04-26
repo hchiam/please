@@ -147,10 +147,10 @@ def spell_with_first_letters(sentence):
     spelt_word = ''.join(list(word[0] for word in words))
     return spelt_word
 
-# TODO: make import also use 'import ... as ...' --> make use of check_spell() !!!
 """
 example:
 please import test
+please import numpy as nectarine pony
 """
 def check_import(sentence_data):
     global import_state
@@ -197,6 +197,7 @@ def check_import(sentence_data):
 example:
 please import test
 please use test_function of test
+please use test_function from test
 """
 def check_use(sentence_data):
     global use_state
