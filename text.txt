@@ -11,4 +11,4 @@ Please import numpy please use __version__ from numpy
 please print print import numpy as nectarine pony
 please print import numpy as nectarine pony
 Please import numpy as nectarine pony
-Please print import test from library
+Please import test from library
