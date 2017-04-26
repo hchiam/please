@@ -186,6 +186,7 @@ def check_import(sentence_data):
                 as_string += ' ' + word
                 as_string = spell_with_first_letters(as_string)
             elif from_state == True:
+                as_string += import_string
                 from_string += ' ' + word
                 #from_string = spell_with_first_letters(from_string)
             import_string = import_string.strip()
