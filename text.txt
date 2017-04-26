@@ -6,9 +6,9 @@ Please spell with the first letters of Neptune unicorn moose panda Yoda
 please spell with the first letters of orange kiwi
 please add two hundred plus two and unwanted words please print testing
 Please print now print debug output for testing importing stuff
-please import test please use test_function of test
 Please import numpy please use __version__ from numpy
 please print print import numpy as nectarine pony
 please print import numpy as nectarine pony
 Please import numpy as nectarine pony
 Please import test from library
+please use test_function of test
