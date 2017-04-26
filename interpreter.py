@@ -202,32 +202,32 @@ please use test_function from test
 def check_use(sentence_data):
     global use_state
     global use_string
-    global use_from_state
-    global use_from_string
+    global from_state
+    global from_string
     word = sentence_data.word
     words_left = sentence_data.words_left
     if use_state == False and word == 'use':
         use_state = True
     elif use_state == True:
-        if words_left > 1 and (word != 'of' and word != 'from') and use_from_state == False:
+        if words_left > 1 and (word != 'of' and word != 'from') and from_state == False:
             use_string += ' ' + word
             # print('use_string ' + use_string)
         elif words_left > 1 and (word == 'of' or word == 'from'):
-            use_from_state = True
-            # print('use_from_state = True')
-        elif words_left > 1 and use_from_state == True:
-            use_from_string += ' ' + word
-            use_from_string = use_from_string.strip()
-            # print('use_from_string = ' + use_from_string)
+            from_state = True
+            # print('from_state = True')
+        elif words_left > 1 and from_state == True:
+            from_string += ' ' + word
+            from_string = from_string.strip()
+            # print('from_string = ' + from_string)
         elif words_left == 1:
-            if use_from_state == True:
-                use_from_string += ' ' + word
-                use_from_string = use_from_string.strip()
-                # print('use_from_string = ' + use_from_string)
+            if from_state == True:
+                from_string += ' ' + word
+                from_string = from_string.strip()
+                # print('from_string = ' + from_string)
             use_string = use_string.strip()
             print('  DEBUG USE: ' + use_string)
-            # print('use_from_string = ' + use_from_string)
-            function_imported = getattr(import_dictionary[use_from_string], use_string)
+            # print('from_string = ' + from_string)
+            function_imported = getattr(import_dictionary[from_string], use_string)
             try:
                 function_imported() # try to use function_imported as a function
             except:
@@ -235,8 +235,8 @@ def check_use(sentence_data):
             # reset variables
             use_state = False
             use_string = ''
-            use_from_state = False
-            use_from_string = ''
+            from_state = False
+            from_string = ''
 
 
 # initialize global variables:
@@ -263,8 +263,8 @@ import_as_state = False
 import_as_string = ''
 use_state = False
 use_string = ''
-use_from_state = False
-use_from_string = ''
+from_state = False
+from_string = ''
 class sentence_info():
     word = ''
     words_left = 0
