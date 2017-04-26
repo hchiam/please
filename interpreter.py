@@ -165,21 +165,26 @@ def check_import(sentence_data):
         import_state = True
     elif import_state == True:
         if words_left > 1 and word != 'as':
-            import_string += ' ' + word
+            if import_as_state == False:
+                import_string += ' ' + word
+            else:
+                import_as_string += ' ' + word
         elif words_left > 1 and word == 'as':
             import_as_state = True
             spell_state = True # to use check_spell()
-        elif words_left > 1 and import_as_state == True:
-            import_as_string += ' ' + word
         elif words_left == 1:
-            import_string += ' ' + word
             import_as_string += ' ' + word
             if import_as_state == True:
-                import_string = import_as_string
+                import_as_string = spell_with_first_letters(import_as_string)
+            else:
+                import_string += ' ' + word
+                import_as_string = import_string
             import_string = import_string.strip()
-            print('  DEBUG IMPORT: ' + import_string)
+            import_as_string = import_as_string.strip()
+            print('  DEBUG IMPORT: import_string = ' + import_string)
+            print('  DEBUG IMPORT: import_as_string = ' + import_as_string)
             module = import_module(import_string.strip())
-            import_dictionary[import_string] = module
+            import_dictionary[import_as_string] = module
             # print('  DEBUG IMPORT: ' + str(import_dictionary))
             # reset variables
             import_state = False
