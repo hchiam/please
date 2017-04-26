@@ -156,42 +156,56 @@ def check_import(sentence_data):
     global import_state
     global import_string
     global import_dictionary
-    global import_as_state
-    global import_as_string
+    global as_state
+    global as_string
     global spell_state
+    global from_state
+    global from_string
     word = sentence_data.word
     words_left = sentence_data.words_left
     if import_state == False and word == 'import':
         import_state = True
     elif import_state == True:
-        if words_left > 1 and word != 'as':
-            if import_as_state == False:
+        if words_left > 1 and word != 'as' and word != 'from':
+            if as_state == False and from_state == False:
                 import_string += ' ' + word
-            else:
-                import_as_string += ' ' + word
-        elif words_left > 1 and word == 'as':
-            import_as_state = True
+            elif as_state == True:
+                as_string += ' ' + word
+            elif from_state == True:
+                from_string += ' ' + word
+        elif words_left > 1 and word == 'as' and as_state == False:
+            as_state = True
             spell_state = True # to use check_spell()
+        elif words_left > 1 and word == 'from' and from_state == False:
+            from_state = True
         elif words_left == 1:
-            import_as_string += ' ' + word
-            if import_as_state == True:
-                import_as_string = spell_with_first_letters(import_as_string)
-            else:
+            if as_state == False and from_state == False:
                 import_string += ' ' + word
-                import_as_string = import_string
+                as_string = import_string
+            elif as_state == True:
+                as_string += ' ' + word
+                as_string = spell_with_first_letters(as_string)
+            elif from_state == True:
+                from_string += ' ' + word
+                #from_string = spell_with_first_letters(from_string)
             import_string = import_string.strip()
-            import_as_string = import_as_string.strip()
+            as_string = as_string.strip()
+            from_string = from_string.strip()
             print('  DEBUG IMPORT: import_string = ' + import_string)
-            print('  DEBUG IMPORT: import_as_string = ' + import_as_string)
+            print('  DEBUG IMPORT: as_string = ' + as_string)
+            if from_state == True:
+                print('  DEBUG IMPORT: from_string = ' + from_string)
             module = import_module(import_string.strip())
-            import_dictionary[import_as_string] = module
+            import_dictionary[as_string] = module
             # print('  DEBUG IMPORT: ' + str(import_dictionary))
             # reset variables
             import_state = False
             import_string = ''
-            import_as_state = False
-            import_as_string = ''
+            as_state = False
+            as_string = ''
             spell_state = False
+            from_state = False
+            from_string = ''
 
 """
 example:
@@ -259,8 +273,8 @@ spell_checkphrase = ['spell','with','the','first','letters','of']
 import_state = False
 import_string = ''
 import_dictionary = {}
-import_as_state = False
-import_as_string = ''
+as_state = False
+as_string = ''
 use_state = False
 use_string = ''
 from_state = False
