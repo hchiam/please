@@ -288,6 +288,7 @@ use_state = False
 use_string = ''
 from_state = False
 from_string = ''
+variable_dictionary = {}
 class sentence_info():
     word = ''
     words_left = 0
