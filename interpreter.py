@@ -139,7 +139,7 @@ def check_spell(sentence_data):
             # reset variables
             spell_state = False
             spell_string = ''
-            spell_phrase_index = -1
+            spell_phrase_index = 0
 
 def spell_with_first_letters(sentence):
     spelt_word = ''
