@@ -46,6 +46,7 @@ def run_commands(words_grouped):
                 check_print(sentence_data)
                 check_spell(sentence_data)
                 if print_state == False:
+                    check_variable(sentence_data)
                     check_math(sentence_data)
                     check_import(sentence_data)
                     check_use(sentence_data)
@@ -270,6 +271,32 @@ def check_use(sentence_data):
 
 """
 example:
+Please create variable apple
+Please variable banana
+"""
+def check_variable(sentence_data):
+    global variable_state
+    global variable_dictionary
+    global variable_name
+    word = sentence_data.word
+    words_left = sentence_data.words_left
+    if variable_state == False and word == 'variable':
+        variable_state = True
+    elif variable_state == True:
+        if words_left > 1:
+            variable_name += ' ' + word
+        elif words_left == 1:
+            variable_name += ' ' + word
+            variable_name = variable_name.strip()
+            variable_dictionary[variable_name] = ''
+            printplz('  DEBUG variable_name: ' + variable_name)
+            printplz('  DEBUG variable_dictionary: ' + str(variable_dictionary))
+            # reset variables
+            variable_state = False
+            variable_name = ''
+
+"""
+example:
 Please note this is a comment
 """
 def check_note(sentence_data):
@@ -320,7 +347,11 @@ use_string = ''
 from_state = False
 from_string = ''
 note_state = False
+variable_state = False
 variable_dictionary = {}
+variable_name = ''
+assign_state = False
+assign_string = ''
 class sentence_info():
     word = ''
     words_left = 0
