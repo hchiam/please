@@ -276,7 +276,7 @@ def printplz(string):
 
 
 # initialize global variables:
-hide_debug_printouts = True
+hide_debug_printouts = False # True
 print_state = False
 print_string = ''
 math_state = False
