@@ -83,7 +83,7 @@ def check_print(sentence_data):
         elif words_left == 1:
             print_string += ' ' + word
             print_string = print_string.strip() # .strip() removes leading and trailing spaces
-            print('stop: '+ print_string)
+            print(print_string)
             # reset variables
             print_state = False
             print_string = ''
