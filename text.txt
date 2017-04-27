@@ -18,3 +18,4 @@ Please note this is a comment
 Please assign three hundred to variable apple
 Please assign some words to variable banana
 Please if one equals one then print it works
+Please if one equals two then print it works
