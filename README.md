@@ -90,6 +90,13 @@ Please one plus two
 ```
 --> This outputs: `3`
 
+**Comment**:
+
+```
+Please note this is a comment
+```
+--> This outputs: `this is a comment`
+
 # Inspirations for Please:
 
 https://github.com/hchiam/programmingByVoice

@@ -40,12 +40,14 @@ def run_commands(words_grouped):
         for i, word in enumerate(sentence): # need to track number of words left in sentence while read each word
             words_left = words_count - i
             sentence_data = sentence_info(word, words_left)
-            check_print(sentence_data)
-            check_spell(sentence_data)
-            if print_state == False:
-                check_math(sentence_data)
-                check_import(sentence_data)
-                check_use(sentence_data)
+            check_note(sentence_data)
+            if note_state == False:
+                check_print(sentence_data)
+                check_spell(sentence_data)
+                if print_state == False:
+                    check_math(sentence_data)
+                    check_import(sentence_data)
+                    check_use(sentence_data)
 
 """
 example:
@@ -266,6 +268,28 @@ def check_use(sentence_data):
             from_string = ''
 
 """
+example:
+Please note this is a comment
+"""
+def check_note(sentence_data):
+    global note_state
+    global note_string
+    word = sentence_data.word
+    words_left = sentence_data.words_left
+    if note_state == False and word == 'note':
+        note_state = True
+    elif note_state == True:
+        if words_left > 1:
+            note_string += ' ' + word
+        elif words_left == 1:
+            note_string += ' ' + word
+            note_string = note_string.strip() # .strip() removes leading and trailing spaces
+            printplz(note_string)
+            # reset variables
+            note_state = False
+            note_string = ''
+
+"""
 enable/disable debug print outputs
 """
 def printplz(string):
@@ -303,6 +327,8 @@ use_state = False
 use_string = ''
 from_state = False
 from_string = ''
+note_state = False
+note_string = ''
 variable_dictionary = {}
 class sentence_info():
     word = ''
