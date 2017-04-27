@@ -36,26 +36,26 @@ Here are 3 ground rules to make commands easier to say, but also easier for spee
 
 Print:
 
-    please print this string of words
+    Please print this string of words
 
 Import:
 
-    please import test
-    please import numpy as nectarine pony
+    Please import test
+    Please import numpy as nectarine pony
 
 Use An Import Module's Function:
 
-    please import test
-    please use test_function of test
-    please use test_function from test
+    Please import test
+    Please use test_function of test
+    Please use test_function from test
 
 Spell it out:
 
-    please spell with the first letters of Neptune unicorn moose panda Yoda
+    Please spell with the first letters of Neptune unicorn moose panda Yoda
 
 Math:
 
-    please one plus two
+    Please one plus two
 
 # Inspirations for Please:
 

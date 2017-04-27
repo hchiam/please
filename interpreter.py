@@ -45,7 +45,7 @@ def run_commands(words_grouped):
 
 """
 example:
-please print this string of words
+Please print this string of words
 """
 def check_print(sentence_data):
     global print_state
@@ -67,7 +67,7 @@ def check_print(sentence_data):
 
 """
 example:
-please one plus two
+Please one plus two
 """
 def check_math(sentence_data):
     global math_state
@@ -114,7 +114,7 @@ def eval_math(expression):
 
 """
 example:
-please spell with the first letters of Neptune unicorn moose panda Yoda
+Please spell with the first letters of Neptune unicorn moose panda Yoda
 """
 def check_spell(sentence_data):
     global spell_state
@@ -150,8 +150,8 @@ def spell_with_first_letters(sentence):
 
 """
 example:
-please import test
-please import numpy as nectarine pony
+Please import test
+Please import numpy as nectarine pony
 """
 def check_import(sentence_data):
     global import_state
@@ -218,9 +218,9 @@ def check_import(sentence_data):
 
 """
 example:
-please import test
-please use test_function of test
-please use test_function from test
+Please import test
+Please use test_function of test
+Please use test_function from test
 """
 def check_use(sentence_data):
     global use_state
