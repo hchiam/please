@@ -98,7 +98,7 @@ Please import numpy as nectarine pony
 ```
 
 ```
-Please import numpy as please import numpy as spell with the first letters of Neptune unicorn moose panda Yoda
+Please import numpy as spell with the first letters of Neptune unicorn moose panda Yoda
 ```
 
 ## Use An Import Module's Function:
