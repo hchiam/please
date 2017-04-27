@@ -53,6 +53,13 @@ Please print this string of words
 ```
 --> This prints out: `this string of words`
 
+## Spell Out a Special Word:
+
+```
+Please spell with the first letters of Neptune unicorn moose panda Yoda
+```
+--> This outputs: `numpy`
+
 ## Create Variable:
 
 ```
@@ -102,13 +109,6 @@ Please use test_function of test
 Please use test_function from test
 ```
 --> This prints twice: `Yay the import test_function() of test.py from the "library" folder works!`
-
-## Spell Out a Special Word:
-
-```
-Please spell with the first letters of Neptune unicorn moose panda Yoda
-```
---> This outputs: `numpy`
 
 ## Math:
 
