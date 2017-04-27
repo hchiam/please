@@ -20,7 +20,7 @@ this string of words
 
 1. Download this project from GitHub.
 
-2. Open the folder in Terminal/Commandline.
+2. Open the folder in Terminal/Command-line.
 
 3. Then type the following command and hit enter:
 
