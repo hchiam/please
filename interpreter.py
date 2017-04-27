@@ -1,3 +1,7 @@
+# interpret() function is where you should start reading to understand this code.
+# interpret() has to be called at the bottom of this file for things to work.
+
+
 from sys import *
 from importlib import import_module
 import importlib.util
