@@ -1,4 +1,5 @@
-Please print this string of words please print this too
+Please note this file contains example code
+Please print this string of words and please print this too
 please one plus two
 please 1 plus nine
  please  1  plus    nine  
@@ -11,7 +12,7 @@ Please import test from library
 please use test_function of test
 please use test_function from test
 Please import alternate as apple lemon
-Please use test_function from al
+Please use test_function from apple lemon
 Please print could import numpy and then use __version__ from numpy
 Please print could import numpy as nectarine pony
 Please note this is a comment
