@@ -13,9 +13,9 @@ def interpret():
     text = open_file(argv[1]) # so you can use this Terminal command: python interpreter.py text.txt
     text = text.lower() # lowercase
     sentences = get_sentences(text)
-    # printplz('  DEBUG OUTPUT: ' + sentences)
+    # printplz('  DEBUG OUTPUT: ' + str(sentences))
     words_grouped = get_words_grouped_by_sentence(sentences)
-    # printplz('  DEBUG OUTPUT: ' + words_grouped)
+    # printplz('  DEBUG OUTPUT: ' + str(words_grouped))
     run_commands(words_grouped)
 
 def open_file(file_name):
@@ -37,7 +37,6 @@ def run_commands(words_grouped):
     global last_spelled_word
     global last_variable
     global if_continue_state
-    global is_first_word_after_please
     for sentence in words_grouped:
         # printplz('  DEBUG OUTPUT: ' + 'sentence = ' + str(sentence))
         words_count = len(sentence)
@@ -62,7 +61,6 @@ def run_commands(words_grouped):
                     check_print(sentence_data) # put after assign to avoid recognition of keyword within print
                 if print_state == False:
                     check_note(sentence_data)
-                check_if_first_word_after_please(word) # put after all other checks
 
 """
 example:
@@ -71,11 +69,9 @@ Please print this string of words
 def check_print(sentence_data):
     global print_state
     global print_string
-    global is_first_word_after_please
     word = sentence_data.word
     words_left = sentence_data.words_left
-    # printplz('  DEBUG :'+word+' \t '+str(is_first_word_after_please))
-    if print_state == False and word == 'print' and is_first_word_after_please:
+    if print_state == False and word == 'print':
         print_state = True
     elif print_state == True:
         if words_left > 1:
@@ -87,16 +83,6 @@ def check_print(sentence_data):
             # reset variables
             print_state = False
             print_string = ''
-
-def check_if_first_word_after_please(word):
-    global previous_word
-    global is_first_word_after_please
-    if previous_word == 'please':
-        is_first_word_after_please = True
-        previous_word = word
-    elif is_first_word_after_please == True:
-        previous_word = 'please'
-        is_first_word_after_please = False
 
 """
 example:
@@ -480,8 +466,6 @@ last_spelled_word = ''
 last_variable = ''
 if_state = False
 if_continue_state = True
-previous_word = 'please'
-is_first_word_after_please = True
 class sentence_info():
     word = ''
     words_left = 0
