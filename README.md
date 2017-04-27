@@ -136,7 +136,11 @@ https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0
 
 * ~~Try to import existing python libraries like numpy.~~
 
-* Try variables. Maybe something like 'variable apple' and 'variable apple equals one'. Also: enable remap 'numpy' to 'numb pie'.
+* ~~Try variables. Maybe something like 'variable apple' and 'variable apple equals one'.~~
+
+* Try enable remap 'numpy' to 'numb pie'.
+
+* Make sure assign and print keywords are isolated from each other.
 
 * Try "Please import spell with the first letters of hippo igloo **ok/okay**" with ok/okay as an 'escape' signal to stop spelling.
 
