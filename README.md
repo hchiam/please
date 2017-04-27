@@ -92,6 +92,7 @@ Please import alternate
 ```
 Please import test from library
 ```
+--> This imports: /library/test.py
 
 ```
 Please import numpy as nectarine pony
@@ -100,6 +101,7 @@ Please import numpy as nectarine pony
 ```
 Please import numpy as spelled with the first letters of Neptune unicorn moose panda Yoda
 ```
+--> This does: `import numpy as numpy`
 
 ## Use An Import Module's Function:
 
