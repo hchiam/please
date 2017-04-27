@@ -151,48 +151,4 @@ https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0
 
 # Ideas for Development:
 
-* ~~Try to be able to enter words that are likely to not be trained into Mac Dictation by default (like the word 'numpy'). How? Maybe use some kind of spelling convention, like using the first letters of the words 'Neptune unicorn moose panda Yoda' --> 'numpy'.~~
-
-* ~~Try to map number strings to digits.~~
-
-* ~~Try to import existing python libraries like numpy.~~
-
-* ~~Try variables. Maybe something like 'variable apple' and 'variable apple equals one'.~~
-
-* ~~Try if-then statement like "Please if one equals two then print it should not print this".~~
-
-    * ~~At "then" get math_result of "one equals one".~~
-    
-    * ~~If math_result == True: keep reading, don't reset if_state, and then after "then" start math_string, print, etc.~~
-
-* ~~Try enable remap 'numpy' to 'numb pie'.~~
-
-* See github issues list!
-
-* as spell**ed** with the first letters of
-
-* fix: "Please print import spell with the first letters of Neptune unicorn moose panda Yoda as numb pie"
-
-* Try enable: "Please import spell with the first letters of Neptune unicorn moose panda Yoda **as** numb pie" with "as" as an 'escape' signal to stop spelling.
-
-* Try "Please import spell with the first letters of hippo igloo **ok/okay**" with "ok" or "okay" as an 'escape' signal to stop spelling?
-
-* Try enable: "Please create variable spell with the first letters of apple banana coconut".
-
-* Try to make sure certain keyword checks are "isolated" from each other.
-
-* Try using check_spell as check_spell(sentence) and moving it up to loop with sentences, not words.
-
-* http://stackoverflow.com/questions/5599283/how-can-i-assign-the-value-of-a-variable-using-eval-in-python
-
-* Try embedded expressions. Maybe use "thanks" as a closing bracket of sorts? for these maybe:
-
-* Try loops.
-
-* Try functions.
-
-* Try classes.
-
-* Try in-browser trinket that loads most recent python code from github for you. No installation required.
-
-* Try compiling into C or something so the code can run faster.
+(See the Issues list. Click the "Issues" tab above.)
