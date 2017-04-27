@@ -36,7 +36,7 @@ Here are 3 ground rules to make commands easier to say, but also easier for spee
 
 Print:
 
-    Please print this string of words
+    `Please print this string of words` prints out `this string of words`
 
 Import:
 
@@ -51,11 +51,11 @@ Use An Import Module's Function:
 
 Spell it out:
 
-    Please spell with the first letters of Neptune unicorn moose panda Yoda
+    `Please spell with the first letters of Neptune unicorn moose panda Yoda` outputs `numpy`
 
 Math:
 
-    Please one plus two
+    `Please one plus two` outputs `3`
 
 # Inspirations for Please:
 
