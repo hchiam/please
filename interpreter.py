@@ -146,13 +146,15 @@ def check_spell(sentence_data):
     global spell_state
     global spell_string
     global spell_phrase_index
-    global spell_checkphrase
+    global spell_checkphrases
     word = sentence_data.word
     words_left = sentence_data.words_left
     if spell_state == False:
-        checkword = spell_checkphrase[spell_phrase_index]
-        if word == checkword:
-            if spell_phrase_index == len(spell_checkphrase)-1:
+        # check if words keep matching the next word in any equivalent check phrase of same length
+        checkwords = [checkphrase[spell_phrase_index] for checkphrase in spell_checkphrases]
+        if word in checkwords:
+            # NOTE: compares with length of first checkphrase only (all same length)
+            if spell_phrase_index == len(spell_checkphrases[0])-1:
                 spell_state = True
             else:
                 spell_phrase_index += 1
@@ -444,7 +446,7 @@ math_words_operators = {'plus':'+','minus':'-','times':'*','divide':'/','equals'
 spell_state = False
 spell_string = ''
 spell_phrase_index = 0
-spell_checkphrase = ['spell','with','the','first','letters','of']
+spell_checkphrases = ['spell with the first letters of'.split(), 'spelled with the first letters of'.split(), 'spelt with the first letters of'.split()]
 import_state = False
 import_string = ''
 import_dictionary = {}

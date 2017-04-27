@@ -20,4 +20,5 @@ Please assign some words to variable banana
 Please if one equals one then print it works
 Please if one equals two then print it should not print this
 Please import numpy as nectarine pony
-please import numpy as spell with the first letters of Neptune unicorn moose panda Yoda
+please import alternate as spell with the first letters of Neptune unicorn moose panda Yoda
+please import alternate as spelled with the first letters of apple lemon
