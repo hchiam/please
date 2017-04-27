@@ -13,9 +13,9 @@ def interpret():
     text = open_file(argv[1]) # so you can use this Terminal command: python interpreter.py text.txt
     text = text.lower() # lowercase
     sentences = get_sentences(text)
-    # print('  DEBUG OUTPUT: ' + sentences)
+    # printplz('  DEBUG OUTPUT: ' + sentences)
     words_grouped = get_words_grouped_by_sentence(sentences)
-    # print('  DEBUG OUTPUT: ' + words_grouped)
+    # printplz('  DEBUG OUTPUT: ' + words_grouped)
     run_commands(words_grouped)
 
 def open_file(file_name):
@@ -35,12 +35,12 @@ def get_words_grouped_by_sentence(sentences):
 
 def run_commands(words_grouped):
     for sentence in words_grouped:
-        # print('  DEBUG OUTPUT: ' + 'sentence = ' + str(sentence))
+        # printplz('  DEBUG OUTPUT: ' + 'sentence = ' + str(sentence))
         words_count = len(sentence)
         for i, word in enumerate(sentence): # need to track number of words left in sentence while read each word
             words_left = words_count - i
             sentence_data = sentence_info(word, words_left)
-            check_print(sentence_data)
+            check_printplz(sentence_data)
             check_spell(sentence_data)
             if print_state == False:
                 check_math(sentence_data)
@@ -51,7 +51,7 @@ def run_commands(words_grouped):
 example:
 Please print this string of words
 """
-def check_print(sentence_data):
+def check_printplz(sentence_data):
     global print_state
     global print_string
     word = sentence_data.word
@@ -64,7 +64,7 @@ def check_print(sentence_data):
         elif words_left == 1:
             print_string += ' ' + word
             print_string = print_string.strip() # .strip() removes leading and trailing spaces
-            print(print_string)
+            printplz(print_string)
             # reset variables
             print_state = False
             print_string = ''
@@ -88,7 +88,7 @@ def check_math(sentence_data):
         elif words_left > 1 and not word_uses_math_keyword:
             math_string = math_string.strip()
             evaluated_expression = eval_math(translate_math(math_string))
-            print('  DEBUG MATH: ' + str(evaluated_expression))
+            printplz('  DEBUG MATH: ' + str(evaluated_expression))
             # reset variables
             math_state = False
             math_string = ''
@@ -97,7 +97,7 @@ def check_math(sentence_data):
                 math_string += ' ' + word
             math_string = math_string.strip()
             evaluated_expression = eval_math(translate_math(math_string))
-            print('  DEBUG MATH: ' + str(evaluated_expression))
+            printplz('  DEBUG MATH: ' + str(evaluated_expression))
             # reset variables
             math_state = False
             math_string = ''
@@ -140,7 +140,7 @@ def check_spell(sentence_data):
         spell_string += ' ' + word
         if words_left == 1:
             spell_string = spell_with_first_letters(spell_string)
-            print('  DEBUG SPELL: ' + spell_string)
+            printplz('  DEBUG SPELL: ' + spell_string)
             # reset variables
             spell_state = False
             spell_string = ''
@@ -198,11 +198,11 @@ def check_import(sentence_data):
             import_string = import_string.strip()
             dictionary_key = dictionary_key.strip()
             from_string = from_string.strip()
-            print('  DEBUG IMPORT: import_string = ' + import_string)
-            print('  DEBUG IMPORT: dictionary_key = ' + dictionary_key)
+            printplz('  DEBUG IMPORT: import_string = ' + import_string)
+            printplz('  DEBUG IMPORT: dictionary_key = ' + dictionary_key)
             if from_state == True:
                 # importing from folder
-                print('  DEBUG IMPORT: from_string = ' + from_string)
+                printplz('  DEBUG IMPORT: from_string = ' + from_string)
                 # http://stackoverflow.com/questions/67631/how-to-import-a-module-given-the-full-path
                 spec = importlib.util.spec_from_file_location(import_string, from_string + '/' + import_string + '.py')
                 module = importlib.util.module_from_spec(spec) # get module
@@ -210,7 +210,7 @@ def check_import(sentence_data):
             elif from_state == False:
                 module = import_module(import_string)
             import_dictionary[dictionary_key] = module
-            print('  DEBUG IMPORT: ' + str(import_dictionary))
+            printplz('  DEBUG IMPORT: ' + str(import_dictionary))
             # reset variables
             import_state = False
             import_string = ''
@@ -238,35 +238,45 @@ def check_use(sentence_data):
     elif use_state == True:
         if words_left > 1 and (word != 'of' and word != 'from') and from_state == False:
             use_string += ' ' + word
-            # print('use_string ' + use_string)
+            # printplz('use_string ' + use_string)
         elif words_left > 1 and (word == 'of' or word == 'from'):
             from_state = True
-            # print('from_state = True')
+            # printplz('from_state = True')
         elif words_left > 1 and from_state == True:
             from_string += ' ' + word
             from_string = from_string.strip()
-            # print('from_string = ' + from_string)
+            # printplz('from_string = ' + from_string)
         elif words_left == 1:
             if from_state == True:
                 from_string += ' ' + word
                 from_string = from_string.strip()
-                # print('from_string = ' + from_string)
+                # printplz('from_string = ' + from_string)
             use_string = use_string.strip()
-            print('  DEBUG USE: ' + use_string)
-            # print('from_string = ' + from_string)
+            printplz('  DEBUG USE: ' + use_string)
+            # printplz('from_string = ' + from_string)
             function_imported = getattr(import_dictionary[from_string], use_string)
             try:
                 function_imported() # try to use function_imported as a function
             except:
-                print(function_imported) # in case function_imported is just an output value
+                printplz(function_imported) # in case function_imported is just an output value
             # reset variables
             use_state = False
             use_string = ''
             from_state = False
             from_string = ''
 
+"""
+enable/disable debug print outputs
+"""
+def printplz(string):
+    if hide_debug_printouts == False:
+        print(string)
+    elif hide_debug_printouts == True and '  DEBUG' != string[0:7]:
+        print(string)
+
 
 # initialize global variables:
+hide_debug_printouts = True
 print_state = False
 print_string = ''
 math_state = False
@@ -301,7 +311,7 @@ class sentence_info():
         self.words_left = words_left
 
 
-print('\nPLEASE WORK...\n')
+printplz('\nPLEASE WORK...\n')
 # run this interpreter:
 interpret()
-print('\n...THANK YOU!\n')
+printplz('\n...THANK YOU!\n')
