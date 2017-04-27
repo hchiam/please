@@ -40,8 +40,6 @@ def run_commands(words_grouped):
         for i, word in enumerate(sentence): # need to track number of words left in sentence while read each word
             words_left = words_count - i
             sentence_data = sentence_info(word, words_left)
-            if print_state == False:
-                check_note(sentence_data)
             if note_state == False:
                 check_print(sentence_data)
                 check_spell(sentence_data)
@@ -50,6 +48,8 @@ def run_commands(words_grouped):
                     check_math(sentence_data)
                     check_import(sentence_data)
                     check_use(sentence_data)
+            if print_state == False:
+                check_note(sentence_data)
 
 """
 example:
