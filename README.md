@@ -57,13 +57,16 @@ This prints out: `this string of words`
 
 ```
 Please import test
+```
+
+```
 Please import numpy as nectarine pony
 ```
 
 **Use An Import Module's Function**:
 
 ```
-Please import test
+Please import test from library
 Please use test_function of test
 Please use test_function from test
 ```
