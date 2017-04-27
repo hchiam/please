@@ -128,14 +128,14 @@ Please if one equals one then print it works
 ```
 Please if one equals two then print it should not print this
 ```
---> This doesn't print anything.
+--> (This doesn't print anything.)
 
 ## Comment:
 
 ```
 Please note this is a comment
 ```
---> (Ignores text until the next sentence comes along.)
+--> (The interpreter ignores this sentence.)
 
 # Inspirations for Please:
 
