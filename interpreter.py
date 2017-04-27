@@ -312,7 +312,7 @@ def check_variable(sentence_data):
 example:
 Please assign one to variable apple
 Please assign three hundred to variable banana
-Please assign word to variable coconut
+Please assign some words to variable coconut
 """
 def check_assign(sentence_data):
     global assign_state
