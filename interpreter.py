@@ -156,7 +156,8 @@ def spell_with_first_letters(sentence):
 
 """
 example:
-Please import test
+Please import alternate
+Please import test from library
 Please import numpy as nectarine pony
 """
 def check_import(sentence_data):
@@ -224,7 +225,6 @@ def check_import(sentence_data):
 
 """
 example:
-Please import test
 Please use test_function of test
 Please use test_function from test
 """
