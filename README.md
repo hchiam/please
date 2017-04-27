@@ -14,15 +14,17 @@ When you run that code, it prints out:
 
 # Use:
 
-Download this project from GitHub.
+1. Download this project from GitHub.
 
-Open the folder in Terminal/Commandline.
+2. Open the folder in Terminal/Commandline.
 
-Then type the following command and hit enter:
+3. Then type the following command and hit enter:
 
     python interpreter.py text.txt
 
-You can see example "source code" in text.txt, which interpreter.py will interpret as Please code.
+The *interpreter* will interpret and run the *text* file as "source code" written in Please.
+
+Requires Python: https://www.python.org/downloads
 
 # Why?
 
@@ -56,8 +58,10 @@ Please import numpy as nectarine pony
 
 ```
 Please import test
-Please use test_function of test
-Please use test_function from test
+Please use test*function of test
+Please use test_function *from* test
+
+Requires Python https://www.python.org/downloads
 ```
 This outputs twice: `Yay the import test_function() of test.py from the "library" folder works!`
 
