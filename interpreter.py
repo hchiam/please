@@ -278,9 +278,7 @@ def check_note(sentence_data):
     if note_state == False and word == 'note':
         note_state = True
     elif note_state == True and words_left == 1:
-        # reset variables
-        note_state = False
-        note_string = ''
+        note_state = False # reset variable
 
 """
 enable/disable debug print outputs
@@ -321,7 +319,6 @@ use_string = ''
 from_state = False
 from_string = ''
 note_state = False
-note_string = ''
 variable_dictionary = {}
 class sentence_info():
     word = ''
