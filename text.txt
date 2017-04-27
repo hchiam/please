@@ -2,6 +2,7 @@ Please print this string of words please print this too
 please one plus two
 please 1 plus nine
  please  1  plus    nine  
+Please one plus one equals two
 Please spell with the first letters of Neptune unicorn moose panda Yoda
 please spell with the first letters of orange kiwi
 please add two hundred plus two and unwanted words please print testing

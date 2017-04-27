@@ -113,6 +113,11 @@ Please one plus two
 ```
 --> This outputs: `3`
 
+```
+Please one plus one equals two
+```
+--> This outputs: `True`
+
 **Comment**:
 
 ```
