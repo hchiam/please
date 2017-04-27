@@ -115,6 +115,10 @@ https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0
 
 * Try variables. Maybe something like 'variable apple' and 'variable apple equals one'. Also: enable remap 'numpy' to 'numb pie'.
 
+* Try "Please import spell with the first letters of hippo igloo **ok/okay**" with ok/okay as an 'escape' signal to stop spelling.
+
+* Try using check_spell as check_spell(sentence) and moving it up to loop with sentences, not words.
+
 * Try embedded expressions. Maybe use "thanks" as a closing bracket of sorts?
 
 * Try in-browser trinket that loads most recent python code from github for you. No installation required.
