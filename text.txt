@@ -14,12 +14,11 @@ please use test_function from test
 Please import alternate as apple lemon
 Please use test_function from apple lemon
 Please print could import numpy and then use __version__ from numpy
-Please print could import numpy as nectarine pony
+Please print could import numpy as numb pie
 Please note this is a comment
 Please assign three hundred to variable apple
 Please assign some words to variable banana
 Please if one equals one then print it works
 Please if one equals two then print it should not print this
-Please import numpy as nectarine pony
 please import alternate as spell with the first letters of Neptune unicorn moose panda Yoda
 please import alternate as spelled with the first letters of apple lemon
