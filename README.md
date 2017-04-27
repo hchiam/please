@@ -74,7 +74,7 @@ Please import test from library
 Please use test_function of test
 Please use test_function from test
 ```
---> This outputs twice: `Yay the import test_function() of test.py from the "library" folder works!`
+--> This prints twice: `Yay the import test_function() of test.py from the "library" folder works!`
 
 **Spell Out a Special Word**:
 
