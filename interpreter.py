@@ -299,7 +299,7 @@ def check_variable(sentence_data):
             variable_name = variable_name.strip()
             if variable_name not in variable_dictionary:
                 variable_dictionary[variable_name] = ''
-                printplz('  DEBUG create new var')
+                printplz('  DEBUG create new var: ' + variable_name)
             printplz('  DEBUG variable_name: ' + variable_name)
             printplz('  DEBUG variable_dictionary: ' + str(variable_dictionary))
             temp = variable_name
