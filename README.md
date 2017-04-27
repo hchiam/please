@@ -140,7 +140,7 @@ https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0
 
 * Try enable remap 'numpy' to 'numb pie'.
 
-* Make sure assign and print keywords are isolated from each other.
+* Try to make sure certain keyword checks are "isolated" from each other.
 
 * Try "Please import spell with the first letters of hippo igloo **ok/okay**" with ok/okay as an 'escape' signal to stop spelling.
 
