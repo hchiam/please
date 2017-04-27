@@ -14,3 +14,5 @@ Please use test_function from al
 Please print could import numpy and then use __version__ from numpy
 Please print could import numpy as nectarine pony
 Please note this is a comment
+Please assign three hundred to variable apple
+Please assign some words to variable banana
