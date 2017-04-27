@@ -51,7 +51,7 @@ Here are 3 ground rules to make commands easier to say, but also easier for spee
 ```
 Please print this string of words
 ```
-This prints out: `this string of words`
+--> This prints out: `this string of words`
 
 **Import**:
 
@@ -74,21 +74,21 @@ Please import test from library
 Please use test_function of test
 Please use test_function from test
 ```
-This outputs twice: `Yay the import test_function() of test.py from the "library" folder works!`
+--> This outputs twice: `Yay the import test_function() of test.py from the "library" folder works!`
 
 **Spell Out a Special Word**:
 
 ```
 Please spell with the first letters of Neptune unicorn moose panda Yoda
 ```
-This outputs: `numpy`
+--> This outputs: `numpy`
 
 **Math**:
 
 ```
 Please one plus two
 ```
-This outputs: `3`
+--> This outputs: `3`
 
 # Inspirations for Please:
 
