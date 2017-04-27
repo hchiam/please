@@ -34,41 +34,42 @@ Here are 3 ground rules to make commands easier to say, but also easier for spee
 
 # More Example Code:
 
-Print:
+**Print**:
 
 ```
 Please print this string of words
 ```
-prints out: `this string of words`
+This prints out: `this string of words`
 
-Import:
+**Import**:
 
 ```
 Please import test
 Please import numpy as nectarine pony
 ```
 
-Use An Import Module's Function:
+**Use** An Import Module's Function:
 
 ```
 Please import test
 Please use test_function of test
 Please use test_function from test
 ```
+This outputs twice: `Yay the import test_function() of test.py from the "library" folder works!`
 
-Spell it out:
+**Spell** Out a Special Word:
 
 ```
 Please spell with the first letters of Neptune unicorn moose panda Yoda
 ```
-outputs: `numpy`
+This outputs: `numpy`
 
-Math:
+**Math**:
 
 ```
 Please one plus two
 ```
-outputs: `3`
+This outputs: `3`
 
 # Inspirations for Please:
 
