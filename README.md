@@ -95,7 +95,7 @@ Please one plus two
 ```
 Please note this is a comment
 ```
---> This outputs: `this is a comment`
+--> (Ignores text until the next sentence comes along.)
 
 # Inspirations for Please:
 

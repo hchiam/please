@@ -273,21 +273,14 @@ Please note this is a comment
 """
 def check_note(sentence_data):
     global note_state
-    global note_string
     word = sentence_data.word
     words_left = sentence_data.words_left
     if note_state == False and word == 'note':
         note_state = True
-    elif note_state == True:
-        if words_left > 1:
-            note_string += ' ' + word
-        elif words_left == 1:
-            note_string += ' ' + word
-            note_string = note_string.strip() # .strip() removes leading and trailing spaces
-            printplz(note_string)
-            # reset variables
-            note_state = False
-            note_string = ''
+    elif note_state == True and words_left == 1:
+        # reset variables
+        note_state = False
+        note_string = ''
 
 """
 enable/disable debug print outputs
