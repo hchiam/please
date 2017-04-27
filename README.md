@@ -46,14 +46,14 @@ Here are 3 ground rules to make commands easier to say, but also easier for spee
 
 # More Example Code:
 
-**Print**:
+## Print:
 
 ```
 Please print this string of words
 ```
 --> This prints out: `this string of words`
 
-**Create Variable**:
+## Create Variable:
 
 ```
 Please create variable apple
@@ -65,7 +65,7 @@ or
 Please variable banana
 ```
 
-**Assign Value to Variable**:
+## Assign Value to Variable:
 
 ```
 Please assign one to variable apple
@@ -76,7 +76,7 @@ Please assign some words to variable coconut
 
 Note: if you assign a value to a variable that you didn't already create, the variable gets automatically created for you (and then assigned).
 
-**Import**:
+## Import:
 
 ```
 Please import alternate
@@ -90,7 +90,7 @@ Please import test from library
 Please import numpy as nectarine pony
 ```
 
-**Use An Import Module's Function**:
+## Use An Import Module's Function:
 
 ```
 Please import test from library
@@ -99,14 +99,14 @@ Please use test_function from test
 ```
 --> This prints twice: `Yay the import test_function() of test.py from the "library" folder works!`
 
-**Spell Out a Special Word**:
+## Spell Out a Special Word:
 
 ```
 Please spell with the first letters of Neptune unicorn moose panda Yoda
 ```
 --> This outputs: `numpy`
 
-**Math**:
+## Math:
 
 ```
 Please one plus two
@@ -118,7 +118,7 @@ Please one plus one equals two
 ```
 --> This outputs: `True`
 
-**Comment**:
+## Comment:
 
 ```
 Please note this is a comment
