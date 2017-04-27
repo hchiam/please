@@ -18,7 +18,7 @@ Download this project, open the folder in Terminal/Commandline, and type:
 
     python interpreter.py text.txt
 
-You can see example "source code" in text.txt that interpreter.py will interpret as Please code.
+You can see example "source code" in text.txt, which interpreter.py will interpret as Please code.
 
 # Why?
 
