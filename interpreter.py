@@ -301,5 +301,7 @@ class sentence_info():
         self.words_left = words_left
 
 
+print('\nPLEASE WORK...\n')
 # run this interpreter:
 interpret()
+print('\n...THANK YOU!\n')
