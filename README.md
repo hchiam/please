@@ -159,6 +159,12 @@ https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0
 
 * Try embedded expressions. Maybe use "thanks" as a closing bracket of sorts?
 
+* Try loops.
+
+* Try functions.
+
+* Try classes.
+
 * Try in-browser trinket that loads most recent python code from github for you. No installation required.
 
 * Try compiling into C or something so the code can run faster.
