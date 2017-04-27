@@ -58,10 +58,9 @@ Please import numpy as nectarine pony
 
 ```
 Please import test
-Please use test*function of test
-Please use test_function *from* test
+Please use test_function of test
+Please use test_function from test
 
-Requires Python https://www.python.org/downloads
 ```
 This outputs twice: `Yay the import test_function() of test.py from the "library" folder works!`
 
