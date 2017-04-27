@@ -167,6 +167,8 @@ https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0
 
 * ~~Try enable remap 'numpy' to 'numb pie'.~~
 
+* See github issues list!
+
 * as spell**ed** with the first letters of
 
 * fix: "Please print import spell with the first letters of Neptune unicorn moose panda Yoda as numb pie"
