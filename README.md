@@ -118,6 +118,18 @@ Please one plus one equals two
 ```
 --> This outputs: `True`
 
+## If-Then Statement:
+
+```
+Please if one equals one then print it works
+```
+--> This prints out: `it works`
+
+```
+Please if one equals two then print it should not print this
+```
+--> This doesn't print anything.
+
 ## Comment:
 
 ```
@@ -143,11 +155,11 @@ https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0
 
 * ~~Try variables. Maybe something like 'variable apple' and 'variable apple equals one'.~~
 
-* Try if-then statement like "Please if one equals one then printitworks".
+* ~~Try if-then statement like "Please if one equals two then print it should not print this".~~
 
-    * At "then" get math_result of "one equals one".
+    * ~~At "then" get math_result of "one equals one".~~
     
-    * If math_result == True: keep reading, don't reset if_state, and then after "then" start math_string, print, etc.
+    * ~~If math_result == True: keep reading, don't reset if_state, and then after "then" start math_string, print, etc.~~
 
 * Try enable remap 'numpy' to 'numb pie'.
 

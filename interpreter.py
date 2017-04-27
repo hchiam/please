@@ -384,6 +384,7 @@ def check_assign(sentence_data):
 """
 example:
 Please if one equals one then print it works
+Please if one equals two then print it should not print this
 """
 def check_if(sentence_data):
     global if_state
