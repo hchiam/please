@@ -269,6 +269,7 @@ def check_use(sentence_data):
 enable/disable debug print outputs
 """
 def printplz(string):
+    global hide_debug_printouts
     if hide_debug_printouts == False:
         print(string)
     elif hide_debug_printouts == True and '  DEBUG' != string[0:7]:
