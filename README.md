@@ -65,6 +65,17 @@ or
 Please variable banana
 ```
 
+**Assign Value to Variable**:
+
+```
+Please assign one to variable apple
+Please assign three hundred to variable banana
+Please assign word to variable coconut
+```
+--> This generates: apple = 1, banana = 300, coconut = 'word'.
+
+Note: if you assign a value to a variable that you didn't already create, the variable get automatically created for you (and then assigned).
+
 **Import**:
 
 ```
