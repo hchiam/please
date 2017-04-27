@@ -42,7 +42,6 @@ def run_commands(words_grouped):
             words_left = words_count - i
             sentence_data = sentence_info(word, words_left)
             if note_state == False:
-                check_print(sentence_data)
                 check_spell(sentence_data)
                 if print_state == False:
                     last_variable = check_variable(sentence_data)
@@ -50,6 +49,7 @@ def run_commands(words_grouped):
                     check_assign(sentence_data) # put after variable and math
                     check_import(sentence_data)
                     check_use(sentence_data)
+                check_print(sentence_data) # put after assign to avoid recognition of keyword within print
             if print_state == False:
                 check_note(sentence_data)
 
