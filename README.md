@@ -53,6 +53,18 @@ Please print this string of words
 ```
 --> This prints out: `this string of words`
 
+**Create Variable**:
+
+```
+Please create variable apple
+```
+
+or
+
+```
+Please variable banana
+```
+
 **Import**:
 
 ```
