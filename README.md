@@ -28,9 +28,9 @@ Please is an attempt at that.
 
 Here are 3 ground rules to make commands easier to say, but also easier for speech recognition software and Please's code interpreter to understand:
 
-* **Just say words that use your ABCs and spaces between**. No special non-letter characters like "?". Why? Speed and recognition. Saying "question mark" just to type out "?" is slow and could be faulty if the speech recognition software thinks you literally want the words "question mark".
-* **Avoid specialized words or names**. Why? So you don't have to specifically train the software to recognize uncommon words like "numpy" (mine thought I said "numb pie"). Workaround/trade-off: you have to spell it out, maybe using the first letters of more common words, like "Neptune unicorn moose panda Yoda" to spell out "numpy". Afterwards, you can reassign "numpy" to a shorter label that uses more common words, like "numb pie" or "pneumatic".
-* **"Be polite"**. Each new sentence starts with "please" and roughly marks out a new command/line in the code.
+1. **Just say words that use your ABCs and spaces between**. No special non-letter characters like "?". Why? Speed and recognition. Saying "question mark" just to type out "?" is slow and could be faulty if the speech recognition software thinks you literally want the words "question mark".
+2. **Avoid specialized words or names**. Why? So you don't have to specifically train the software to recognize uncommon words like "numpy" (mine thought I said "numb pie"). Workaround/trade-off: you have to spell it out, maybe using the first letters of more common words, like "Neptune unicorn moose panda Yoda" to spell out "numpy". Afterwards, you can reassign "numpy" to a shorter label that uses more common words, like "numb pie" or "pneumatic".
+3. **"Be polite"**. Each new sentence starts with "please" and roughly marks out a new command/line in the code.
 
 # More Example Code:
 
