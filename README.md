@@ -14,7 +14,9 @@ When you run that code, it prints out:
 
 # Use:
 
-Download this project, open the folder in Terminal/Commandline, and type:
+Download this project from GitHub. 
+Open the folder in Terminal/Commandline. 
+Then type the following command and hit enter:
 
     python interpreter.py text.txt
 
