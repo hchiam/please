@@ -90,6 +90,10 @@ Please import test from library
 Please import numpy as nectarine pony
 ```
 
+```
+Please import numpy as please import numpy as spell with the first letters of Neptune unicorn moose panda Yoda
+```
+
 ## Use An Import Module's Function:
 
 ```
@@ -161,7 +165,9 @@ https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0
     
     * ~~If math_result == True: keep reading, don't reset if_state, and then after "then" start math_string, print, etc.~~
 
-* Try enable remap 'numpy' to 'numb pie'.
+* ~~Try enable remap 'numpy' to 'numb pie'.~~
+
+* Try enable: "Please import spell with the first letters of Neptune unicorn moose panda Yoda as numb pie".
 
 * Try to make sure certain keyword checks are "isolated" from each other.
 

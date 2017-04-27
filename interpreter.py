@@ -34,6 +34,7 @@ def get_words_grouped_by_sentence(sentences):
     return word_groups
 
 def run_commands(words_grouped):
+    global last_spelled_word
     global last_variable
     global if_continue_state
     global is_first_word_after_please
@@ -50,7 +51,7 @@ def run_commands(words_grouped):
                 words_left = words_count - i
                 sentence_data = sentence_info(word, words_left)
                 if note_state == False:
-                    check_spell(sentence_data)
+                    last_spelled_word = check_spell(sentence_data)
                     if print_state == False:
                         last_variable = check_variable(sentence_data)
                         check_math(sentence_data)
@@ -176,14 +177,17 @@ def check_spell(sentence_data):
         if words_left == 1:
             spell_string = spell_with_first_letters(spell_string)
             printplz('  DEBUG SPELL: ' + spell_string)
+            temp = spell_string
             # reset variables
             spell_state = False
             spell_string = ''
             spell_phrase_index = 0
+            return temp
+    return ''
 
 def spell_with_first_letters(sentence):
-    spelt_word = ''
-    words = sentence.split()
+    local_sent = sentence.replace('spell with the first letters of ', '')
+    words = local_sent.split()
     spelt_word = ''.join(list(word[0] for word in words))
     return spelt_word
 
@@ -200,6 +204,7 @@ def check_import(sentence_data):
     global as_state
     global as_string
     global spell_state
+    global last_spelled_word
     global from_state
     global from_string
     word = sentence_data.word
@@ -216,7 +221,6 @@ def check_import(sentence_data):
                 from_string += ' ' + word
         elif words_left > 1 and word == 'as' and as_state == False:
             as_state = True
-            spell_state = True # to use check_spell()
         elif words_left > 1 and word == 'from' and from_state == False:
             from_state = True
         elif words_left == 1:
@@ -226,7 +230,10 @@ def check_import(sentence_data):
                 dictionary_key = import_string
             elif as_state == True:
                 as_string += ' ' + word
-                dictionary_key = spell_with_first_letters(as_string)
+                if last_spelled_word == '':
+                    dictionary_key = as_string
+                else:
+                    dictionary_key = last_spelled_word
             elif from_state == True:
                 from_string += ' ' + word
                 #from_string = spell_with_first_letters(from_string)
@@ -469,6 +476,7 @@ assign_state = False
 assign_string = ''
 assign_to_state = False
 assign_to_string = ''
+last_spelled_word = ''
 last_variable = ''
 if_state = False
 if_continue_state = True
