@@ -34,6 +34,7 @@ def get_words_grouped_by_sentence(sentences):
     return word_groups
 
 def run_commands(words_grouped):
+    global last_variable
     for sentence in words_grouped:
         # printplz('  DEBUG OUTPUT: ' + 'sentence = ' + str(sentence))
         words_count = len(sentence)
@@ -44,8 +45,9 @@ def run_commands(words_grouped):
                 check_print(sentence_data)
                 check_spell(sentence_data)
                 if print_state == False:
-                    check_variable(sentence_data)
+                    last_variable = check_variable(sentence_data)
                     check_math(sentence_data)
+                    check_assign(sentence_data) # put after variable and math
                     check_import(sentence_data)
                     check_use(sentence_data)
             if print_state == False:
@@ -80,6 +82,7 @@ Please one plus two
 def check_math(sentence_data):
     global math_state
     global math_string
+    global math_result
     word = sentence_data.word
     words_left = sentence_data.words_left
     word_uses_math_keyword = (word in math_words_numbers or word in math_words_operators)
@@ -91,8 +94,8 @@ def check_math(sentence_data):
             math_string += ' ' + word
         elif words_left > 1 and not word_uses_math_keyword:
             math_string = math_string.strip()
-            evaluated_expression = eval_math(translate_math(math_string))
-            printplz('  DEBUG MATH: ' + str(evaluated_expression))
+            math_result = eval_math(translate_math(math_string))
+            printplz('  DEBUG MATH: ' + str(math_result))
             # reset variables
             math_state = False
             math_string = ''
@@ -100,11 +103,14 @@ def check_math(sentence_data):
             if word_uses_math_keyword:
                 math_string += ' ' + word
             math_string = math_string.strip()
-            evaluated_expression = eval_math(translate_math(math_string))
-            printplz('  DEBUG MATH: ' + str(evaluated_expression))
+            math_result = eval_math(translate_math(math_string))
+            printplz('  DEBUG MATH: ' + str(math_result))
+            temp = math_result
             # reset variables
             math_state = False
             math_string = ''
+            math_result = ''
+            return temp
 
 def translate_math(expression_string):
     global math_words_numbers
@@ -119,6 +125,9 @@ def translate_math(expression_string):
 
 def eval_math(expression):
     return eval(expression,{"__builtins__":None},{}) # use ,{"__builtins__":None},{} to make eval function safer
+
+def is_math_expression(expression_string):
+    return all((word in math_words_numbers or word in math_words_operators) for word in expression_string.split(' '))
 
 """
 example:
@@ -288,12 +297,65 @@ def check_variable(sentence_data):
         elif words_left == 1:
             variable_name += ' ' + word
             variable_name = variable_name.strip()
-            variable_dictionary[variable_name] = ''
+            if variable_name not in variable_dictionary:
+                variable_dictionary[variable_name] = ''
+                printplz('  DEBUG create new var')
             printplz('  DEBUG variable_name: ' + variable_name)
             printplz('  DEBUG variable_dictionary: ' + str(variable_dictionary))
+            temp = variable_name
             # reset variables
             variable_state = False
             variable_name = ''
+            return temp
+
+"""
+example:
+Please assign one to variable apple
+"""
+def check_assign(sentence_data):
+    global assign_state
+    global assign_to_state
+    global assign_string
+    global assign_to_string
+    global variable_name
+    global variable_dictionary
+    global math_state
+    global math_string
+    global math_result
+    global last_variable
+    word = sentence_data.word
+    words_left = sentence_data.words_left
+    if assign_state == False and word == 'assign':
+        assign_state = True
+    elif assign_state == True:
+        if words_left > 1 and word != 'to' and assign_to_state == False:
+            assign_string += ' ' + word
+            assign_string = assign_string.strip()
+        elif words_left > 1 and word == 'to':
+            assign_to_state = True
+        elif words_left > 1 and assign_to_state == True:
+            assign_to_string += ' ' + word
+            # let check_variable() get variable name
+        elif words_left == 1:
+            # printplz('  DEBUG math_state = ' + str(math_state))
+            # printplz('  DEBUG math_result ' + str(math_result))
+            # printplz('  DEBUG assign_string ' + str(assign_string))
+            # printplz('  DEBUG assign_string in math_words_numbers ' + str(assign_string in math_words_numbers))
+            # printplz('  DEBUG all words in assign_string are math: check: ' + is_math_expression(assign_string))
+            if math_state == False and math_result != '' and is_math_expression(assign_string):
+                assign_string = math_result
+            # printplz('  DEBUG variable_state ' + str(variable_state))
+            if variable_state == False:
+                assign_to_string = last_variable
+                # printplz('  DEBUG last_variable = ' + last_variable)
+            printplz('  DEBUG assign_string: ' + str(assign_string))
+            variable_dictionary[assign_to_string] = assign_string
+            printplz('  DEBUG assign_to_string: ' + assign_to_string)
+            printplz('  DEBUG variable_dictionary: ' + str(variable_dictionary))
+            # reset variables
+            assign_state = False
+            assign_to_state = False
+            assign_string = ''
 
 """
 example:
@@ -352,6 +414,9 @@ variable_dictionary = {}
 variable_name = ''
 assign_state = False
 assign_string = ''
+assign_to_state = False
+assign_to_string = ''
+last_variable = ''
 class sentence_info():
     word = ''
     words_left = 0
