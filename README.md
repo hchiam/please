@@ -169,13 +169,15 @@ https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0
 
 * Try enable: "Please import spell with the first letters of Neptune unicorn moose panda Yoda **as** numb pie" with "as" as an 'escape' signal to stop spelling.
 
-* Try to make sure certain keyword checks are "isolated" from each other.
-
 * Try "Please import spell with the first letters of hippo igloo **ok/okay**" with "ok" or "okay" as an 'escape' signal to stop spelling?
+
+* Try enable: "Please create variable spell with the first letters of apple banana coconut".
+
+* Try to make sure certain keyword checks are "isolated" from each other.
 
 * Try using check_spell as check_spell(sentence) and moving it up to loop with sentences, not words.
 
-* Try embedded expressions. Maybe use "thanks" as a closing bracket of sorts?
+* Try embedded expressions. Maybe use "thanks" as a closing bracket of sorts? for these maybe:
 
 * Try loops.
 
