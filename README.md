@@ -169,6 +169,8 @@ https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0
 
 * as spell**ed** with the first letters of
 
+* fix: "Please print import spell with the first letters of Neptune unicorn moose panda Yoda as numb pie"
+
 * Try enable: "Please import spell with the first letters of Neptune unicorn moose panda Yoda **as** numb pie" with "as" as an 'escape' signal to stop spelling.
 
 * Try "Please import spell with the first letters of hippo igloo **ok/okay**" with "ok" or "okay" as an 'escape' signal to stop spelling?
