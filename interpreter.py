@@ -35,23 +35,33 @@ def get_words_grouped_by_sentence(sentences):
 
 def run_commands(words_grouped):
     global last_variable
+    global if_continue_state
+    global is_first_word_after_please
     for sentence in words_grouped:
         # printplz('  DEBUG OUTPUT: ' + 'sentence = ' + str(sentence))
         words_count = len(sentence)
         for i, word in enumerate(sentence): # need to track number of words left in sentence while read each word
-            words_left = words_count - i
-            sentence_data = sentence_info(word, words_left)
-            if note_state == False:
-                check_spell(sentence_data)
+            if if_continue_state == False:
+                # reset variable for next sentence
+                if_continue_state = True
+                # go to next sentence
+                continue
+            elif if_continue_state == True:
+                words_left = words_count - i
+                sentence_data = sentence_info(word, words_left)
+                if note_state == False:
+                    check_spell(sentence_data)
+                    if print_state == False:
+                        last_variable = check_variable(sentence_data)
+                        check_math(sentence_data)
+                        check_assign(sentence_data) # put after variable and math
+                        check_import(sentence_data)
+                        check_use(sentence_data)
+                        if_continue_state = check_if(sentence_data)
+                    check_print(sentence_data) # put after assign to avoid recognition of keyword within print
                 if print_state == False:
-                    last_variable = check_variable(sentence_data)
-                    check_math(sentence_data)
-                    check_assign(sentence_data) # put after variable and math
-                    check_import(sentence_data)
-                    check_use(sentence_data)
-                check_print(sentence_data) # put after assign to avoid recognition of keyword within print
-            if print_state == False:
-                check_note(sentence_data)
+                    check_note(sentence_data)
+                check_if_first_word_after_please(word) # put after all other checks
 
 """
 example:
@@ -60,9 +70,11 @@ Please print this string of words
 def check_print(sentence_data):
     global print_state
     global print_string
+    global is_first_word_after_please
     word = sentence_data.word
     words_left = sentence_data.words_left
-    if print_state == False and word == 'print':
+    # printplz('  DEBUG :'+word+' \t '+str(is_first_word_after_please))
+    if print_state == False and word == 'print' and is_first_word_after_please:
         print_state = True
     elif print_state == True:
         if words_left > 1:
@@ -70,10 +82,20 @@ def check_print(sentence_data):
         elif words_left == 1:
             print_string += ' ' + word
             print_string = print_string.strip() # .strip() removes leading and trailing spaces
-            printplz(print_string)
+            print('stop: '+ print_string)
             # reset variables
             print_state = False
             print_string = ''
+
+def check_if_first_word_after_please(word):
+    global previous_word
+    global is_first_word_after_please
+    if previous_word == 'please':
+        is_first_word_after_please = True
+        previous_word = word
+    elif is_first_word_after_please == True:
+        previous_word = 'please'
+        is_first_word_after_please = False
 
 """
 example:
@@ -361,6 +383,34 @@ def check_assign(sentence_data):
 
 """
 example:
+Please if one equals one then print it works
+"""
+def check_if(sentence_data):
+    global if_state
+    global if_continue_state
+    global math_result
+    word = sentence_data.word
+    words_left = sentence_data.words_left
+    # printplz('  DEBUG words_left ---> ' + str(words_left))
+    if if_state == False:
+        if word == 'if':
+            if_state = True
+            printplz('  DEBUG IF')
+        if_continue_state = True # reset variable to eval new if statement
+        return if_continue_state
+    elif if_state == True:
+        if word == 'then':
+            printplz('  DEBUG detect math within if statement: ' + str(math_result))
+            printplz('  DEBUG THEN')
+            if_continue_state = math_result
+            if_state = False # reset variable
+            return if_continue_state
+        else:
+            if_continue_state = True
+            return if_continue_state
+
+"""
+example:
 Please note this is a comment
 """
 def check_note(sentence_data):
@@ -419,6 +469,10 @@ assign_string = ''
 assign_to_state = False
 assign_to_string = ''
 last_variable = ''
+if_state = False
+if_continue_state = True
+previous_word = 'please'
+is_first_word_after_please = True
 class sentence_info():
     word = ''
     words_left = 0
