@@ -36,26 +36,30 @@ Here are 3 ground rules to make commands easier to say, but also easier for spee
 
 Print:
 
-    `Please print this string of words` prints out `this string of words`
+`Please print this string of words` prints out `this string of words`
 
 Import:
 
-    Please import test
-    Please import numpy as nectarine pony
+```
+Please import test
+Please import numpy as nectarine pony
+```
 
 Use An Import Module's Function:
 
-    Please import test
-    Please use test_function of test
-    Please use test_function from test
+```
+Please import test
+Please use test_function of test
+Please use test_function from test
+```
 
 Spell it out:
 
-    `Please spell with the first letters of Neptune unicorn moose panda Yoda` outputs `numpy`
+`Please spell with the first letters of Neptune unicorn moose panda Yoda` outputs `numpy`
 
 Math:
 
-    `Please one plus two` outputs `3`
+`Please one plus two` outputs `3`
 
 # Inspirations for Please:
 
