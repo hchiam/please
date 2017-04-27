@@ -44,9 +44,10 @@ def run_commands(words_grouped):
         for i, word in enumerate(sentence): # need to track number of words left in sentence while read each word
             if if_continue_state == False:
                 # reset variable for next sentence
+                print('-----')
                 if_continue_state = True
-                # go to next sentence
-                continue
+                # stop looking at next words and go to next sentence
+                break
             elif if_continue_state == True:
                 words_left = words_count - i
                 sentence_data = sentence_info(word, words_left)
