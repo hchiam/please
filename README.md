@@ -74,7 +74,7 @@ Please assign some words to variable coconut
 ```
 --> This generates: apple = 1, banana = 300, coconut = 'some words'.
 
-Note: if you assign a value to a variable that you didn't already create, the variable gets automatically created for you (and then assigned).
+Note: variables automatically get created if you didn't already create them.
 
 ## Import:
 
