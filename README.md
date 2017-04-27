@@ -56,7 +56,11 @@ This prints out: `this string of words`
 **Import**:
 
 ```
-Please import test
+Please import alternate
+```
+
+```
+Please import test from library
 ```
 
 ```
