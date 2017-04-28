@@ -22,3 +22,4 @@ Please if one equals one then print it works
 Please if one equals two then print it should not print this
 please import alternate as spell with the first letters of Neptune unicorn moose panda Yoda
 please import alternate as spelled with the first letters of apple lemon
+Please note I want to import numpy as numb pie without spelling numpy
