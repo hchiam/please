@@ -18,7 +18,7 @@ this string of words
 
 # Use:
 
-1. Download this project from GitHub. https://github.com/hchiam/please/archive/master.zip gives you the master branch.
+1. Download this project from GitHub. https://github.com/hchiam/please/archive/master.zip --> master branch.
 
 2. Open the folder using Terminal or Command-line.
 
