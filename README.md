@@ -94,7 +94,9 @@ Import .py code or Python modules to make Please more useful.
 ```
 Please import alternate
 ```
---> This imports: alternate.py (from the local folder)
+--> This imports: alternate.py
+
+Note: unless specified, this imports from the local folder.
 
 ```
 Please import test from library
