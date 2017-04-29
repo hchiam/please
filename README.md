@@ -87,9 +87,7 @@ Please assign some words to variable coconut
 
 Note: variables automatically get created if you didn't already create them.
 
-## Import:
-
-Import .py code or Python modules to make Please more useful.
+## Import to Add Functionality:
 
 ```
 Please import alternate
