@@ -10,16 +10,16 @@ from importlib import import_module
 import importlib.util
 
 
-progress_bar = ''
+progress_bar = 0
 
 def clean():
-    print('\n---Formatter Starting---')
+    print('\n---Formatter Starting---\n')
     file_name = 'text.txt'
     text = get_text(file_name)
     update_progress_bar_display()
     text = reformat(text)
     rewrite_file(file_name, text)
-    print('---Formatter Finished---\n')
+    print('\n---Formatter Finished---\n')
 
 def get_text(file_name):
     # with open(file_name, 'r') as f:
@@ -48,7 +48,7 @@ def rewrite_file(file_name, text):
 
 def update_progress_bar_display():
     global progress_bar
-    progress_bar += '.'
-    print(progress_bar)
+    progress_bar += 1
+    print(str(progress_bar) + ' .........Still Formatting.........')
 
 clean()
