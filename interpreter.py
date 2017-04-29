@@ -469,7 +469,7 @@ def printplz(string):
 
 
 # initialize global variables:
-hide_debug_printouts = False # True
+hide_debug_printouts = False # True = hide debug prints printplz()
 print_state = False
 print_string = ''
 math_state = False
