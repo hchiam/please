@@ -35,11 +35,11 @@ def reformat(text):
     # put indents when it sees if (and later for loops, and de-indents at any end-if's).
     return text_lines
 
-def rewrite_file(file_name, text):
+def rewrite_file(file_name, text_lines):
     # create or clear formatted file
     open(file_name[:-4]+'_formatted.txt', 'w').write('')
     # append each new line of text
-    for line in text:
+    for line in text_lines:
         with open(file_name[:-4]+'_formatted.txt', 'a') as f:
             f.write(line)
             update_progress_bar_display()
