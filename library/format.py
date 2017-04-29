@@ -2,7 +2,7 @@
 # Puts "please" at every new line
 
 """
-# FUTURE: Puts indents when it sees if-statements (and later for-loops, and de-indents at any end-if's).
+FUTURE: Puts indents when it sees if-statements (and later for-loops, and de-indents at any end-if's).
 """
 
 from sys import *
