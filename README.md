@@ -40,7 +40,7 @@ Please is an attempt at that.
 
 Here are 3 ground rules to make commands easier to say, but also easier for speech recognition software and Please's code interpreter to understand:
 
-1. **Just say words that use your ABCs and spaces between**. No special non-letter characters like "?". Why? Speed and recognition. Saying "question mark" just to type out "?" is slow and could be faulty if the speech recognition software thinks you literally want the words "question mark".
+1. **Just say words that use your ABCs and spaces between**. No special non-letter characters like "?". Why? Speed and recognition. Saying "question mark" just to type out "?" is slow and could be faulty if the speech recognition software thinks you literally want the words "question mark". Please also doesn't differentiate (non-)capital letters because it's a speech-based language (vs. a "written language").
 2. **Avoid specialized words or names**. Why? So you don't have to specifically train your speech recognition software to recognize uncommon words like "numpy" (mine thought I said "numb pie"). Workaround/trade-off: you have to spell it out, maybe using the first letters of more common words, like "**N**eptune **u**nicorn **m**oose **p**anda **Y**oda" to spell out "numpy". Afterwards, you can reassign "numpy" to a shorter label that uses more common words, like "numb pie" or "pneumatic".
 3. **"Be polite"**. Each new sentence starts with "please" and roughly marks out a new command or line in the code.
 
@@ -60,7 +60,9 @@ Please spell with the first letters of Neptune unicorn moose panda Yoda
 ```
 --> This outputs: `numpy`
 
-## Create Variable:
+## Create Variables:
+
+By design, Please encourages you to use words instead of letters and short forms -- you're saying it out loud.
 
 ```
 Please create variable apple
@@ -72,22 +74,25 @@ or
 Please variable banana
 ```
 
-## Assign Value to Variable:
+## Assign Values to Variables:
 
 ```
 Please assign one to variable apple
 Please assign three hundred to variable banana
 Please assign some words to variable coconut
 ```
---> This generates: apple = 1, banana = 300, coconut = 'some words'.
+--> This generates: `apple = 1`, `banana = 300`, `coconut = 'some words'`.
 
 Note: variables automatically get created if you didn't already create them.
 
 ## Import:
 
+Import .py code or Python modules to make Please more useful.
+
 ```
 Please import alternate
 ```
+--> This imports: alternate.py (from the local folder)
 
 ```
 Please import test from library
@@ -95,13 +100,19 @@ Please import test from library
 --> This imports: /library/test.py
 
 ```
-Please import numpy as nectarine pony
+Please import spelled with the first letters of Neptune unicorn moose panda Yoda
 ```
+--> This performs: `import numpy`. (You can spell out "numpy" since it's not an everyday word, and your speech recognition software might not already be trained to recognize it.)
 
 ```
-Please import numpy as spelled with the first letters of Neptune unicorn moose panda Yoda
+Please import spelled with the first letters of Neptune unicorn moose panda Yoda as noodle
 ```
---> This does: `import numpy as numpy`
+--> This performs: `import numpy as noodle`. (So no need to spell it out each time you use it.)
+
+```
+Please import spelled with the first letters of Neptune unicorn moose panda Yoda as numb pie
+```
+--> This performs: `import numpy as numb pie`. (You can also just rename it to whatever your speech recognition software thinks you're saying.)
 
 ## Use An Import Module's Function:
 
@@ -136,7 +147,7 @@ Please if one equals two then print it should not print this
 ```
 --> (This doesn't print anything.)
 
-## Comment:
+## Comments/Notes:
 
 ```
 Please note this is a comment
@@ -153,4 +164,4 @@ https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0
 
 # Ideas for Development:
 
-(See the Issues list. Click the "Issues" tab above.)
+(See the Issues list. Click the "Issues" tab above or go to https://github.com/hchiam/please/issues)

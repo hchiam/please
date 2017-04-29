@@ -192,6 +192,7 @@ def check_import(sentence_data):
     global as_state
     global as_string
     global spell_state
+    global spell_string
     global last_spelled_word
     global from_state
     global from_string
@@ -209,23 +210,54 @@ def check_import(sentence_data):
                 from_string += ' ' + word
         elif words_left > 1 and word == 'as' and as_state == False:
             as_state = True
+            if spell_string != '':
+                import_string = spell_with_first_letters(spell_string)[:-1] # [:-1] to remove the 'a' from 'as'
+                # reset spell variables at keyword 'as' in case need to spell again
+                spell_state = False
+                spell_string = ''
+                spell_phrase_index = 0
         elif words_left > 1 and word == 'from' and from_state == False:
             from_state = True
+            if spell_string != '':
+                import_string = spell_with_first_letters(spell_string)[:-1] # [:-1] to remove the 'a' from 'from'
+                # reset spell variables at keyword 'from' in case need to spell again
+                spell_state = False
+                spell_string = ''
+                spell_phrase_index = 0
         elif words_left == 1:
-            dictionary_key = import_string
             if as_state == False and from_state == False:
                 import_string += ' ' + word
+                # handle "Please import spelled with ...":
+                if last_spelled_word != '':
+                    import_string = last_spelled_word
                 dictionary_key = import_string
             elif as_state == True:
                 as_string += ' ' + word
-                if last_spelled_word == '':
-                    dictionary_key = as_string
-                else:
+                # handle "Please import spelled with ... AS spelled with ...":
+                if last_spelled_word != '':
                     dictionary_key = last_spelled_word
+                else:
+                    # need to use spell_with_first_letters(as_string) here because 2nd spell...of not detected in "import spell...of as spell...of"
+                    for i in range(len(checkphrases)):
+                        if checkphrases[i] in as_string:
+                            as_string = as_string.replace(checkphrases[i], '')
+                            as_string = spell_with_first_letters(as_string)
+                            break
+                    dictionary_key = as_string #???? --> 2nd spell in string not getting detected by check_spell *************
             elif from_state == True:
                 from_string += ' ' + word
-                #from_string = spell_with_first_letters(from_string)
-                dictionary_key = import_string
+                dictionary_key = import_string #???? --> 2nd spell in string not getting detected by check_spell *************
+                # handle "Please import spelled with ... AS spelled with ...":
+                if last_spelled_word != '':
+                    from_string = last_spelled_word
+                else:
+                    # need to use spell_with_first_letters(as_string) here because 2nd spell...of not detected in "import spell...of as spell...of"
+                    for i in range(len(checkphrases)):
+                        if checkphrases[i] in from_string:
+                            from_string = from_string.replace(checkphrases[i], '')
+                            from_string = spell_with_first_letters(from_string)
+                            break
+                    # from_string = last_spelled_word
             import_string = import_string.strip()
             dictionary_key = dictionary_key.strip()
             from_string = from_string.strip()
@@ -234,22 +266,29 @@ def check_import(sentence_data):
             if from_state == True:
                 # importing from folder
                 printplz('  DEBUG IMPORT: from_string = ' + from_string)
-                # http://stackoverflow.com/questions/67631/how-to-import-a-module-given-the-full-path
                 spec = importlib.util.spec_from_file_location(import_string, from_string + '/' + import_string + '.py')
                 module = importlib.util.module_from_spec(spec) # get module
                 spec.loader.exec_module(module) # enables use of functions and variables from the module
             elif from_state == False:
                 module = import_module(import_string)
+            # add to list of imports
             import_dictionary[dictionary_key] = module
-            printplz('  DEBUG IMPORT: ' + str(import_dictionary))
+            
+            
+            printplz('  DEBUG: dictionary_key = ' + dictionary_key + ' ... size = ' + str(len(import_dictionary)))
+            printplz('  DEBUG IMPORT: IMPORT_DICTIONARY, size = ' + str(len(import_dictionary)) + '\n\t = ' + str(import_dictionary))
+            
+            
             # reset variables
             import_state = False
             import_string = ''
             as_state = False
             as_string = ''
-            spell_state = False
             from_state = False
             from_string = ''
+            spell_state = False
+            spell_string = ''
+            spell_phrase_index = 0
 
 """
 example:
@@ -446,7 +485,11 @@ math_words_operators = {'plus':'+','minus':'-','times':'*','divide':'/','equals'
 spell_state = False
 spell_string = ''
 spell_phrase_index = 0
-spell_checkphrases = ['spell with the first letters of'.split(), 'spelled with the first letters of'.split(), 'spelt with the first letters of'.split()]
+check_phrase_1 = 'spell with the first letters of'
+check_phrase_2 = 'spelled with the first letters of'
+check_phrase_3 = 'spelt with the first letters of'
+checkphrases = [check_phrase_1, check_phrase_2, check_phrase_3]
+spell_checkphrases = [check_phrase_1.split(), check_phrase_2.split(), check_phrase_3.split()]
 import_state = False
 import_string = ''
 import_dictionary = {}
