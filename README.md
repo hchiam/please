@@ -58,7 +58,7 @@ Please print this string of words
 ```
 Please spell with the first letters of Neptune unicorn moose panda Yoda
 ```
---> This outputs: `numpy`
+--> This outputs: `numpy` (Note: capital letters are not treated differently.)
 
 ## Create Variables:
 
