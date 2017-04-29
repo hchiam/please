@@ -18,11 +18,11 @@ this string of words
 
 # Use:
 
-1. Download this project from GitHub.
+1. Download this project from GitHub. https://github.com/hchiam/please/archive/master.zip gives you the master branch.
 
 2. Open the folder using Terminal or Command-line.
 
-3. Then type the following command and hit enter:
+3. Then input the following command and hit enter:
 
 ```
 python interpreter.py text.txt
