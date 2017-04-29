@@ -1,7 +1,9 @@
 # code text formatter
 # Puts "please" at every new line
-# Puts indents when it sees if (and later for loops, and de-indents at any end-if's).
 
+"""
+# FUTURE: Puts indents when it sees if-statements (and later for-loops, and de-indents at any end-if's).
+"""
 
 from sys import *
 from importlib import import_module
@@ -11,13 +13,13 @@ import importlib.util
 progress_bar = ''
 
 def clean():
-    print('---Formatter Starting---')
+    print('\n---Formatter Starting---')
     file_name = '../text.txt'
     text = get_text(file_name)
     update_progress_bar_display()
-    text_lines = reformat(text)
-    rewrite_file(file_name, text_lines)
-    print('---Formatter Finished---')
+    text = reformat(text)
+    rewrite_file(file_name, text)
+    print('---Formatter Finished---\n')
 
 def get_text(file_name):
     # with open(file_name, 'r') as f:
@@ -28,25 +30,25 @@ def get_text(file_name):
 
 def reformat(text):
     # put each "please" at every new line
-    text_lines = text.lower().split('please')
+    text = text.lower().replace('\n ','\n').replace(' please','\nplease') # just one long string to parse
     
-    # TRY THIS : REGEX FIND NOT \N PLEASE AND ONLY REPLACE PLEASE WITHOUT \N BEFORE IT
+    # FUTURE: put indents when it sees if-statements (and later for-loops, and de-indents at any end-if's).
     
-    # put indents when it sees if (and later for loops, and de-indents at any end-if's).
-    return text_lines
+    return text
 
-def rewrite_file(file_name, text_lines):
+def rewrite_file(file_name, text):
+    new_file_name = file_name[:-4]+'_FORMATTED.txt'
     # create or clear formatted file
-    open(file_name[:-4]+'_formatted.txt', 'w').write('')
+    open(new_file_name, 'w').write('')
     # append each new line of text
-    for line in text_lines:
-        with open(file_name[:-4]+'_formatted.txt', 'a') as f:
+    for line in text:
+        with open(new_file_name, 'a') as f:
             f.write(line)
             update_progress_bar_display()
 
 def update_progress_bar_display():
     global progress_bar
-    progress_bar += '_'
+    progress_bar += '.'
     print(progress_bar)
 
 clean()
