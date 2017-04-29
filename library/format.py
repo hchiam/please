@@ -14,7 +14,7 @@ progress_bar = ''
 
 def clean():
     print('\n---Formatter Starting---')
-    file_name = '../text.txt'
+    file_name = 'text.txt'
     text = get_text(file_name)
     update_progress_bar_display()
     text = reformat(text)
