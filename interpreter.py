@@ -32,6 +32,7 @@ def get_words_grouped_by_sentence(sentences):
     for sentence in sentences:
         words = list(sentence.strip().split()) # no params for split so it uses any whitespace character
         word_groups.append(words)
+    print(word_groups)
     return word_groups
 
 def run_commands(words_grouped):
@@ -49,19 +50,19 @@ def run_commands(words_grouped):
                 break
             elif if_continue_state == True:
                 words_left = words_count - i
-                sentence_data = sentence_info(word, words_left)
+                word_data = word_info(word, words_left)
                 if note_state == False:
-                    last_spelled_word = check_spell(sentence_data)
+                    last_spelled_word = check_spell(word_data)
                     if print_state == False:
-                        last_variable = check_variable(sentence_data)
-                        check_math(sentence_data)
-                        check_assign(sentence_data) # put after variable and math
-                        check_import(sentence_data)
-                        check_use(sentence_data)
-                        if_continue_state = check_if(sentence_data)
-                    check_print(sentence_data) # put after assign to avoid recognition of keyword within print
+                        last_variable = check_variable(word_data)
+                        check_math(word_data)
+                        check_assign(word_data) # put after variable and math
+                        check_import(word_data)
+                        check_use(word_data)
+                        if_continue_state = check_if(word_data)
+                    check_print(word_data) # put after assign to avoid recognition of keyword within print
                 if print_state == False:
-                    check_note(sentence_data)
+                    check_note(word_data)
 
 """
 example:
@@ -512,7 +513,7 @@ last_spelled_word = ''
 last_variable = ''
 if_state = False
 if_continue_state = True
-class sentence_info():
+class word_info():
     word = ''
     words_left = 0
     def __init__(self, word, words_left):
