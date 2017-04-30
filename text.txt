@@ -24,3 +24,5 @@ please import alternate as spell with the first letters of Neptune unicorn moose
 please import alternate as spelled with the first letters of apple lemon
 Please print you can now import spelled with the first letters of Neptune unicorn moose panda Yoda as numb pie
 Please print you can now use __version__ from numb pie
+please assign one to variable cow
+please check if one equals cow then print passed test 1
