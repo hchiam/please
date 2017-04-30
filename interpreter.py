@@ -32,7 +32,7 @@ def get_words_grouped_by_sentence(sentences):
     for sentence in sentences:
         words = list(sentence.strip().split()) # no params for split so it uses any whitespace character
         word_groups.append(words)
-    print(word_groups)
+    printplz('  DEBUG word_groups: ' + str(word_groups))
     return word_groups
 
 def run_commands(words_grouped):
@@ -487,9 +487,9 @@ math_words_operators = {'plus':'+','minus':'-','times':'*','divide':'/','equals'
 spell_state = False
 spell_string = ''
 spell_phrase_index = 0
-check_phrase_1 = 'spell with the first letters of'
-check_phrase_2 = 'spelled with the first letters of'
-check_phrase_3 = 'spelt with the first letters of'
+check_phrase_1 = 'spell with the first letters of' # 6 words
+check_phrase_2 = 'spelled using first letters of words' # 6 words
+check_phrase_3 = 'spelt with the first letter from' # 6 words
 checkphrases = [check_phrase_1, check_phrase_2, check_phrase_3]
 spell_checkphrases = [check_phrase_1.split(), check_phrase_2.split(), check_phrase_3.split()]
 import_state = False
