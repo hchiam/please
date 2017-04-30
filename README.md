@@ -87,6 +87,37 @@ Please assign some words to variable coconut
 
 Note: variables automatically get created if you didn't already create them.
 
+## Math:
+
+```
+Please one plus two
+```
+--> This outputs: `3`
+
+```
+Please one plus one equals two
+```
+--> This outputs: `True`
+
+## If-Then Statement:
+
+```
+Please if one equals one then print it works
+```
+--> This prints out: `it works`
+
+```
+Please if one equals two then print it should not print this
+```
+--> (This doesn't print anything.)
+
+## Comments/Notes:
+
+```
+Please note this is a comment
+```
+--> (The interpreter ignores this sentence.)
+
 ## Import to Add Functionality:
 
 ```
@@ -124,37 +155,6 @@ Please use test_function from test
 --> This performs twice: `test.test_function()`
 
 --> This prints twice: `Yay the import test_function() of test.py from the "library" folder works!`
-
-## Math:
-
-```
-Please one plus two
-```
---> This outputs: `3`
-
-```
-Please one plus one equals two
-```
---> This outputs: `True`
-
-## If-Then Statement:
-
-```
-Please if one equals one then print it works
-```
---> This prints out: `it works`
-
-```
-Please if one equals two then print it should not print this
-```
---> (This doesn't print anything.)
-
-## Comments/Notes:
-
-```
-Please note this is a comment
-```
---> (The interpreter ignores this sentence.)
 
 # Inspirations for Please:
 
