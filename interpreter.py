@@ -104,6 +104,9 @@ def check_math(sentence_data):
         if words_left > 1 and word_uses_math_keyword:
             math_string += ' ' + word
         elif words_left > 1 and not word_uses_math_keyword:
+            if words_left > 1 and word in variable_dictionary:
+                math_string += ' ' + str(variable_dictionary[word])
+            printplz('  DEBUG math_string = ' +math_string)
             math_string = math_string.strip()
             math_result = eval_math(translate_math(math_string))
             printplz('  DEBUG MATH: ' + str(math_result))
@@ -113,6 +116,9 @@ def check_math(sentence_data):
         elif words_left == 1:
             if word_uses_math_keyword:
                 math_string += ' ' + word
+            if word in variable_dictionary:
+                math_string += ' ' + str(variable_dictionary[word])
+            printplz('  DEBUG math_string = ' +math_string)
             math_string = math_string.strip()
             math_result = eval_math(translate_math(math_string))
             printplz('  DEBUG MATH: ' + str(math_result))
@@ -132,6 +138,10 @@ def translate_math(expression_string):
             output_string += str(math_words_numbers[word])
         elif word in math_words_operators:
             output_string += str(math_words_operators[word])
+        elif word in variable_dictionary:
+            output_string += str(variable_dictionary[word])
+        else:
+            output_string += word # '"' + word + '"'
     return output_string
 
 def eval_math(expression):
@@ -483,7 +493,7 @@ math_words_numbers = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,'six'
                       'twenty':20,'thirty':30,'forty':40,'fifty':50,'sixty':60,'seventy':70,'eighty':80,'ninety':90,
                       'hundred':'00','thousand':'000','million':'000000','billion':'000000000','trillion':'000000000',
                       '0':0,'1':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9}
-math_words_operators = {'plus':'+','minus':'-','times':'*','divide':'/','equals':'=='}
+math_words_operators = {'plus':'+','minus':'-','times':'*','divide':'/','equals':'==','equal':'=='}
 spell_state = False
 spell_string = ''
 spell_phrase_index = 0
