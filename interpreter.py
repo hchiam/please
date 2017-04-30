@@ -10,7 +10,7 @@ import importlib.util
 # functions:
 
 def interpret():
-    text = open_file(argv[1]) # so you can use this Terminal command: python interpreter.py text.txt
+    text = get_text(argv[1]) # so you can use this Terminal command: python interpreter.py text.txt
     text = text.lower() # lowercase
     sentences = get_sentences(text)
     # printplz('  DEBUG OUTPUT: ' + str(sentences))
@@ -18,7 +18,7 @@ def interpret():
     # printplz('  DEBUG OUTPUT: ' + str(words_grouped))
     run_commands(words_grouped)
 
-def open_file(file_name):
+def get_text(file_name):
     text = open(file_name, 'r').read()
     return text
 
