@@ -23,7 +23,8 @@ def get_text(file_name):
     return text
 
 def get_sentences(text):
-    sentences = text.split('please') # each sentence is expected to begin with "please"
+    # each sentence is expected to begin with "please"
+    sentences = text.split('please')[1:] # assume index [0] is always empty or invalid before the first "Please"
     return sentences
 
 def get_words_grouped_by_sentence(sentences):
