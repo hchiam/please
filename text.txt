@@ -39,5 +39,6 @@ please print seven it should print this only after getting an end if
 Please if one equals one then
 please print eight it works
 
-please note try assign one to variable cow
-please note try check if one equals cow then print passed test 1
+please assign one to variable cow
+please if one equals cow then please print passed test 1
+please if cow equals one then please print passed test 2
