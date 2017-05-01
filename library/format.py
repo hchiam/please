@@ -51,4 +51,6 @@ def update_progress_bar_display():
     progress_bar += 1
     print(str(progress_bar) + ' .........Still Formatting.........')
 
-clean()
+
+if __name__ == '__main__': # only perform the following if running this file directly
+    clean()
