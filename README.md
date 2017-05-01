@@ -1,10 +1,10 @@
-# "Please" - an experimental programming language
+# "Please" - An Experimental Programming Language
 
 **Simply put:** program by talking to your computer with words that sound *more* like everday English words. 
 
 **More technically:** you can easily write code in Please using speech recognition software (like Mac Dictation) without having to train the software to recognize special keywords and symbols. 
 
-# Example code in Please:
+# Example Code in Please:
 
 First transcribe this code:
 
@@ -165,7 +165,7 @@ Please import spelled with the first letters of Neptune unicorn moose panda Yoda
 ```
 --> This performs: `import numpy as numb pie`. (You can also just rename it to whatever your speech recognition software thinks you're saying.)
 
-## Use An Import Module's Function:
+## Use an Import Module's Function:
 
 ```
 Please import test from library
