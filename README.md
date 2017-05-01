@@ -34,6 +34,8 @@ The *interpreter* will interpret and run the *text* file as "source code" writte
 
 Requires Python: https://www.python.org/downloads
 
+No Python? No speech recognition software? Type code in your browser: https://trinket.io/python3/6589f45d9e (go to the text.txt tab to type in it).
+
 # Why?
 
 What if you could easily write code just by talking with speech recognition software? What if code could be *more* like English sentences? How might you combine these two things (easy-to-parse and easy-to-say code)?
