@@ -55,12 +55,12 @@ def format_lines(text):
     num_indents = 0
     for sentence in sentences:
         # immediately de-indent an end-if line
-        if sentence[:7] == ' end if':
+        if sentence[:7] == ' end if': # TO-DO: or sentence[:8] == ' end for' or sentence[:13] == ' end function' or sentence[:10] == ' end class':
             num_indents -= 1
         # add indents as needed and remove multiple consecutive space characters per line
         text += '\t'*num_indents + 'please ' + remove_multi_spaces(sentence) + '\n'
         # indent the next line after an if-statement
-        if sentence[:4] == ' if ':
+        if sentence[:4] == ' if ': # TO-DO: or sentence[:5] == ' for ' or sentence[:17] == ' define function ' or sentence[:14] == ' define class ':
             num_indents += 1
     return text
 
