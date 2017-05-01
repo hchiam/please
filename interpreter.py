@@ -1,11 +1,11 @@
 # interpret() function is where you should start reading to understand this code.
 # interpret() has to be called at the bottom of this file for things to work.
 
-
 from sys import *
 import re
 from importlib import import_module
 import importlib.util
+
 
 
 # functions:
@@ -309,10 +309,13 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
         else:
             return keep_going
 
+
+
 # initialize global variables:
+
 hide_debug_printouts = False # True = hide debug prints print()
 keep_going = True # whether to not ignore lines after an if-statement
-variable_dictionary = {}
+variable_dictionary = {} # Python dictionaries are just hashtables (avg time complexity O(1))
 import_dictionary = {}
 math_words_numbers = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,'six':6,'seven':7,'eight':8,'nine':9,
                       'ten':10,'eleven':11,'twelve':12,'thirteen':13,'fourteen':14,'fifteen':15,
@@ -339,7 +342,11 @@ spell_checkphrases = ['spell with first letters of',
 spell_finish_words = ['to', 'as', 'from', 'then', '$'] # $ for end of line for regex
 
 
-print('\nPLEASE WORK...\n')
-# run this interpreter:
-interpret()
-print('\n...THANK YOU!\n')
+
+# (this if statement lets code after it only run if you're running this file directly)
+if __name__ == '__main__':
+    print('\nPLEASE WORK...\n')
+    # run this interpreter:
+    interpret()
+    print('\n...THANK YOU!\n')
+    
