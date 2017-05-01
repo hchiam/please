@@ -323,7 +323,7 @@ math_words_numbers = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,'six'
                       'twenty':20,'thirty':30,'forty':40,'fifty':50,'sixty':60,'seventy':70,'eighty':80,'ninety':90,
                       'hundred':'00','thousand':'000','million':'000000','billion':'000000000','trillion':'000000000',
                       '0':0,'1':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9}
-math_words_operators = {'plus':'+','minus':'-','times':'*','divide':'/','divided':'/','equals':'==','equal':'=='}
+math_words_operators = {'plus':'+','minus':'-','times':'*','divide':'/','divided':'/','equals':'==','equal':'==','modulus':'%','modulo':'%'}
 spell_checkphrases = ['spell with first letters of',
                       'spell with first letter of',
                       'spell with the first letters of',
