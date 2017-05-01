@@ -114,6 +114,8 @@ Note: Please ignores whitespace and newline characters because the spoken word d
 Please if one equals two then please print it should not print this please end if
 ```
 
+You can use library/format.py to automatically format your Please code.
+
 ## Comments/Notes:
 
 ```
