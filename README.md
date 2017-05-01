@@ -2,7 +2,7 @@
 
 **Simply put:** Program by talking to your computer. But use words that are *more* like everday English. 
 
-**More technically:** You can easily write code in Please using speech recognition software (like Mac Dictation) without having to train the software to recognize special keywords and symbols. 
+**More technically:** You can easily write code in Please using speech recognition software (like Mac Dictation) without having to train the software to recognize special keywords, symbols, and jargon. 
 
 # Example Code in Please:
 
