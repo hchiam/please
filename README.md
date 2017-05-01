@@ -95,16 +95,16 @@ Please one plus one equals two
 ## If-Then Statement:
 
 ```
-please if one equals one then
-    please print this should print
-please end if
+Please if one equals one then
+    Please print this should print
+Please end if
 ```
 --> This prints out: `this should print`
 
 ```
 Please if one equals two then
-    please print it should not print this
-please end if
+    Please print it should not print this
+Please end if
 ```
 --> (This doesn't print anything because the if-statement evaluates to False.)
 
