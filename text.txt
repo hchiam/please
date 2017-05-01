@@ -40,5 +40,5 @@ Please if one equals one then
 please print eight it works
 
 please assign one to variable cow
-please if one equals cow then please print passed test 1
-please if cow equals one then please print passed test 2
+please note can import format from library
+Please note can use spell with the first letters of clean lines every awesome new from format
