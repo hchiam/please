@@ -20,6 +20,12 @@ this string of words
 
 # Use:
 
+## Try It in Your Browser:
+
+No speech recognition software? No Python? Just type code in your browser: https://trinket.io/python3/6589f45d9e (go to the text.txt tab to write code in Please).
+
+## Try It on Your Computer:
+
 1. Download this project from GitHub. https://github.com/hchiam/please/archive/master.zip --> master branch.
 
 2. Open the folder using Terminal or Command-line.
@@ -33,8 +39,6 @@ python interpreter.py text.txt
 The *interpreter* will interpret and run the *text* file as "source code" written in Please.
 
 Requires Python: https://www.python.org/downloads
-
-No Python? No speech recognition software? Type code in your browser: https://trinket.io/python3/6589f45d9e (go to the text.txt tab to type in it).
 
 # Why?
 
