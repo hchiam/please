@@ -38,7 +38,7 @@ python interpreter.py text.txt
 
 The *interpreter* will interpret and run the *text* file as "source code" written in Please.
 
-Requires Python: https://www.python.org/downloads
+Requires Python 3: https://www.python.org/downloads
 
 # Why?
 
