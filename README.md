@@ -22,7 +22,7 @@ this string of words
 
 ## Try It in Your Browser:
 
-No speech recognition software? No Python? Just type code in your browser: https://trinket.io/python3/6589f45d9e (go to the text.txt tab to write code in Please).
+No speech recognition software? No Python? Just type code in your browser: https://trinket.io/python3/5e3b208e8d (go to the text.txt tab to write code in Please).
 
 ## Try It on Your Computer:
 
