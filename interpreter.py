@@ -283,7 +283,7 @@ please print it works
 please if one equals two then
 please print it should not print this
 """
-def check_if(sentence):
+def check_if(sentence): # TODO need to debug
     global keep_going
     checkphrase = '.*if (.+) then'
     matches = re.match(checkphrase, sentence)
