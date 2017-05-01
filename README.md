@@ -108,6 +108,12 @@ please end if
 ```
 --> (This doesn't print anything because the if-statement evaluates to False.)
 
+Note: Please ignores whitespace and newline characters because the spoken word doesn't explicitly mark out paragraphs either. So you could type this too:
+
+```
+Please if one equals two then please print it should not print this please end if
+```
+
 ## Comments/Notes:
 
 ```
