@@ -95,14 +95,18 @@ Please one plus one equals two
 ## If-Then Statement:
 
 ```
-Please if one equals one then print it works
+please if one equals one then
+please print this should print
+please end if
 ```
---> This prints out: `it works`
+--> This prints out: `this should print`
 
 ```
-Please if one equals two then print it should not print this
+Please if one equals two then
+please print it should not print this
+please end if
 ```
---> (This doesn't print anything.)
+--> (This doesn't print anything because the if-statement evaluates to False.)
 
 ## Comments/Notes:
 

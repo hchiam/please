@@ -1,39 +1,35 @@
-Please note this file contains example code
-Please note this is a comment
-please print this string of words
-Please print
-  Please  print  the next  printout will    make   use of  spelling within  a print  statement   
-please print spell with the first letters of Neptune unicorn moose panda Yoda
+Please print this string of words
 Please create variable apple
 Please variable banana
-Please variable spell with the first letters of xylophone
-please variable name with multiple words allowed
-please one plus one hundred
-please one minus two
 Please assign one to variable apple
-please assign two times seven hundred to variable banana
+Please assign three hundred to variable banana
+Please assign some words to variable coconut
+Please one plus two
+Please one plus one equals two
+please if one equals one then
+please print this should print
+please end if
+Please if one equals two then
+please print it should not print this
+please end if
+Please note this is a comment
+Please spell with the first letters of Neptune unicorn moose panda Yoda
 Please import alternate
+Please print
+Please print
+Please print
+Please import spelled with the first letters of Neptune unicorn moose panda Yoda
+Please import spelled with the first letters of Neptune unicorn moose panda Yoda as noodle
+Please import spelled with the first letters of Neptune unicorn moose panda Yoda as numb pie
 Please import test from library
-Please print can import spell with the first letters of Neptune unicorn moose panda Yoda as numb pie
-Please print can import spell with the first letters of Neptune unicorn moose panda Yoda as spelled with the first letters of nectarine pony
 Please use test_function of test
 Please use test_function from test
-please print
-please print
-Please print print an if statement within a print like saying if two equals one then
-please print this should still print because the previous is not an if statement
-please print
-please print the next is an if statement
-Please if two equals one then
-please print this should not print
-please print this should not print
-please print this should not printplease print this should not print
-please end if
-please print an end if statement just got read
-please print
-Please print print an if statement within a print like saying if two equals one then
-please print this should still print because the previous is not an if statement
-please print
-please note assign one to variable cow
-please note can import format from library
-Please note can use spell with the first letters of clean lines every awesome new from format
+Please print
+Please print
+please assign four to variable cow
+Please print
+Please import format from library
+Please print
+Please use spell with the first letters of clean lines every awesome new from format
+  plEasE   print        this  string of  words
+

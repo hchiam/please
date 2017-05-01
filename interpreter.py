@@ -95,7 +95,7 @@ def check_spell(sentence):
             if matches:
                 words_to_spell_with = matches.group(1) # this is substring found inside '(.+)'
                 spelt_word = spell_with_first_letters(checkphrase, words_to_spell_with)
-                # print('spelt_word=' + spelt_word)
+                print('  DEBUG SPELL: spelt_word=' + spelt_word)
                 # print(sentence)
                 phrase_to_replace = phrase_start + ' ' + words_to_spell_with
                 sentence = sentence.replace(phrase_to_replace, spelt_word + ' ')
@@ -214,16 +214,15 @@ def check_import(sentence):
     checkphrase = '.*import (.+)(( as (.+))|( from (.+)))'
     matches = re.match(checkphrase, sentence)
     if matches:
-        print('*********'+sentence)
         import_name = matches.group(1)
         import_as = matches.group(4)
         import_from = matches.group(6)
-        print('-------\n  DEBUG :\nimport_name = ' + str(import_name) + '\nimport_from = ' + str(import_from) + '\nimport_as = ' + str(import_as))
+        print('  DEBUG IMPORT:\n\timport_name = ' + str(import_name) + '\n\timport_from = ' + str(import_from) + '\n\timport_as = ' + str(import_as))
         if import_as: # can nickname import module
-            print('...as')
+            print('  DEBUG IMPORT ... AS ...')
             module = import_module(import_name)
         if import_from: # can import from folder
-            print('...from')
+            print('  DEBUG IMPORT ... FROM ...')
             spec = importlib.util.spec_from_file_location(import_name, import_from + '/' + import_name + '.py')
             module = importlib.util.module_from_spec(spec)
             # enables use of functions and variables from the module (does the actual import):
@@ -239,12 +238,21 @@ def check_import(sentence):
         checkphrase = '.*import (.+)'
         matches = re.match(checkphrase, sentence)
         if matches:
-            import_name = matches.group(1)
-            print('...')
-            spec = importlib.util.spec_from_file_location(import_name, import_name + '.py')
-            module = importlib.util.module_from_spec(spec)
-            # enables use of functions and variables from the module (does the actual import):
-            spec.loader.exec_module(module)
+            print('  DEBUG IMPORT NAME ...')
+            import_name = matches.group(1).strip() # remove final spaces because of regex
+            try: # try with .py ending
+                spec = importlib.util.spec_from_file_location(import_name, import_name + '.py')
+                module = importlib.util.module_from_spec(spec)
+                # enables use of functions and variables from the module (does the actual import):
+                spec.loader.exec_module(module)
+            except:
+                try: # try withOUT .py ending
+                    spec = importlib.util.spec_from_file_location(import_name, import_name)
+                    module = importlib.util.module_from_spec(spec)
+                    # enables use of functions and variables from the module (does the actual import):
+                    spec.loader.exec_module(module)
+                except:
+                    pass
             print(str(module))
             # add to list of imports
             import_dictionary[import_name] = module
@@ -278,18 +286,19 @@ please if one equals two then
 please print it should not print this
 please end if
 """
-def check_if(sentence): # TODO need to debug
+def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nesting)
     global keep_going
     # force 'if' to be first word; DO NOT start regex with '.*'
     checkphrase = 'if (.+) then'
     matches = re.match(checkphrase, sentence)
     if matches and keep_going:
         if_string = eval_math(check_math(matches.group(1))) # if_string = eval_math(check_math(check_variable(check_spell(matches.group(1)))))
-        print('if (' + str(if_string) + ') then')
+        print('  DEBUG if (' + str(if_string) + ') then')
         if if_string == True:
             keep_going = True
             return True
         else:
+            print('  DEBUG -> FALSE -> end if')
             return False
     else:
         checkphrase = '.*end if'
