@@ -4,6 +4,8 @@
 
 **More technically:** You can easily write code in Please using speech recognition software (like Mac Dictation) out-of-the-box, without having to train the software to recognize esoteric jargon and special keywords for symbols. 
 
+<br>
+
 # Example Code in Please:
 
 First transcribe this code:
@@ -18,13 +20,15 @@ When you run that code, it prints out:
 this string of words
 ```
 
+<br>
+
 # Use:
 
-## Try It in Your Browser:
+## A) Try It in Your Browser:
 
 No speech recognition software? No Python? Just type code in your browser: https://trinket.io/python3/5e3b208e8d (go to the text.txt tab to write code in Please).
 
-## Try It on Your Computer:
+## B) Try It on Your Computer:
 
 1. Download this project from GitHub. https://github.com/hchiam/please/archive/master.zip --> master branch.
 
@@ -40,6 +44,8 @@ The *interpreter* will interpret and run the *text* file as "source code" writte
 
 Requires Python 3: https://www.python.org/downloads
 
+<br>
+
 # Why?
 
 What if you could easily write code just by talking with speech recognition software? What if code could be *more* like English sentences? How might you combine these two things (easy-to-parse and easy-to-say code)?
@@ -51,6 +57,8 @@ Here are 3 ground rules to make commands easier to say, but also easier for spee
 1. **Just say words that use your ABCs and spaces between**. No special non-letter characters like "?". Why? Speed and recognition. Saying "question mark" just to type out "?" is slow and could be faulty if the speech recognition software thinks you literally want the words "question mark". Please also doesn't differentiate (non-)capital letters because it's a speech-based language (vs. a "written language").
 2. **Avoid specialized words or names**. Why? So you don't have to specifically train your speech recognition software to recognize uncommon words like "numpy" (mine thought I said "numb pie"). Workaround/trade-off: you have to spell it out, maybe using the first letters of more common words, like "**N**eptune **u**nicorn **m**oose **p**anda **Y**oda" to spell out "numpy". Afterwards, you can reassign "numpy" to a shorter label that uses more common words, like "numb pie" or "pneumatic".
 3. **"Say please"**. Each new sentence starts with "please" and roughly marks out a new command or line in the code. The computer will try to run your code.
+
+<br>
 
 # More Example Code:
 
@@ -176,6 +184,8 @@ Please use test_function from test
 
 --> This prints twice: `Yay the import test_function() of test.py from the "library" folder works!`
 
+<br>
+
 # Inspirations for Please:
 
 https://github.com/hchiam/programmingByVoice
@@ -183,6 +193,8 @@ https://github.com/hchiam/programmingByVoice
 https://github.com/AnotherTest/-English
 
 https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0
+
+<br>
 
 # Ideas for Development:
 
