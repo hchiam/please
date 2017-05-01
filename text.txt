@@ -20,25 +20,20 @@ Please use test_function of test
 Please use test_function from test
 please print
 please print
-
+Please print print an if statement within a print like saying if two equals one then
+please print this should still print because the previous is not an if statement
+please print
+please print the next is an if statement
 Please if two equals one then
-please print it works
-please print one
-please print two
+please print this should not print
+please print this should not print
+please print this should not printplease print this should not print
 please end if
-please print three
-please print four
-please print five
-
-Please if one equals two then
-please print six it should not print this
-
-Please if one equals one then
-please print seven it should print this only after getting an end if
-
-Please if one equals one then
-please print eight it works
-
-please assign one to variable cow
+please print an end if statement just got read
+please print
+Please print print an if statement within a print like saying if two equals one then
+please print this should still print because the previous is not an if statement
+please print
+please note assign one to variable cow
 please note can import format from library
 Please note can use spell with the first letters of clean lines every awesome new from format

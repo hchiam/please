@@ -76,14 +76,7 @@ def check_print(sentence):
         print(' '.join(words[1:]))
         return True
     else:
-        checkphrase = '.*print (.+)'
-        matches = re.match(checkphrase, sentence)
-        if matches:
-            print_string = matches.group(1) # this is substring found inside '(.+)'
-            print(print_string)
-            return True
-        else:
-            return False
+        return False
 
 """
 example:
@@ -225,7 +218,7 @@ def check_import(sentence):
         import_name = matches.group(1)
         import_as = matches.group(4)
         import_from = matches.group(6)
-        print('-------\nimport_name = ' + str(import_name) + '\nimport_from = ' + str(import_from) + '\nimport_as = ' + str(import_as))
+        print('-------\n  DEBUG :\nimport_name = ' + str(import_name) + '\nimport_from = ' + str(import_from) + '\nimport_as = ' + str(import_as))
         if import_as: # can nickname import module
             print('...as')
             module = import_module(import_name)
@@ -285,7 +278,8 @@ please print it should not print this
 """
 def check_if(sentence): # TODO need to debug
     global keep_going
-    checkphrase = '.*if (.+) then'
+    # force 'if' to be first word; DO NOT start regex with '.*'
+    checkphrase = 'if (.+) then'
     matches = re.match(checkphrase, sentence)
     if matches and keep_going:
         if_string = eval_math(check_math(matches.group(1))) # if_string = eval_math(check_math(check_variable(check_spell(matches.group(1)))))
