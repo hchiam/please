@@ -273,8 +273,10 @@ def check_use(sentence):
 example:
 please if one equals one then
 please print it works
+please end if
 please if one equals two then
 please print it should not print this
+please end if
 """
 def check_if(sentence): # TODO need to debug
     global keep_going
