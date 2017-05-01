@@ -35,3 +35,5 @@ Please use spell with the first letters of clean lines every awesome new from fo
 
   plEasE   print        this  string of  words
 
+
+Please if one equals two then please print it should not print this please end if
