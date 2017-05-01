@@ -55,15 +55,6 @@ Please print this string of words
 ```
 --> This prints out: `this string of words`
 
-## Spell Out a Special Word:
-
-```
-Please spell with the first letters of Neptune unicorn moose panda Yoda
-```
---> This outputs: `numpy`
-
-Note: capital letters are not treated differently.
-
 ## Create Variables:
 
 By design, Please encourages you to use words instead of letters and short forms -- you're saying it out loud.
@@ -119,6 +110,15 @@ Please if one equals two then print it should not print this
 Please note this is a comment
 ```
 --> (The interpreter ignores this sentence.)
+
+## Spell Out a Special Word:
+
+```
+Please spell with the first letters of Neptune unicorn moose panda Yoda
+```
+--> This outputs: `numpy`
+
+Note: capital letters are the same as lowercase letters. Please is case-insensitive.
 
 ## Import to Add Functionality:
 
