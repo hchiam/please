@@ -1,28 +1,42 @@
 Please note this file contains example code
-Please print this string of words and please print this too
-please one plus two
-please 1 plus nine
- please  1  plus    nine  
-Please one plus one equals two
-Please spell with the first letters of Neptune unicorn moose panda Yoda
-please spell with the first letters of orange kiwi
-please add two hundred plus two and unwanted words please print testing
-Please print now print debug output for testing importing stuff
-Please import test from library
-please use test_function of test
-please use test_function from test
-Please import alternate as apple lemon
-Please use test_function from apple lemon
-Please print could import numpy and then use __version__ from numpy
-Please print could import numpy as numb pie
 Please note this is a comment
-Please assign three hundred to variable apple
-Please assign some words to variable banana
-Please if one equals one then print it works
-Please if one equals two then print it should not print this
-please import alternate as spell with the first letters of Neptune unicorn moose panda Yoda
-please import alternate as spelled with the first letters of apple lemon
-Please print you can now import spelled with the first letters of Neptune unicorn moose panda Yoda as numb pie
-Please print you can now use __version__ from numb pie
-please assign one to variable cow
-please check if one equals cow then print passed test 1
+please print this string of words
+Please print
+  Please  print  the next  printout will    make   use of  spelling within  a print  statement   
+please print spell with the first letters of Neptune unicorn moose panda Yoda
+Please create variable apple
+Please variable banana
+Please variable spell with the first letters of xylophone
+please variable name with multiple words allowed
+please one plus one hundred
+please one minus two
+Please assign one to variable apple
+please assign two times seven hundred to variable banana
+Please import alternate
+Please import test from library
+Please print can import spell with the first letters of Neptune unicorn moose panda Yoda as numb pie
+Please print can import spell with the first letters of Neptune unicorn moose panda Yoda as spelled with the first letters of nectarine pony
+Please use test_function of test
+Please use test_function from test
+please print
+
+Please if two equals one then
+please print it works
+please print one
+please print two
+please end if
+please print three
+please print four
+please print five
+
+Please if one equals two then
+please print six it should not print this
+
+Please if one equals one then
+please print seven it should print this only after getting an end if
+
+Please if one equals one then
+please print eight it works
+
+please note try assign one to variable cow
+please note try check if one equals cow then print passed test 1

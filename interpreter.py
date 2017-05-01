@@ -3,6 +3,7 @@
 
 
 from sys import *
+import re
 from importlib import import_module
 import importlib.util
 
@@ -10,371 +11,183 @@ import importlib.util
 # functions:
 
 def interpret():
-    text = get_text(argv[1]) # so you can use this Terminal command: python interpreter.py text.txt
+    file_name = argv[1] # so you can use this Terminal command: python interpreter.py text.txt
+    text = get_text(file_name)
     text = text.lower() # lowercase
+    text = remove_multi_spaces(text)
     sentences = get_sentences(text)
-    # printplz('  DEBUG OUTPUT: ' + str(sentences))
-    words_grouped = get_words_grouped_by_sentence(sentences)
-    # printplz('  DEBUG OUTPUT: ' + str(words_grouped))
-    run_commands(words_grouped)
+    run_commands(sentences)
 
 def get_text(file_name):
-    text = open(file_name, 'r').read()
+    text = open(file_name, 'r').read() # for example: file_name = "text.txt"
     return text
 
+def remove_multi_spaces(text):
+    return ' '.join(text.split())
+
 def get_sentences(text):
-    # each sentence is expected to begin with "please"
-    sentences = text.split('please')[1:] # assume index [0] is always empty or invalid before the first "Please"
+    # each sentence is expected to begin with "please "
+    sentences = text.split('please ')[1:] # assume index [0] is always empty or invalid before the first "please "
     return sentences
 
-def get_words_grouped_by_sentence(sentences):
-    word_groups = [] # instead of "= sentences", which would pass by reference
+def run_commands(sentences):
+    global keep_going
     for sentence in sentences:
-        words = list(sentence.strip().split()) # no params for split so it uses any whitespace character
-        word_groups.append(words)
-    printplz('  DEBUG word_groups: ' + str(word_groups))
-    return word_groups
+        sentence = sentence.strip()
+        # note: order matters, like order of replacing words or ignoring rest of sentence:
+        # note > if > spell > print > variable > math, assign, import, use
+        is_note = check_note(sentence)
+        if is_note:
+            continue # ignore this sentence
+        keep_going = check_if(sentence) # whether to not ignore lines after an if-statement
+        if keep_going:
+            sentence = check_spell(sentence)
+            is_print = check_print(sentence)
+            if is_print:
+                continue # do not try to interpret the rest of the sentence, just go straight to next sentence
+            check_variable(sentence)
+            check_assign(sentence)
+            sentence = check_math(sentence) # math after assign: avoid creating variables named None
+            check_import(sentence)
+            check_use(sentence)
 
-def run_commands(words_grouped):
-    global last_spelled_word
-    global last_variable
-    global if_continue_state
-    for sentence in words_grouped:
-        # printplz('  DEBUG OUTPUT: ' + 'sentence = ' + str(sentence))
-        words_count = len(sentence)
-        for i, word in enumerate(sentence): # need to track number of words left in sentence while read each word
-            if if_continue_state == False:
-                # reset variable for next sentence
-                if_continue_state = True
-                # stop looking at next words and go to next sentence
-                break
-            elif if_continue_state == True:
-                words_left = words_count - i
-                word_data = word_info(word, words_left)
-                if note_state == False:
-                    last_spelled_word = check_spell(word_data)
-                    if print_state == False:
-                        last_variable = check_variable(word_data)
-                        check_math(word_data)
-                        check_assign(word_data) # put after variable and math
-                        check_import(word_data)
-                        check_use(word_data)
-                        if_continue_state = check_if(word_data)
-                    check_print(word_data) # put after assign to avoid recognition of keyword within print
-                if print_state == False:
-                    check_note(word_data)
+def get_words(sentence):
+    words = sentence.strip().split() # .split() with no params splits at any whitespace character
+    return words
+
+"""
+example:
+Please note this is a comment
+"""
+def check_note(sentence):
+    words = get_words(sentence)
+    if words[0] == 'note':
+        return True
+    else:
+        return False
 
 """
 example:
 Please print this string of words
 """
-def check_print(sentence_data):
-    global print_state
-    global print_string
-    word = sentence_data.word
-    words_left = sentence_data.words_left
-    if print_state == False and word == 'print':
-        print_state = True
-    elif print_state == True:
-        if words_left > 1:
-            print_string += ' ' + word
-        elif words_left == 1:
-            print_string += ' ' + word
-            print_string = print_string.strip() # .strip() removes leading and trailing spaces
+def check_print(sentence):
+    words = get_words(sentence)
+    if words[0] == 'print':
+        print(' '.join(words[1:]))
+        return True
+    else:
+        checkphrase = '.*print (.+)'
+        matches = re.match(checkphrase, sentence)
+        if matches:
+            print_string = matches.group(1) # this is substring found inside '(.+)'
             print(print_string)
-            # reset variables
-            print_state = False
-            print_string = ''
-
-"""
-example:
-Please one plus two
-"""
-def check_math(sentence_data):
-    global math_state
-    global math_string
-    global math_result
-    word = sentence_data.word
-    words_left = sentence_data.words_left
-    word_uses_math_keyword = (word in math_words_numbers or word in math_words_operators)
-    if math_state == False and word_uses_math_keyword:
-        math_state = True
-        math_string = word
-    elif math_state == True:
-        if words_left > 1 and word_uses_math_keyword:
-            math_string += ' ' + word
-        elif words_left > 1 and not word_uses_math_keyword:
-            if words_left > 1 and word in variable_dictionary:
-                math_string += ' ' + str(variable_dictionary[word])
-            printplz('  DEBUG math_string = ' +math_string)
-            math_string = math_string.strip()
-            math_result = eval_math(translate_math(math_string))
-            printplz('  DEBUG MATH: ' + str(math_result))
-            # reset variables
-            math_state = False
-            math_string = ''
-        elif words_left == 1:
-            if word_uses_math_keyword:
-                math_string += ' ' + word
-            if word in variable_dictionary:
-                math_string += ' ' + str(variable_dictionary[word])
-            printplz('  DEBUG math_string = ' +math_string)
-            math_string = math_string.strip()
-            math_result = eval_math(translate_math(math_string))
-            printplz('  DEBUG MATH: ' + str(math_result))
-            # temp = math_result
-            # reset variables
-            math_state = False
-            math_string = ''
-            math_result = ''
-            # return temp
-
-def translate_math(expression_string):
-    global math_words_numbers
-    output_string = ''
-    expression = expression_string.split()
-    for word in expression:
-        if word in math_words_numbers:
-            output_string += str(math_words_numbers[word])
-        elif word in math_words_operators:
-            output_string += str(math_words_operators[word])
-        elif word in variable_dictionary:
-            output_string += str(variable_dictionary[word])
+            return True
         else:
-            output_string += word # '"' + word + '"'
-    return output_string
-
-def eval_math(expression):
-    return eval(expression,{"__builtins__":None},{}) # use ,{"__builtins__":None},{} to make eval function safer
-
-def is_math_expression(expression_string):
-    return all((word in math_words_numbers or word in math_words_operators) for word in expression_string.split(' '))
+            return False
 
 """
 example:
 Please spell with the first letters of Neptune unicorn moose panda Yoda
 """
-def check_spell(sentence_data):
-    global spell_state
-    global spell_string
-    global spell_phrase_index
+def check_spell(sentence):
     global spell_checkphrases
-    word = sentence_data.word
-    words_left = sentence_data.words_left
-    if spell_state == False:
-        # check if words keep matching the next word in any equivalent check phrase of same length
-        checkwords = [checkphrase[spell_phrase_index] for checkphrase in spell_checkphrases]
-        if word in checkwords:
-            # NOTE: compares with length of first checkphrase only (all same length)
-            if spell_phrase_index == len(spell_checkphrases[0])-1:
-                spell_state = True
-            else:
-                spell_phrase_index += 1
-        else:
-            spell_phrase_index = 0
-    elif spell_state == True:
-        spell_string += ' ' + word
-        if words_left == 1:
-            spell_string = spell_with_first_letters(spell_string)
-            printplz('  DEBUG SPELL: ' + spell_string)
-            temp = spell_string
-            # reset variables
-            spell_state = False
-            spell_string = ''
-            spell_phrase_index = 0
-            return temp
-    return ''
+    global spell_finish_words
+    count = 0
+    partial_checks = []
+    # find matches in sentence:
+    for phrase_start in spell_checkphrases:
+        for phrase_stop in spell_finish_words:
+            checkphrase = '.*' + phrase_start + ' ' + '(.+)' + phrase_stop
+            matches = re.match(checkphrase, sentence)
+            if matches:
+                words_to_spell_with = matches.group(1) # this is substring found inside '(.+)'
+                spelt_word = spell_with_first_letters(checkphrase, words_to_spell_with)
+                # print('spelt_word=' + spelt_word)
+                # print(sentence)
+                phrase_to_replace = phrase_start + ' ' + words_to_spell_with
+                sentence = sentence.replace(phrase_to_replace, spelt_word + ' ')
+                # print(sentence)
+    # alternate idea:
+        # get indices and then find words between
+        # [indices.start() for indices in re.finditer('test', 'test test test test')]
+    return sentence
 
-def spell_with_first_letters(sentence):
-    local_sent = sentence.replace('spell with the first letters of ', '')
+def spell_with_first_letters(checkphrase, sentence):
+    local_sent = sentence.replace(checkphrase, '')
     words = local_sent.split()
     spelt_word = ''.join(list(word[0] for word in words))
     return spelt_word
 
 """
 example:
-Please import alternate
-Please import test from library
-Please import numpy as nectarine pony
-"""
-def check_import(sentence_data):
-    global import_state
-    global import_string
-    global import_dictionary
-    global as_state
-    global as_string
-    global spell_state
-    global spell_string
-    global last_spelled_word
-    global from_state
-    global from_string
-    word = sentence_data.word
-    words_left = sentence_data.words_left
-    if import_state == False and word == 'import':
-        import_state = True
-    elif import_state == True:
-        if words_left > 1 and word != 'as' and word != 'from':
-            if as_state == False and from_state == False:
-                import_string += ' ' + word
-            elif as_state == True:
-                as_string += ' ' + word
-            elif from_state == True:
-                from_string += ' ' + word
-        elif words_left > 1 and word == 'as' and as_state == False:
-            as_state = True
-            if spell_string != '':
-                import_string = spell_with_first_letters(spell_string)[:-1] # [:-1] to remove the 'a' from 'as'
-                # reset spell variables at keyword 'as' in case need to spell again
-                spell_state = False
-                spell_string = ''
-                spell_phrase_index = 0
-        elif words_left > 1 and word == 'from' and from_state == False:
-            from_state = True
-            if spell_string != '':
-                import_string = spell_with_first_letters(spell_string)[:-1] # [:-1] to remove the 'a' from 'from'
-                # reset spell variables at keyword 'from' in case need to spell again
-                spell_state = False
-                spell_string = ''
-                spell_phrase_index = 0
-        elif words_left == 1:
-            if as_state == False and from_state == False:
-                import_string += ' ' + word
-                # handle "Please import spelled with ...":
-                if last_spelled_word != '':
-                    import_string = last_spelled_word
-                dictionary_key = import_string
-            elif as_state == True:
-                as_string += ' ' + word
-                # handle "Please import spelled with ... AS spelled with ...":
-                if last_spelled_word != '':
-                    dictionary_key = last_spelled_word
-                else:
-                    # need to use spell_with_first_letters(as_string) here because 2nd spell...of not detected in "import spell...of as spell...of"
-                    for i in range(len(checkphrases)):
-                        if checkphrases[i] in as_string:
-                            as_string = as_string.replace(checkphrases[i], '')
-                            as_string = spell_with_first_letters(as_string)
-                            break
-                    dictionary_key = as_string #???? --> 2nd spell in string not getting detected by check_spell *************
-            elif from_state == True:
-                from_string += ' ' + word
-                dictionary_key = import_string #???? --> 2nd spell in string not getting detected by check_spell *************
-                # handle "Please import spelled with ... AS spelled with ...":
-                if last_spelled_word != '':
-                    from_string = last_spelled_word
-                else:
-                    # need to use spell_with_first_letters(as_string) here because 2nd spell...of not detected in "import spell...of as spell...of"
-                    for i in range(len(checkphrases)):
-                        if checkphrases[i] in from_string:
-                            from_string = from_string.replace(checkphrases[i], '')
-                            from_string = spell_with_first_letters(from_string)
-                            break
-                    # from_string = last_spelled_word
-            import_string = import_string.strip()
-            dictionary_key = dictionary_key.strip()
-            from_string = from_string.strip()
-            printplz('  DEBUG IMPORT: import_string = ' + import_string)
-            printplz('  DEBUG IMPORT: dictionary_key = ' + dictionary_key)
-            if from_state == True:
-                # importing from folder
-                printplz('  DEBUG IMPORT: from_string = ' + from_string)
-                spec = importlib.util.spec_from_file_location(import_string, from_string + '/' + import_string + '.py')
-                module = importlib.util.module_from_spec(spec) # get module
-                spec.loader.exec_module(module) # enables use of functions and variables from the module
-            elif from_state == False:
-                module = import_module(import_string)
-            # add to list of imports
-            import_dictionary[dictionary_key] = module
-            
-            
-            printplz('  DEBUG: dictionary_key = ' + dictionary_key + ' ... size = ' + str(len(import_dictionary)))
-            printplz('  DEBUG IMPORT: IMPORT_DICTIONARY, size = ' + str(len(import_dictionary)) + '\n\t = ' + str(import_dictionary))
-            
-            
-            # reset variables
-            import_state = False
-            import_string = ''
-            as_state = False
-            as_string = ''
-            from_state = False
-            from_string = ''
-            spell_state = False
-            spell_string = ''
-            spell_phrase_index = 0
-
-"""
-example:
-Please use test_function of test
-Please use test_function from test
-"""
-def check_use(sentence_data):
-    global use_state
-    global use_string
-    global from_state
-    global from_string
-    word = sentence_data.word
-    words_left = sentence_data.words_left
-    if use_state == False and word == 'use':
-        use_state = True
-    elif use_state == True:
-        if words_left > 1 and (word != 'of' and word != 'from') and from_state == False:
-            use_string += ' ' + word
-            # printplz('use_string ' + use_string)
-        elif words_left > 1 and (word == 'of' or word == 'from'):
-            from_state = True
-            # printplz('from_state = True')
-        elif words_left > 1 and from_state == True:
-            from_string += ' ' + word
-            from_string = from_string.strip()
-            # printplz('from_string = ' + from_string)
-        elif words_left == 1:
-            if from_state == True:
-                from_string += ' ' + word
-                from_string = from_string.strip()
-                # printplz('from_string = ' + from_string)
-            use_string = use_string.strip()
-            printplz('  DEBUG USE: ' + use_string)
-            # printplz('from_string = ' + from_string)
-            function_imported = getattr(import_dictionary[from_string], use_string)
-            try:
-                function_imported() # try to use function_imported as a function
-            except:
-                printplz(function_imported) # in case function_imported is just an output value
-            # reset variables
-            use_state = False
-            use_string = ''
-            from_state = False
-            from_string = ''
-
-"""
-example:
 Please create variable apple
 Please variable banana
 """
-def check_variable(sentence_data):
-    global variable_state
+def check_variable(sentence):
     global variable_dictionary
-    global variable_name
-    word = sentence_data.word
-    words_left = sentence_data.words_left
-    if variable_state == False and word == 'variable':
-        variable_state = True
-    elif variable_state == True:
-        if words_left > 1:
-            variable_name += ' ' + word
-        elif words_left == 1:
-            variable_name += ' ' + word
-            variable_name = variable_name.strip()
-            if variable_name not in variable_dictionary:
-                variable_dictionary[variable_name] = ''
-                printplz('  DEBUG CREATE NEW VAR: ' + variable_name)
-            printplz('  DEBUG variable_name: ' + variable_name)
-            printplz('  DEBUG variable_dictionary: ' + str(variable_dictionary))
-            temp = variable_name
+    checkphrase = '.*' + 'variable ' + '(.+)'
+    matches = re.match(checkphrase, sentence)
+    if matches:
+        variable_name = matches.group(1) # this is substring found inside '(.+)'
+        if variable_name not in variable_dictionary:
+            variable_dictionary[variable_name] = None
+        print('  DEBUG variable_dictionary: ' + str(variable_dictionary))
+
+"""
+example:
+Please one plus two
+"""
+def check_math(sentence):
+    words = get_words(sentence)
+    math_expression = ''
+    replace_expression = ''
+    # need to find math expressions word-by-word (since sometimes embedded in sentences like if...then)
+    for i in range(len(words)):
+        word = words[i]
+        if word in math_words_numbers:
+            # sentence = sentence.replace(word, str(math_words_numbers[word]))
+            math_expression += str(math_words_numbers[word])
+            replace_expression += ' ' + word
+        elif word.isdigit():
+            math_expression += str(word)
+            replace_expression += ' ' + word
+        elif word in math_words_operators:
+            # sentence = sentence.replace(word, math_words_operators[word])
+            math_expression += math_words_operators[word]
+            replace_expression += ' ' + word
+        elif word in variable_dictionary:
+            # sentence = sentence.replace(word, str(variable_dictionary[word]))
+            math_expression += str(variable_dictionary[word])
+            replace_expression += word
+        else: # non-math word detected; time to evaluate expression so far
+            try:
+                math_result = eval_math(math_expression)
+                print('  DEBUG MATH: ' + math_expression + ' = ' + str(math_result) + ' \t replace_expression = ' + replace_expression)
+                # if the math works, then replace the section of the sentence
+                replace_expression = replace_expression[1:]
+                sentence = sentence.replace(replace_expression, str(math_result))
+            except:
+                pass
             # reset variables
-            variable_state = False
-            variable_name = ''
-            return temp
+            math_expression = ''
+            replace_expression = ''
+        # separate if-statement for end of sentence; time to evaluate (may (not) have been a math word)
+        if i == len(words)-1:
+            try:
+                math_result = eval_math(math_expression)
+                print('  DEBUG MATH: ' + math_expression + ' = ' + str(math_result))
+                # if the math works, then replace the section of the sentence
+                replace_expression = replace_expression[1:]
+                sentence = sentence.replace(replace_expression, str(math_result))
+            except:
+                pass
+            # reset variables
+            math_expression = ''
+            replace_expression = ''
+    return sentence
+
+def eval_math(expression):
+    return eval(expression,{"__builtins__":None},{}) # use ,{"__builtins__":None},{} to make eval function safer
 
 """
 example:
@@ -382,156 +195,146 @@ Please assign one to variable apple
 Please assign three hundred to variable banana
 Please assign some words to variable coconut
 """
-def check_assign(sentence_data):
-    global assign_state
-    global assign_to_state
-    global assign_string
-    global assign_to_string
-    global variable_name
-    global variable_dictionary
-    global math_state
-    global math_string
-    global math_result
-    global last_variable
-    word = sentence_data.word
-    words_left = sentence_data.words_left
-    if assign_state == False and word == 'assign':
-        assign_state = True
-    elif assign_state == True:
-        if words_left > 1 and word != 'to' and assign_to_state == False:
-            assign_string += ' ' + word
-            assign_string = assign_string.strip()
-        elif words_left > 1 and word == 'to':
-            assign_to_state = True
-        elif words_left > 1 and assign_to_state == True:
-            assign_to_string += ' ' + word
-            # let check_variable() get variable name
-        elif words_left == 1:
-            # printplz('  DEBUG math_state = ' + str(math_state))
-            # printplz('  DEBUG math_result ' + str(math_result))
-            # printplz('  DEBUG assign_string ' + str(assign_string))
-            # printplz('  DEBUG assign_string in math_words_numbers ' + str(assign_string in math_words_numbers))
-            # printplz('  DEBUG all words in assign_string are math: check: ' + is_math_expression(assign_string))
-            if math_state == False and math_result != '' and is_math_expression(assign_string):
-                assign_string = math_result
-            # printplz('  DEBUG variable_state ' + str(variable_state))
-            if variable_state == False:
-                assign_to_string = last_variable
-                # printplz('  DEBUG last_variable = ' + last_variable)
-            printplz('  DEBUG assign_string: ' + str(assign_string))
-            variable_dictionary[assign_to_string] = assign_string
-            printplz('  DEBUG assign_to_string: ' + assign_to_string)
-            printplz('  DEBUG variable_dictionary: ' + str(variable_dictionary))
-            # reset variables
-            assign_state = False
-            assign_to_state = False
-            assign_string = ''
+def check_assign(sentence):
+    checkphrase = '.*' + 'assign ' + '(.+)' + ' to variable ' + '(.+)'
+    matches = re.match(checkphrase, sentence)
+    if matches:
+        variable_value = matches.group(1)
+        variable_name = matches.group(2)
+        try:
+            variable_value = eval_math(check_math(variable_value))
+        except:
+            pass
+        variable_dictionary[variable_name] = variable_value
+        # print(' variable_value = ' + str(variable_value) + ' \t variable_name = ' + variable_name)
+        print('  DEBUG variable_dictionary: ' + str(variable_dictionary))
 
 """
 example:
-Please if one equals one then print it works
-Please if one equals two then print it should not print this
+Please import alternate
+Please import test from library
+Please import numpy as nectarine pony
 """
-def check_if(sentence_data):
-    global if_state
-    global if_continue_state
-    global math_result
-    word = sentence_data.word
-    words_left = sentence_data.words_left
-    # printplz('  DEBUG words_left ---> ' + str(words_left))
-    if if_state == False:
-        if word == 'if':
-            if_state = True
-            printplz('  DEBUG IF')
-        if_continue_state = True # reset variable to eval new if statement
-        return if_continue_state
-    elif if_state == True:
-        if word == 'then':
-            printplz('  DEBUG detect math within if statement: ' + str(math_result))
-            printplz('  DEBUG THEN')
-            if_continue_state = math_result
-            if_state = False # reset variable
-            return if_continue_state
+def check_import(sentence):
+    global import_dictionary
+    module = None
+    checkphrase = '.*import (.+)(( as (.+))|( from (.+)))'
+    matches = re.match(checkphrase, sentence)
+    if matches:
+        print('*********'+sentence)
+        import_name = matches.group(1)
+        import_as = matches.group(4)
+        import_from = matches.group(6)
+        print('-------\nimport_name = ' + str(import_name) + '\nimport_from = ' + str(import_from) + '\nimport_as = ' + str(import_as))
+        if import_as: # can nickname import module
+            print('...as')
+            module = import_module(import_name)
+        if import_from: # can import from folder
+            print('...from')
+            spec = importlib.util.spec_from_file_location(import_name, import_from + '/' + import_name + '.py')
+            module = importlib.util.module_from_spec(spec)
+            # enables use of functions and variables from the module (does the actual import):
+            spec.loader.exec_module(module)
+        print(str(module))
+        # add to list of imports
+        if import_as:
+            import_dictionary[import_as] = module
         else:
-            if_continue_state = True
-            return if_continue_state
+            import_dictionary[import_name] = module
+        print('  DEBUG IMPORT: IMPORT_DICTIONARY, size = ' + str(len(import_dictionary)) + '\n\t = ' + str(import_dictionary))
+    else:
+        checkphrase = '.*import (.+)'
+        matches = re.match(checkphrase, sentence)
+        if matches:
+            import_name = matches.group(1)
+            print('...')
+            spec = importlib.util.spec_from_file_location(import_name, import_name + '.py')
+            module = importlib.util.module_from_spec(spec)
+            # enables use of functions and variables from the module (does the actual import):
+            spec.loader.exec_module(module)
+            print(str(module))
+            # add to list of imports
+            import_dictionary[import_name] = module
+            print('  DEBUG IMPORT: IMPORT_DICTIONARY, size = ' + str(len(import_dictionary)) + '\n\t = ' + str(import_dictionary))
 
 """
 example:
-Please note this is a comment
+Please use test_function of test
+Please use test_function from test
 """
-def check_note(sentence_data):
-    global note_state
-    word = sentence_data.word
-    words_left = sentence_data.words_left
-    if note_state == False and word == 'note':
-        note_state = True
-    elif note_state == True and words_left == 1:
-        note_state = False # reset variable
+def check_use(sentence):
+    global import_dictionary
+    checkphrase = '.*use (.+)( from | of )(.+)'
+    matches = re.match(checkphrase, sentence)
+    if matches:
+        use_string = matches.group(1)
+        from_string = matches.group(3)
+        print('  DEBUG USE: ' + use_string + ' from ' + from_string)
+        function_imported = getattr(import_dictionary[from_string], use_string)
+        try:
+            function_imported() # try to use function_imported as a function
+        except:
+            print(function_imported) # in case function_imported is just an output value
 
 """
-enable/disable debug print outputs
+example:
+please if one equals one then
+please print it works
+please if one equals two then
+please print it should not print this
 """
-def printplz(string):
-    global hide_debug_printouts
-    if hide_debug_printouts == False:
-        print(string)
-    elif hide_debug_printouts == True and '  DEBUG' != string[0:7]:
-        print(string)
-
+def check_if(sentence):
+    global keep_going
+    checkphrase = '.*if (.+) then'
+    matches = re.match(checkphrase, sentence)
+    if matches and keep_going:
+        if_string = eval_math(check_math(matches.group(1))) # if_string = eval_math(check_math(check_variable(check_spell(matches.group(1)))))
+        print('if (' + str(if_string) + ') then')
+        if if_string == True:
+            keep_going = True
+            return True
+        else:
+            return False
+    else:
+        checkphrase = '.*end if'
+        matches = re.match(checkphrase, sentence)
+        if matches:
+            keep_going = True
+            return True
+        else:
+            return keep_going
 
 # initialize global variables:
-hide_debug_printouts = False # True = hide debug prints printplz()
-print_state = False
-print_string = ''
-math_state = False
-math_string = ''
-math_result = ''
+hide_debug_printouts = False # True = hide debug prints print()
+keep_going = True # whether to not ignore lines after an if-statement
+variable_dictionary = {}
+import_dictionary = {}
 math_words_numbers = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,'six':6,'seven':7,'eight':8,'nine':9,
                       'ten':10,'eleven':11,'twelve':12,'thirteen':13,'fourteen':14,'fifteen':15,
                       'sixteen':16,'seventeen':17,'eighteen':18,'nineteen':19,
                       'twenty':20,'thirty':30,'forty':40,'fifty':50,'sixty':60,'seventy':70,'eighty':80,'ninety':90,
                       'hundred':'00','thousand':'000','million':'000000','billion':'000000000','trillion':'000000000',
                       '0':0,'1':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9}
-math_words_operators = {'plus':'+','minus':'-','times':'*','divide':'/','equals':'==','equal':'=='}
-spell_state = False
-spell_string = ''
-spell_phrase_index = 0
-check_phrase_1 = 'spell with the first letters of' # 6 words
-check_phrase_2 = 'spelled using first letters of words' # 6 words
-check_phrase_3 = 'spelt with the first letter from' # 6 words
-checkphrases = [check_phrase_1, check_phrase_2, check_phrase_3]
-spell_checkphrases = [check_phrase_1.split(), check_phrase_2.split(), check_phrase_3.split()]
-import_state = False
-import_string = ''
-import_dictionary = {}
-as_state = False
-as_string = ''
-use_state = False
-use_string = ''
-from_state = False
-from_string = ''
-note_state = False
-variable_state = False
-variable_dictionary = {}
-variable_name = ''
-assign_state = False
-assign_string = ''
-assign_to_state = False
-assign_to_string = ''
-last_spelled_word = ''
-last_variable = ''
-if_state = False
-if_continue_state = True
-class word_info():
-    word = ''
-    words_left = 0
-    def __init__(self, word, words_left):
-        self.word = word
-        self.words_left = words_left
+math_words_operators = {'plus':'+','minus':'-','times':'*','divide':'/','divided':'/','equals':'==','equal':'=='}
+spell_checkphrases = ['spell with first letters of',
+                      'spell with first letter of',
+                      'spell with the first letters of',
+                      'spell with the first letter of',
+                      'spelled with the first letters of',
+                      'spelled with the first letter of',
+                      'spell using the first letters of',
+                      'spell using the first letter of',
+                      'spelled using the first letters of',
+                      'spelled using the first letter of',
+                      'spelt with the first letters of',
+                      'spelt with the first letter of',
+                      'spelt using the first letters of',
+                      'spelt using the first letter of',
+                     ]
+spell_finish_words = ['to', 'as', 'from', 'then', '$'] # $ for end of line for regex
 
 
-printplz('\nPLEASE WORK...\n')
+print('\nPLEASE WORK...\n')
 # run this interpreter:
 interpret()
-printplz('\n...THANK YOU!\n')
+print('\n...THANK YOU!\n')
