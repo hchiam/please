@@ -26,11 +26,11 @@ this string of words
 
 # Use:
 
-## A) Try It in Your Browser:
+## A) Try It in Your Browser (Mini Version):
 
 No speech recognition software? No Python? Just type code in your browser: https://trinket.io/python3/2cc1b4fb61 (go to the text.txt tab to write code in Please).
 
-## B) Try It on Your Computer:
+## B) Try It on Your Computer (Full Version):
 
 1. Download this project from GitHub. https://github.com/hchiam/please/archive/master.zip --> master branch.
 
