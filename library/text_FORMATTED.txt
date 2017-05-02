@@ -1,0 +1,37 @@
+please print this string of words
+please create variable apple
+please variable banana
+please assign one to variable apple
+please assign three hundred to variable banana
+please assign some words to variable coconut
+please one plus two
+please one plus one equals two
+please if one equals one then
+	please print this should print
+please end if
+please if one equals two then
+	please print it should not print this
+please end if
+please note this is a comment
+please spell with the first letters of neptune unicorn moose panda yoda
+please import alternate
+please print
+please print
+please print
+please import spelled with the first letters of neptune unicorn moose panda yoda
+please import spelled with the first letters of neptune unicorn moose panda yoda as noodle
+please import spelled with the first letters of neptune unicorn moose panda yoda as numb pie
+please import test from library
+please use test_function of test
+please use test_function from test
+please print
+please print
+please assign four to variable cow
+please print
+please import format from library
+please print
+please use spell with the first letters of clean lines every awesome new from format
+please print this string of words
+please if one equals two then
+	please print it should not print this
+please end if

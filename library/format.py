@@ -17,13 +17,13 @@ def clean():
     text = ''
     print('\n---Formatter Starting---\n')
     # first try getting from folder above
-    file_name_dir = '../text.txt'
+    file_name_dir = '../'+file_name
     try:
         text = get_text(file_name_dir)
     except:
         # then try getting from local folder
         try:
-            file_name_dir = 'text.txt'
+            file_name_dir = file_name
             text = get_text(file_name_dir)
         except:
             print('\n***FILE NOT FOUND***\n')
@@ -68,7 +68,8 @@ def remove_multi_spaces(sentence):
     return ' '.join(sentence.split())
 
 def rewrite_file(file_name, text):
-    new_file_name = file_name[:-4]+'_FORMATTED.txt'
+    put_in_library_folder = 'library/'
+    new_file_name = put_in_library_folder + file_name[:-4] + '_FORMATTED.txt'
     # create or clear formatted file
     open(new_file_name, 'w').write('')
     # append each new line of text
