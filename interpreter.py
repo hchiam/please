@@ -155,9 +155,9 @@ def check_math(sentence):
         else: # non-math word detected; time to evaluate expression so far
             try:
                 math_result = eval_math(math_expression)
-                print('  DEBUG MATH: ' + math_expression + ' = ' + str(math_result) + ' \t replace_expression = ' + replace_expression)
+                print('  DEBUG MATH: ' + math_expression + ' -> ' + str(math_result) + ' \t replace_expression = ' + replace_expression)
                 # if the math works, then replace the section of the sentence
-                replace_expression = replace_expression[1:]
+                replace_expression = replace_expression.strip() # to make sure replaces properly
                 sentence = sentence.replace(replace_expression, str(math_result))
             except:
                 pass
@@ -168,9 +168,9 @@ def check_math(sentence):
         if i == len(words)-1:
             try:
                 math_result = eval_math(math_expression)
-                print('  DEBUG MATH: ' + math_expression + ' = ' + str(math_result))
+                print('  DEBUG MATH: ' + math_expression + ' -> ' + str(math_result) + ' \t replace_expression = ' + replace_expression)
                 # if the math works, then replace the section of the sentence
-                replace_expression = replace_expression[1:]
+                replace_expression = replace_expression.strip() # to make sure replaces properly
                 sentence = sentence.replace(replace_expression, str(math_result))
             except:
                 pass
@@ -292,7 +292,8 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
     checkphrase = 'if (.+) then'
     matches = re.match(checkphrase, sentence)
     if matches and keep_going:
-        if_string = eval_math(check_math(matches.group(1))) # if_string = eval_math(check_math(check_variable(check_spell(matches.group(1)))))
+        math_expression = check_math(matches.group(1))
+        if_string = eval_math(math_expression) # if_string = eval_math(check_math(check_variable(check_spell(matches.group(1)))))
         print('  DEBUG if (' + str(if_string) + ') then')
         if if_string == True:
             keep_going = True
