@@ -6,8 +6,7 @@ FUTURE: Puts indents when it sees if-statements (and later for-loops, and de-ind
 """
 
 from sys import *
-from importlib import import_module
-import importlib.util
+import re
 
 
 progress_bar = 0
@@ -59,8 +58,10 @@ def format_lines(text):
             num_indents -= 1
         # add indents as needed and remove multiple consecutive space characters per line
         text += '\t'*num_indents + 'please ' + remove_multi_spaces(sentence) + '\n'
-        # indent the next line after an if-statement
-        if sentence[:4] == ' if ': # TO-DO: or sentence[:5] == ' for ' or sentence[:17] == ' define function ' or sentence[:14] == ' define class ':
+        # indent the next line after a if-statement (multiline ones, not the one-liner if-statements)
+        checkphrase = '.*if (.+) then$' # $ for end of sentence
+        is_multiline_if_statement = re.match(checkphrase, sentence)
+        if is_multiline_if_statement: # if sentence[:4] == ' if ': # TO-DO: or sentence[:5] == ' for ' or sentence[:17] == ' define function ' or sentence[:14] == ' define class ':
             num_indents += 1
     return text
 

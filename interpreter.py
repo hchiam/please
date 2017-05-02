@@ -39,8 +39,8 @@ def run_commands(sentences):
         is_note = check_note(sentence)
         if is_note:
             continue # ignore this sentence
-        keep_going = check_if(sentence) # whether to not ignore lines after an if-statement
-        if keep_going:
+        [keep_going,sentence] = check_if(sentence) # one-liner if-statement may contain sentence to run
+        if keep_going: # whether to not ignore lines after an if-statement
             sentence = check_spell(sentence)
             is_print = check_print(sentence)
             if is_print:
@@ -289,26 +289,41 @@ please end if
 def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nesting)
     global keep_going
     # force 'if' to be first word; DO NOT start regex with '.*'
-    checkphrase = 'if (.+) then'
+    checkphrase = 'if (.+) then$' # $ for end of sentence
     matches = re.match(checkphrase, sentence)
+    checkphrase_oneliner = 'if (.+) then ' # space after WITHOUT $ for continuing sentence
+    matches_oneliner = re.match(checkphrase_oneliner, sentence)
     if matches and keep_going:
         math_expression = check_math(matches.group(1))
         if_string = eval_math(math_expression) # if_string = eval_math(check_math(check_variable(check_spell(matches.group(1)))))
         print('  DEBUG if (' + str(if_string) + ') then')
         if if_string == True:
             keep_going = True
-            return True
+            return [True,sentence]
         else:
             print('  DEBUG -> FALSE -> end if')
-            return False
+            return [False,sentence]
+    elif matches_oneliner and keep_going:
+        # treat the rest of the sentence like a new sentence
+        math_expression = check_math(matches_oneliner.group(1))
+        if_string = eval_math(math_expression) # if_string = eval_math(check_math(check_variable(check_spell(matches.group(1)))))
+        print('  DEBUG if (' + str(if_string) + ') then')
+        if if_string == True:
+            keep_going = True
+            # run the rest of this sentence as its own command (make sure check_if() happens before other checks)
+            sentence = sentence.replace(matches_oneliner.group(), '')
+            return [True,sentence]
+        else:
+            print('  DEBUG -> FALSE -> end if')
+            return [False,sentence]
     else:
         checkphrase = '.*end if'
         matches = re.match(checkphrase, sentence)
         if matches:
             keep_going = True
-            return True
+            return [True,sentence]
         else:
-            return keep_going
+            return [keep_going,sentence]
 
 
 
