@@ -24,3 +24,5 @@ Please use test_function of test
 Please use test_function from test
    plEasE   print        this  string of  words   
 Please if apple equals one then please print apple equals one please end if
+please assign two to variable apple
+Please if apple equals two then print apple equals two this should print
