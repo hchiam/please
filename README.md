@@ -2,7 +2,7 @@
 
 # "Please" - An Experimental Programming Language
 
-**Simply put:** Program by talking to your computer. But use words that are *more* like everday English. 
+**Simply put:** Program by talking to your computer using common English words. 
 
 **More technically:** You can easily write code in Please using speech recognition software (like Mac Dictation) out-of-the-box, without having to train the software to recognize esoteric jargon and special keywords for symbols. 
 
