@@ -1,3 +1,5 @@
+<img src="https://github.com/hchiam/please/blob/master/library/please_icon.jpeg" height="250" title="Please scroll down to read more">
+
 # "Please" - An Experimental Programming Language
 
 **Simply put:** Program by talking to your computer. But use words that are *more* like everday English. 
