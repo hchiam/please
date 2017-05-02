@@ -16,24 +16,11 @@ Please note this is a comment
 Please spell with the first letters of Neptune unicorn moose panda Yoda
 Please import alternate
 Please print
-Please print
-Please print
-Please import spelled with the first letters of Neptune unicorn moose panda Yoda
-Please import spelled with the first letters of Neptune unicorn moose panda Yoda as noodle
-Please import spelled with the first letters of Neptune unicorn moose panda Yoda as numb pie
+Please print can import spelled with the first letters of Neptune unicorn moose panda Yoda as numb pie
+Please import format from library
+Please print can use spell with the first letters of clean lines every awesome new from format
 Please import test from library
 Please use test_function of test
 Please use test_function from test
-Please print
-Please print
-please assign four to variable cow
-Please print
-Please import format from library
-Please print
-Please print can use spell with the first letters of clean lines every awesome new from format
-
-
-  plEasE   print        this  string of  words
-
-
-Please if one equals two then please print it should not print this please end if
+   plEasE   print        this  string of  words   
+Please if apple equals one then please print apple equals one please end if
