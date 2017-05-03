@@ -364,7 +364,7 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
             return [nested_ifs_ignore,sentence]
         else:
             print('  DEBUG -> FALSE -> end if')
-            nested_ifs_ignore += 1
+            # one-liner if-statement does not add to nestedness, so do not do nested_ifs_ignore += 1
             # print('  DEBUG nested_ifs_ignore: '+str(nested_ifs_ignore) + ' --- if')
             return [nested_ifs_ignore,sentence]
     else:
