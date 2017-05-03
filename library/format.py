@@ -52,21 +52,27 @@ def format_lines(text):
     sentences = text.split('please')[1:] # index 0 is []
     text = ''
     num_indents = 0
+    newline_after_endif = False
     for sentence in sentences:
         # immediately de-indent an end-if line
         if sentence[:7] == ' end if': # TO-DO: or sentence[:8] == ' end for' or sentence[:13] == ' end function' or sentence[:10] == ' end class':
             num_indents -= 1
-        # add indents as needed and remove multiple consecutive space characters per line
-        text += '\t'*num_indents + 'please ' + remove_multi_spaces(sentence) + '\n'
+            newline_after_endif = True
+        # remove multiple consecutive space characters per line
+        sentence = remove_multi_spaces(sentence)
+        # add indents as needed
+        text += '\t'*num_indents + 'please ' + sentence + '\n' + newline_after_endif*'\n'
         # indent the next line after a if-statement (multiline ones, not the one-liner if-statements)
         checkphrase = '.*if (.+) then$' # $ for end of sentence
         is_multiline_if_statement = re.match(checkphrase, sentence)
         if is_multiline_if_statement: # if sentence[:4] == ' if ': # TO-DO: or sentence[:5] == ' for ' or sentence[:17] == ' define function ' or sentence[:14] == ' define class ':
             num_indents += 1
+        # reset
+        newline_after_endif = False
     return text
 
 def remove_multi_spaces(sentence):
-    return ' '.join(sentence.split())
+    return ' '.join(sentence.strip().split())
 
 def rewrite_file(file_name, text):
     put_in_library_folder = 'library/'
@@ -82,7 +88,7 @@ def rewrite_file(file_name, text):
 def update_progress_bar_display():
     global progress_bar
     progress_bar += 1
-    # print(str(progress_bar) + ' .........Still Formatting.........')
+    print(str(progress_bar) + ' .........Still Formatting.........')
 
 
 if __name__ == '__main__': # only perform the following if running this file directly
