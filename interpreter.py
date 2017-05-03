@@ -173,8 +173,15 @@ def check_math(sentence):
             math_expression += math_words_operators[word] # already a string
             replace_expression += ' ' + word
         elif word in variable_dictionary:
-            math_expression += str(variable_dictionary[word])
-            replace_expression += 'variable ' + word
+            variable_value = str(variable_dictionary[word])
+            # surround value with quotes if string
+            if not variable_value.isdigit():
+                variable_value = '\'' + variable_value + '\''
+            math_expression += variable_value
+            replace_expression += ' variable ' + word
+        elif word not in ['print','variable','assign','if','then','to','of','from','import']:
+            math_expression += '\'' + word + '\''
+            replace_expression += ' ' + word
         else: # non-math word detected; time to evaluate expression so far
             try:
                 math_result = eval_math(math_expression)
