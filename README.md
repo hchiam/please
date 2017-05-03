@@ -106,6 +106,15 @@ Please assign some words to variable coconut
 
 Note: variables automatically get created if you didn't already create them.
 
+## Spell Out a Special Word:
+
+```
+Please spell with the first letters of Neptune unicorn moose panda Yoda
+```
+--> This outputs: `numpy` (It's a Python library you can import: https://en.wikipedia.org/wiki/NumPy)
+
+Note: capital letters are treated the same as lowercase letters. Please is case-insensitive.
+
 ## Math:
 
 ```
@@ -153,15 +162,6 @@ You can use library/format.py to automatically format your Please code.
 Please note this is a comment
 ```
 --> (The interpreter ignores this sentence.)
-
-## Spell Out a Special Word:
-
-```
-Please spell with the first letters of Neptune unicorn moose panda Yoda
-```
---> This outputs: `numpy`
-
-Note: capital letters are the same as lowercase letters. Please is case-insensitive.
 
 ## Import to Add Functionality:
 
