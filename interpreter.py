@@ -219,18 +219,36 @@ Please assign three hundred to variable banana
 Please assign some words to variable coconut
 """
 def check_assign(sentence):
-    checkphrase = '.*' + 'assign ' + '(.+)' + ' to (variable )?' + '(.+)'
+    if not check_assign_list_passed(sentence):
+        checkphrase = '.*' + 'assign ' + '(.+)' + ' to (variable )?' + '(.+)'
+        matches = re.match(checkphrase, sentence)
+        if matches:
+            variable_value = matches.group(1)
+            variable_name = matches.group(3)
+            try:
+                # try to evaluate math value
+                variable_value = eval_math(check_math(variable_value))
+            except:
+                # it could be a string
+                pass
+            variable_dictionary[variable_name] = variable_value
+            # print(' variable_value = ' + str(variable_value) + ' \t variable_name = ' + variable_name)
+            print('  DEBUG variable_dictionary: ' + str(variable_dictionary))
+
+def check_assign_list_passed(sentence):
+    checkphrase = '.*' + 'assign list from ' + '(.+)' + ' to ' + '(.+)' + ' to (variable )?' + '(.+)'
     matches = re.match(checkphrase, sentence)
     if matches:
-        variable_value = matches.group(1)
-        variable_name = matches.group(3)
-        try:
-            variable_value = eval_math(check_math(variable_value))
-        except:
-            pass
-        variable_dictionary[variable_name] = variable_value
-        # print(' variable_value = ' + str(variable_value) + ' \t variable_name = ' + variable_name)
+        list_start = int(check_math(matches.group(1)))
+        list_stop = int(check_math(matches.group(2)))
+        variable_name = matches.group(4)
+        print('  DEBUG list start = ' + str(list_start) + ' stop = ' + str(list_stop) + ' ASSIGN TO: ' + variable_name)
+        list_value = list(range(list_start, list_stop+1))
+        variable_dictionary[variable_name] = list_value
         print('  DEBUG variable_dictionary: ' + str(variable_dictionary))
+        return True # found assignment of list to variable
+    else:
+        return False # did not find assignment of list to variable
 
 """
 example:
