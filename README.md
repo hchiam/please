@@ -60,7 +60,7 @@ Here are 3 ground rules to make commands easier to say, but also easier for spee
 2. **Avoid specialized words or names**. Why? So you don't have to specifically train your speech recognition software to recognize uncommon words like "numpy" (mine thought I said "numb pie"). Workaround/trade-off: you have to spell it out, maybe using the first letters of more common words, like "**N**eptune **u**nicorn **m**oose **p**anda **Y**oda" to spell out "numpy". Afterwards, you can reassign "numpy" to a shorter label that uses more common words, like "numb pie" or "pneumatic".
 3. **"Say please"**. Each new sentence starts with "please" and roughly marks out a new command or line in the code. The computer will try to run your code.
 
-I don't intend to replace Python. In fact, python import capability is built right into Please. See [import example](#import-to-add-functionality) below.
+I don't intend to replace Python. In fact, python import capability is built right into Please. See [import examples](#import-to-add-functionality) below.
 
 <br>
 
@@ -111,7 +111,7 @@ Note: variables automatically get created if you didn't already create them.
 ```
 Please spell with the first letters of Neptune unicorn moose panda Yoda
 ```
---> This outputs: `numpy` (It's a Python library you can import: https://en.wikipedia.org/wiki/NumPy)
+--> This outputs: `numpy` (NumPy is a Python library you can import: https://en.wikipedia.org/wiki/NumPy) (Also see [import examples](#import-to-add-functionality))
 
 Note: capital letters are treated the same as lowercase letters. Please is case-insensitive.
 
