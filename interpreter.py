@@ -225,7 +225,7 @@ Please assign some words to variable coconut
 """
 def check_assign(sentence):
     if not check_assign_list_passed(sentence):
-        checkphrase = '.*' + 'assign ' + '(.+)' + ' to (variable )?' + '(.+)'
+        checkphrase = '.*assign (.+) to (variable )?(.+)'
         matches = re.match(checkphrase, sentence)
         if matches:
             variable_value = matches.group(1)
@@ -241,7 +241,7 @@ def check_assign(sentence):
             print('  DEBUG variable_dictionary: ' + str(variable_dictionary))
 
 def check_assign_list_passed(sentence):
-    checkphrase = '.*' + 'assign list from ' + '(.+)' + ' to ' + '(.+)' + ' to (variable )?' + '(.+)'
+    checkphrase = '.*assign list from (.+) to (.+) to (variable )?(.+)'
     matches = re.match(checkphrase, sentence)
     if matches:
         list_start = int(check_math(matches.group(1)))
