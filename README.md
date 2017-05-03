@@ -102,9 +102,14 @@ Please assign one to variable apple
 Please assign three hundred to variable banana
 Please assign some words to variable coconut
 ```
---> This generates: `apple = 1`, `banana = 300`, `coconut = 'some words'`.
+--> This generates: `apple = 1`, `banana = 300`, `coconut = 'some words'`
 
 Note: variables automatically get created if you didn't already create them.
+
+```
+Please assign list from eight to twelve to durian
+```
+--> This generates: `durian = [8, 9, 10, 11, 12]`
 
 ## Spell Out a Special Word:
 
