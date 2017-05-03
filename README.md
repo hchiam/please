@@ -66,7 +66,7 @@ I don't intend to replace Python. In fact, python import capability is built rig
 
 # More Example Code:
 
-Currently, you can do the following: print, create variables, assign values to variables, basic math, nested if-then-(end-if) statements, one-liner if-then statements, comments, spell out words, import, use imported functions. 
+Currently you can: print, create variables, assign values to variables, do basic math, use nested if-then-(end-if) statements, use one-liner if-then statements, write comments, spell out words, import, use imported functions. 
 
 ## Print:
 
