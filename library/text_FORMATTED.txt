@@ -1,28 +1,39 @@
-please print this string of words
-please create variable apple
-please variable banana
-please assign one to variable apple
-please assign three hundred to variable banana
-please assign some words to variable coconut
-please one plus two
-please one plus one equals two
 please if one equals one then
-	please print this should print
+	please print a
 please end if
-please if one equals two then
-	please print it should not print this
+
+please if two equals one then
+	please print b
 please end if
-please note this is a comment
-please spell with the first letters of neptune unicorn moose panda yoda
-please import alternate
-please print
-please print can import spelled with the first letters of neptune unicorn moose panda yoda as numb pie
+
+please if one equals one then
+	please print c
+please end if
+
+please if two equals one then
+	please print d
+	please if one equals one then
+		please print e
+	please end if
+
+	please if two equals one then
+		please print f
+	please end if
+
+please end if
+
+please if one equals one then
+	please print g
+	please if one equals one then
+		please print h
+	please end if
+
+	please if two equals one then
+		please print i
+	please end if
+
+please end if
+
+please print you should see a c g h
 please import format from library
-please print can use spell with the first letters of clean lines every awesome new from format
-please import test from library
-please use test_function of test
-please use test_function from test
-please print this string of words
-please if apple equals one then
-	please print apple equals one
-please end if
+please use clean of format
