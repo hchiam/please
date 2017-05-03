@@ -31,7 +31,7 @@ def get_sentences(text):
     return sentences
 
 def run_commands(sentences):
-    global keep_going
+    global nested_ifs_ignore
     for sentence in sentences:
         sentence = sentence.strip()
         # note: order matters, like order of replacing words or ignoring rest of sentence:
@@ -39,13 +39,13 @@ def run_commands(sentences):
         is_note = check_note(sentence)
         if is_note:
             continue # ignore this sentence
-        [keep_going,sentence] = check_if(sentence) # one-liner if-statement may contain sentence to run
-        if keep_going: # whether to not ignore lines after an if-statement
+        [nested_ifs_ignore,sentence] = check_if(sentence) # one-liner if-statement may contain sentence to run
+        if nested_ifs_ignore == 0: # whether to not ignore lines after an if-statement
             sentence = check_spell(sentence)
+            sentence = check_variable(sentence) # can replace "variable apple" with the value of apple
             is_print = check_print(sentence)
             if is_print:
                 continue # do not try to interpret the rest of the sentence, just go straight to next sentence
-            check_variable(sentence)
             check_assign(sentence)
             sentence = check_math(sentence) # math after assign: avoid creating variables named None
             check_import(sentence)
@@ -115,16 +115,38 @@ def spell_with_first_letters(checkphrase, sentence):
 example:
 Please create variable apple
 Please variable banana
+please print you assigned variable apple to apple
 """
 def check_variable(sentence):
     global variable_dictionary
-    checkphrase = '.*' + 'variable ' + '(.+)'
+    checkphrase = '.*variable (.+).*'
     matches = re.match(checkphrase, sentence)
     if matches:
         variable_name = matches.group(1) # this is substring found inside '(.+)'
-        if variable_name not in variable_dictionary:
+        not_print_statement = not re.match('print .*', sentence) # avoid creating variables within print statement
+        if variable_name not in variable_dictionary and not_print_statement:
             variable_dictionary[variable_name] = None
         print('  DEBUG variable_dictionary: ' + str(variable_dictionary))
+        not_assign_statement = not re.match('assign .+ to .+',sentence)
+        # if assigning a value then don't replace variable name because dictionary needs variable name kept in sentence
+        if not_assign_statement:
+            variables_found = dictionary_variables_in_string(sentence)
+            for var_found in variables_found:
+                sentence = sentence.replace('variable ' + var_found, str(variable_dictionary[var_found]))
+            return sentence
+        else:
+            return sentence
+    else:
+        return sentence
+
+def dictionary_variables_in_string(string):
+    global variable_dictionary
+    # find 'variable <variable_name>' in string for each variable in variable_dictionary
+    variables_found = []
+    for variable_name in variable_dictionary:
+        if re.match('.*variable ' + variable_name+'.*', string):
+            variables_found.append(variable_name)
+    return variables_found
 
 """
 example:
@@ -138,18 +160,19 @@ def check_math(sentence):
     for i in range(len(words)):
         word = words[i]
         if word in math_words_numbers:
-            # sentence = sentence.replace(word, str(math_words_numbers[word]))
+            # only do this after non-math word or end of sentence: sentence = sentence.replace(word, str(math_words_numbers[word]))
             math_expression += str(math_words_numbers[word])
             replace_expression += ' ' + word
         elif word.isdigit():
             math_expression += str(word)
             replace_expression += ' ' + word
+        elif word in math_words_boolean:
+            math_expression += str(math_words_boolean[word])
+            replace_expression += ' ' + word
         elif word in math_words_operators:
-            # sentence = sentence.replace(word, math_words_operators[word])
-            math_expression += math_words_operators[word]
+            math_expression += math_words_operators[word] # already a string
             replace_expression += ' ' + word
         elif word in variable_dictionary:
-            # sentence = sentence.replace(word, str(variable_dictionary[word]))
             math_expression += str(variable_dictionary[word])
             replace_expression += ' ' + word
         else: # non-math word detected; time to evaluate expression so far
@@ -189,11 +212,11 @@ Please assign three hundred to variable banana
 Please assign some words to variable coconut
 """
 def check_assign(sentence):
-    checkphrase = '.*' + 'assign ' + '(.+)' + ' to variable ' + '(.+)'
+    checkphrase = '.*' + 'assign ' + '(.+)' + ' to (variable )?' + '(.+)'
     matches = re.match(checkphrase, sentence)
     if matches:
         variable_value = matches.group(1)
-        variable_name = matches.group(2)
+        variable_name = matches.group(3)
         try:
             variable_value = eval_math(check_math(variable_value))
         except:
@@ -265,72 +288,96 @@ Please use test_function from test
 """
 def check_use(sentence):
     global import_dictionary
-    checkphrase = '.*use (.+)( from | of )(.+)'
+    checkphrase = '.*use (.+)( from | of )(.+) to (.+)' # check more restrictive one first
     matches = re.match(checkphrase, sentence)
     if matches:
         use_string = matches.group(1)
         from_string = matches.group(3)
+        variable_name = matches.group(4)
         print('  DEBUG USE: ' + use_string + ' from ' + from_string)
         function_imported = getattr(import_dictionary[from_string], use_string)
         try:
-            function_imported() # try to use function_imported as a function
+            variable_dictionary[variable_name] = function_imported() # try to use function_imported as a function
+            print('  DEBUG variable_dictionary: ' + str(variable_dictionary))
         except:
             print(function_imported) # in case function_imported is just an output value
+            variable_dictionary[variable_name] = function_imported # in case function_imported is just an output value
+            print('  DEBUG variable_dictionary: ' + str(variable_dictionary))
+    else:
+        checkphrase = '.*use (.+)( from | of )(.+)' # check less restrictive one after
+        matches = re.match(checkphrase, sentence)
+        if matches:
+            use_string = matches.group(1)
+            from_string = matches.group(3)
+            print('  DEBUG USE: ' + use_string + ' from ' + from_string)
+            function_imported = getattr(import_dictionary[from_string], use_string)
+            try:
+                function_imported() # try to use function_imported as a function
+            except:
+                print(function_imported) # in case function_imported is just an output value
 
 """
 example:
+please if true then print this is a one line if statement
 please if one equals one then
-please print it works
+    please print it works
 please end if
 please if one equals two then
-please print it should not print this
+    please print it should not print this
 please end if
 """
 def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nesting)
-    global keep_going
+    global nested_ifs_ignore
     # force 'if' to be first word; DO NOT start regex with '.*'
     checkphrase = 'if (.+) then$' # $ for end of sentence
     matches = re.match(checkphrase, sentence)
     checkphrase_oneliner = 'if (.+) then ' # space after WITHOUT $ for continuing sentence
     matches_oneliner = re.match(checkphrase_oneliner, sentence)
-    if matches and keep_going:
+    if matches:
         math_expression = check_math(matches.group(1))
         if_string = eval_math(math_expression) # if_string = eval_math(check_math(check_variable(check_spell(matches.group(1)))))
         print('  DEBUG if (' + str(if_string) + ') then')
-        if if_string == True:
-            keep_going = True
-            return [True,sentence]
+        if if_string == True and nested_ifs_ignore == 0:
+            # print('  DEBUG nested_ifs_ignore: '+str(nested_ifs_ignore) + ' --- if')
+            return [nested_ifs_ignore,sentence]
         else:
             print('  DEBUG -> FALSE -> end if')
-            return [False,sentence]
-    elif matches_oneliner and keep_going:
+            nested_ifs_ignore += 1
+            # print('  DEBUG nested_ifs_ignore: '+str(nested_ifs_ignore) + ' --- if')
+            return [nested_ifs_ignore,sentence]
+    elif matches_oneliner:
         # treat the rest of the sentence like a new sentence
         math_expression = check_math(matches_oneliner.group(1))
         if_string = eval_math(math_expression) # if_string = eval_math(check_math(check_variable(check_spell(matches.group(1)))))
         print('  DEBUG if (' + str(if_string) + ') then')
-        if if_string == True:
-            keep_going = True
+        if if_string == True and nested_ifs_ignore == 0:
             # run the rest of this sentence as its own command (make sure check_if() happens before other checks)
             sentence = sentence.replace(matches_oneliner.group(), '')
-            return [True,sentence]
+            # print('  DEBUG nested_ifs_ignore: '+str(nested_ifs_ignore) + ' --- if')
+            return [nested_ifs_ignore,sentence]
         else:
             print('  DEBUG -> FALSE -> end if')
-            return [False,sentence]
+            nested_ifs_ignore += 1
+            # print('  DEBUG nested_ifs_ignore: '+str(nested_ifs_ignore) + ' --- if')
+            return [nested_ifs_ignore,sentence]
     else:
         checkphrase = '.*end if'
         matches = re.match(checkphrase, sentence)
         if matches:
-            keep_going = True
-            return [True,sentence]
+            nested_ifs_ignore -= 1
+            if nested_ifs_ignore < 0:
+                nested_ifs_ignore = 0
+            # print('  DEBUG nested_ifs_ignore: '+str(nested_ifs_ignore) + ' --- end if')
+            return [nested_ifs_ignore,sentence]
         else:
-            return [keep_going,sentence]
+            return [nested_ifs_ignore,sentence]
 
 
 
 # initialize global variables:
 
 hide_debug_printouts = False # True = hide debug prints print()
-keep_going = True # whether to not ignore lines after an if-statement
+nested_ifs_ignore = 0 # to track whether got out of an if-statement that evaluated to False
 variable_dictionary = {} # Python dictionaries are just hashtables (avg time complexity O(1))
 import_dictionary = {}
 math_words_numbers = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,'six':6,'seven':7,'eight':8,'nine':9,
@@ -339,9 +386,12 @@ math_words_numbers = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,'six'
                       'twenty':20,'thirty':30,'forty':40,'fifty':50,'sixty':60,'seventy':70,'eighty':80,'ninety':90,
                       'hundred':'00','thousand':'000','million':'000000','billion':'000000000','trillion':'000000000',
                       '0':0,'1':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9}
+math_words_boolean = {'true':True,'false':False}
 math_words_operators = {'plus':'+','minus':'-','times':'*','divide':'/','divided':'/','equals':'==','equal':'==','modulus':'%','modulo':'%'}
 spell_checkphrases = ['spell with first letters of',
                       'spell with first letter of',
+                      'spelled with first letters of',
+                      'spelled with first letter of',
                       'spell with the first letters of',
                       'spell with the first letter of',
                       'spelled with the first letters of',
