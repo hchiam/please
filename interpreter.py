@@ -341,8 +341,9 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
     checkphrase_oneliner = 'if (.+) then ' # space after WITHOUT $ for continuing sentence
     matches_oneliner = re.match(checkphrase_oneliner, sentence)
     if matches:
-        math_expression = check_math(matches.group(1))
-        if_string = eval_math(math_expression) # if_string = eval_math(check_math(check_variable(check_spell(matches.group(1)))))
+        put_in_vals_of_vars = check_variable(check_spell(matches.group(1)))
+        math_expression = check_math(put_in_vals_of_vars)
+        if_string = eval_math(math_expression)
         print('  DEBUG if (' + str(if_string) + ') then')
         if if_string == True and nested_ifs_ignore == 0:
             # print('  DEBUG nested_ifs_ignore: '+str(nested_ifs_ignore) + ' --- if')
@@ -354,8 +355,9 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
             return [nested_ifs_ignore,sentence]
     elif matches_oneliner:
         # treat the rest of the sentence like a new sentence
-        math_expression = check_math(matches_oneliner.group(1))
-        if_string = eval_math(math_expression) # if_string = eval_math(check_math(check_variable(check_spell(matches.group(1)))))
+        put_in_vals_of_vars = check_variable(check_spell(matches_oneliner.group(1)))
+        math_expression = check_math(put_in_vals_of_vars)
+        if_string = eval_math(math_expression)
         print('  DEBUG if (' + str(if_string) + ') then')
         if if_string == True and nested_ifs_ignore == 0:
             # run the rest of this sentence as its own command (make sure check_if() happens before other checks)
