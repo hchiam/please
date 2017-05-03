@@ -210,6 +210,11 @@ def check_math(sentence):
     return sentence
 
 def eval_math(expression):
+    # be conservative to try to restrict to only math and avoid abuse
+    if ' ' in expression: return None
+    if '_' in expression: return None
+    if '(' in expression: return None
+    if '[' in expression: return None
     return eval(expression,{"__builtins__":None},{}) # use ,{"__builtins__":None},{} to make eval function safer
 
 """
