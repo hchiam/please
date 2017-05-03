@@ -174,7 +174,7 @@ def check_math(sentence):
             replace_expression += ' ' + word
         elif word in variable_dictionary:
             math_expression += str(variable_dictionary[word])
-            replace_expression += ' ' + word
+            replace_expression += 'variable ' + word
         else: # non-math word detected; time to evaluate expression so far
             try:
                 math_result = eval_math(math_expression)

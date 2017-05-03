@@ -43,3 +43,7 @@ please print apple variable apple apple variable apple apple
 
 please print -------
 please print try use array([2,3,4]) from numb pie
+
+please print -------
+please assign one to variable apple
+please if variable apple equals one then print yay
