@@ -66,12 +66,20 @@ I don't intend to replace Python. In fact, python import capability is built rig
 
 # More Example Code:
 
+Currently, you can do the following: print, create variables, assign values to variables, basic math, nested if-then-(end-if) statements, one-liner if-then statements, comments, spell out words, import, use imported functions. 
+
 ## Print:
 
 ```
 Please print this string of words
 ```
 --> This prints out: `this string of words`
+
+```
+Please assign one to variable apple
+Please print variable apple
+```
+--> This prints out: `1`
 
 ## Create Variables:
 
@@ -110,7 +118,12 @@ Please one plus one equals two
 ```
 --> This outputs: `True`
 
-## If-Then Statement:
+## If-Then Statements:
+
+```
+Please if true then print this is a one line if statement
+```
+---> This prints out: `this is a one line if statement`
 
 ```
 Please if one equals one then
