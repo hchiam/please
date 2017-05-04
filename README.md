@@ -121,7 +121,7 @@ Please assign list of one and two and tree bark to variable crazy list
 ```
 Please spell with the first letters of Neptune unicorn moose panda Yoda
 ```
---> This outputs: `numpy` (NumPy is a Python library you can import: https://en.wikipedia.org/wiki/NumPy) (Also see [import examples](#import-to-add-functionality))
+--> This evaluates to: `numpy` (NumPy is a Python library you can import: https://en.wikipedia.org/wiki/NumPy) (Also see [import examples](#import-to-add-functionality))
 
 Note: capital letters are treated the same as lowercase letters. Please is case-insensitive.
 
@@ -130,12 +130,18 @@ Note: capital letters are treated the same as lowercase letters. Please is case-
 ```
 Please one plus two
 ```
---> This outputs: `3`
+--> This evaluates to: `3`
 
 ```
 Please one plus one equals two
 ```
---> This outputs: `True`
+--> This evaluates to: `True`
+
+```
+Please assign one plus two to variable result
+Please print variable result
+```
+--> This prints out: `3`
 
 ## If Statements:
 
