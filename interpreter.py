@@ -448,13 +448,19 @@ def check_for(sentence, i):
         print('  DEBUG FOR: list_range = ' + list_range)
         # activate this loop (no need to evaluate true right now)
         goto_locations[i][0] = True
+        goto_stack.append(i)
         print(goto_locations)
+        print(goto_stack)
     else:
         checkphrase = 'end for'
         matches = re.match(checkphrase, sentence)
         if matches:
-            # check if need to loop back to start index
+            # check if need to loop back to header index
+            last_nested_i = goto_stack.pop()
+            goto_locations[last_nested_i][0] = False
             print(goto_locations)
+            print(goto_stack)
+            # (otherwise read linearly again, whether inside or outside the loop)
 
 
 
@@ -462,6 +468,7 @@ def check_for(sentence, i):
 
 hide_debug_printouts = False # True = hide debug prints print()
 goto_locations = {} # map indices to [statuses and indices] of loops, functions, and classes
+goto_stack = [] # track nesting of loops, functions, or classes by appending/popping their header indices
 nested_blocks_ignore = 0 # to track whether got out of an if-statement that evaluated to False
 variable_dictionary = {} # Python dictionaries are just hashtables (avg time complexity O(1))
 import_dictionary = {}
