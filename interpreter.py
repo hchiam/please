@@ -431,6 +431,8 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
     if matches:
         put_in_vals_of_vars = check_variable(check_spell(matches.group(1)))
         math_expression = check_math(put_in_vals_of_vars)
+        if math_expression not in ['True', 'False']:
+            math_expression = 'False'
         if_string = eval_math(math_expression)
         print_debug('  DEBUG if (' + str(if_string) + ') then')
         if if_string == True and nested_blocks_ignore == 0:
@@ -445,6 +447,8 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
         # treat the rest of the sentence like a new sentence
         put_in_vals_of_vars = check_variable(check_spell(matches_oneliner.group(1)))
         math_expression = check_math(put_in_vals_of_vars)
+        if math_expression not in ['True', 'False']:
+            math_expression = 'False'
         if_string = eval_math(math_expression)
         print_debug('  DEBUG if (' + str(if_string) + ') then')
         if if_string == True and nested_blocks_ignore == 0:
