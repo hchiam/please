@@ -6,6 +6,3 @@ please for each index one in circle
 	please end for
 
 please end for
-
-please import test from library
-please use test_function of test
