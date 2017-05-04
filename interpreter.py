@@ -419,9 +419,9 @@ def check_for(sentence):
     if matches:
         element = matches.group(1)
         list_range = matches.group(2)
-        print('00000'+sentence)
-        print('element = ' + element)
-        print('list_range = ' + list_range)
+        print('  DEBUG sentence = '+sentence)
+        print('  DEBUG element = ' + element)
+        print('  DEBUG list_range = ' + list_range)
         return [nested_blocks_ignore,sentence]
     else:
         return [nested_blocks_ignore,sentence]
