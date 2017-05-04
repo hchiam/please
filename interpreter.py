@@ -120,7 +120,7 @@ def check_spell(sentence):
     # find matches in sentence:
     for phrase_start in spell_checkphrases:
         for phrase_stop in spell_finish_words:
-            checkphrase = '.*' + phrase_start + ' ' + '(.+)' + phrase_stop
+            checkphrase = '.*' + phrase_start + ' (.+)' + phrase_stop
             matches = re.match(checkphrase, sentence)
             if matches:
                 words_to_spell_with = matches.group(1) # this is substring found inside '(.+)'
