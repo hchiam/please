@@ -226,7 +226,7 @@ Please use test_function from test
 ```
 Please assign list of one and two and tree bark to variable crazy list
 Please for each item in crazy list
-    Please print index item of crazy list
+    Please print index variable item of crazy list
 Please end for
 ```
 --> This prints: `1`, `2`, `'tree bark'`
