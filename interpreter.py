@@ -209,7 +209,7 @@ def check_math(sentence):
                 variable_value = '\'' + variable_value + '\''
             math_expression += variable_value
             replace_expression += ' variable ' + word
-        elif word not in ['print','variable','assign','if','then','to','of','from','import','for','as','end','each','in','list']:
+        elif word not in ['print','variable','assign','if','then','to','of','from','import','for','as','end','each','in','list','use']:
             math_expression += '\'' + word + '\''
             replace_expression += ' ' + word
         else: # non-math word detected; time to evaluate expression so far
