@@ -40,7 +40,7 @@ def run_commands(sentences):
         if is_note:
             continue # ignore this sentence
         [nested_blocks_ignore,sentence] = check_if(sentence) # one-liner if-statement may contain sentence to run
-        # [nested_blocks_ignore,sentence] = check_for(sentence)
+        [nested_blocks_ignore,sentence] = check_for(sentence)
         if nested_blocks_ignore == 0: # whether to not ignore lines after an if-statement
             sentence = check_spell(sentence)
             sentence = check_variable(sentence) # can replace "variable apple" with the value of apple
@@ -405,6 +405,26 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
             return [nested_blocks_ignore,sentence]
         else:
             return [nested_blocks_ignore,sentence]
+
+"""
+please assign list from one to three to variable circle
+please for each index in circle
+    please print index
+please end for
+"""
+def check_for(sentence):
+    global nested_blocks_ignore
+    checkphrase = 'for each (.+) in (.+)'
+    matches = re.match(checkphrase, sentence)
+    if matches:
+        element = matches.group(1)
+        list_range = matches.group(2)
+        print('00000'+sentence)
+        print('element = ' + element)
+        print('list_range = ' + list_range)
+        return [nested_blocks_ignore,sentence]
+    else:
+        return [nested_blocks_ignore,sentence]
 
 
 
