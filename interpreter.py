@@ -254,6 +254,7 @@ def check_assign_list_passed(sentence):
         print('  DEBUG variable_dictionary: ' + str(variable_dictionary))
         return True # found assignment of list to variable
     else:
+        # TODO: '.*assign list of (.+) to (variable )?(.+)' --> group(1) --> .split(' and ') --> 'one and two and tree bark' -> [one,two,'tree bark']
         return False # did not find assignment of list to variable
 
 """
