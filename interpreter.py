@@ -48,33 +48,38 @@ def get_goto_locations(sentences):
         checkphrase_class = 'define class (.+)'
         matches_class = re.match(checkphrase_class, sentence)
         if matches_function or matches_class:
-            goto_locations[i] = [False, None]
+            goto_locations[i] = Goto_data() # [status, list_index, list_length] = [False, 0, None]
         elif matches_for:
-            goto_locations[i] = [False, 0]
+            goto_locations[i] = Goto_data() # [status, list_index, list_length] = [False, 0, None]
     print('  DEBUG goto_locations: ' + str(goto_locations))
 
 def run_commands(sentences):
     global nested_blocks_ignore
-    for i in range(len(sentences)): # use i to access sentence indices for go-to locations
+    i = 0
+    while i < len(sentences): # use i to access sentence indices for go-to locations
         sentence = sentences[i]
         sentence = sentence.strip()
         # note: order matters, like order of replacing words or ignoring rest of sentence:
         # note > if > spell > print > variable > math, assign, import, use
         is_note = check_note(sentence)
         if is_note:
+            i += 1
             continue # ignore this sentence
         [nested_blocks_ignore,sentence] = check_if(sentence) # one-liner if-statement may contain sentence to run
-        check_for(sentence, i)
+        i = check_for(sentence, i) # can skip back to top part of for loop
         if nested_blocks_ignore == 0: # whether to not ignore lines after an if-statement
             sentence = check_spell(sentence)
             sentence = check_variable(sentence) # can replace "variable apple" with the value of apple
             is_print = check_print(sentence)
             if is_print:
+                i += 1
                 continue # do not try to interpret the rest of the sentence, just go straight to next sentence
             check_assign(sentence)
             sentence = check_math(sentence) # math after assign: avoid creating variables named None
             check_import(sentence)
             check_use(sentence)
+        # go to next sentence
+        i += 1
 
 def get_words(sentence):
     words = sentence.strip().split() # .split() with no params splits at any whitespace character
@@ -374,13 +379,13 @@ def check_use(sentence):
 
 """
 example:
-please if true then print this is a one line if statement
-please if one equals one then
-    please print it works
-please end if
-please if one equals two then
-    please print it should not print this
-please end if
+Please if true then print this is a one line if statement
+Please if one equals one then
+    Please print it works
+Please end if
+Please if one equals two then
+    Please print it should not print this
+Please end if
 """
 def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nesting)
     global nested_blocks_ignore
@@ -431,44 +436,85 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
             return [nested_blocks_ignore,sentence]
 
 """
-please assign list from one to three to variable circle
-please for each index in circle
-    please print index
-please end for
+Please assign list from negative one to three to variable circle
+Please for each index in circle
+    Please print variable index
+Please end for
 """
 def check_for(sentence, i):
     global nested_blocks_ignore
-    checkphrase = 'for each (.+) in (.+)'
+    skip_to_line = i
+    checkphrase = 'for each (variable )?(.+) in (variable )?(.+)'
     matches = re.match(checkphrase, sentence)
     if matches:
-        element = matches.group(1)
-        list_range = matches.group(2)
+        element = matches.group(2)
+        list_name = matches.group(4)
         print('  DEBUG FOR: sentence = '+sentence)
         print('  DEBUG FOR: element = ' + element)
-        print('  DEBUG FOR: list_range = ' + list_range)
+        print('  DEBUG FOR: list_name = ' + list_name)
+        # create loop variable for element to go through the list range
+        variable_dictionary[element] = variable_dictionary[list_name][0]
+        print(variable_dictionary)
         # activate this loop (no need to evaluate true right now)
-        goto_locations[i][0] = True
+        current_loop = goto_locations[i]
+        current_loop.activate(element, variable_dictionary[list_name])
+        print(goto_locations[i].status)
+        # track nesting
         goto_stack.append(i)
-        print(goto_locations)
         print(goto_stack)
+        # don't skip anywhere
+        skip_to_line = i
     else:
         checkphrase = 'end for'
         matches = re.match(checkphrase, sentence)
-        if matches:
-            # check if need to loop back to header index
-            last_nested_i = goto_stack.pop()
-            goto_locations[last_nested_i][0] = False
-            print(goto_locations)
-            print(goto_stack)
-            # (otherwise read linearly again, whether inside or outside the loop)
+        if matches: # check if need to loop back to header index
+            last_nested_i = goto_stack[-1]
+            current_loop = goto_locations[last_nested_i]
+            # check if at last index in list_name
+            loop_index = current_loop.list_index
+            print('--------'+str(current_loop.list_length))
+            if loop_index >= current_loop.list_length-1:
+                # remove loop variable
+                element = current_loop.loop_variable
+                variable_dictionary.pop(element)
+                print(variable_dictionary)
+                # deactivate this loop
+                current_loop.deactivate()
+                print(goto_locations[last_nested_i].status)
+                goto_stack.pop()
+                print(goto_stack)
+                # don't skip anywhere
+                skip_to_line
+            else:
+                current_loop.list_index += 1
+                variable_dictionary[current_loop.loop_variable] += 1
+                # skip back to the beginning of loop
+                skip_to_line = last_nested_i
+        else:
+            # don't skip anywhere
+            skip_to_line = i
+    return skip_to_line
 
 
 
 # initialize global variables:
 
 hide_debug_printouts = False # True = hide debug prints print()
-goto_locations = {} # map indices to [statuses and indices] of loops, functions, and classes
 goto_stack = [] # track nesting of loops, functions, or classes by appending/popping their header indices
+goto_locations = {} # map indices to [statuses and indices] of loops, functions, and classes
+class Goto_data:
+    status = False
+    list_index = 0 # for loops
+    loop_variable = '' # for loops
+    list_length = None # for loops
+    def activate(self, element, list_name):
+        self.status = True
+        self.loop_variable = element
+        self.list_length = len(list_name)
+    def deactivate(self):
+        self.status = False
+        self.list_index = 0
+        self.loop_variable = ''
 nested_blocks_ignore = 0 # to track whether got out of an if-statement that evaluated to False
 variable_dictionary = {} # Python dictionaries are just hashtables (avg time complexity O(1))
 import_dictionary = {}

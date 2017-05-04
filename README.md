@@ -66,7 +66,7 @@ I don't intend to replace Python. In fact, python import capability is built rig
 
 # More Example Code:
 
-Currently you can: print, create variables, assign values to variables, do basic math, use nested if-then-(end-if) statements, use one-liner if-then statements, write comments, spell out words, import, use imported functions. 
+Currently you can: print, create variables, assign values to variables, do basic math, use nested if-then-(end-if) statements, use one-liner if-then statements, use for loops, write comments, spell out words, import, use imported functions. 
 
 ## Print:
 
@@ -132,7 +132,7 @@ Please one plus one equals two
 ```
 --> This outputs: `True`
 
-## If-Then Statements:
+## If Statements:
 
 ```
 Please if true then print this is a one line if statement
@@ -160,6 +160,16 @@ Please if one equals two then please print it should not print this please end i
 ```
 
 You can use library/format.py to automatically format your Please code.
+
+## For Loops:
+
+```
+Please assign list from negative one to three to variable circle
+Please for each index in circle
+    Please print variable index
+Please end for
+```
+--> This prints out: `-1`, `0`, `1`, `2`, `3`
 
 ## Comments/Notes:
 
