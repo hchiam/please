@@ -1,13 +1,19 @@
-please assign list from one to two to variable circle
+please note to rerun the code you should hit the triangle run button
 
-please for each index one in circle
-    please print index one equals variable index one
-    please for each index two in circle
-        please print index two equals variable index two
-    please end for
-please end for
+please print on smaller screens hit the pencil icon
+
+please print
+ PLeAsE  print    this string  of words   
+   
+please assign one plus two thousand plus sixteen to result
+please print may variable result
+
+please print
 
 Please assign list of one and two and tree bark to variable crazy list
+
+please print variable crazy list
+
 Please for each item in crazy list
     Please print index variable item of crazy list
 Please end for
