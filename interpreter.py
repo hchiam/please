@@ -36,18 +36,21 @@ def get_goto_locations(sentences):
     initialize go-to locations for loops, functions, and classes
     track indices of 'header' sentences (0,1,2,3,...)
     track respective statuses (True/False)
+    track loop indices (0,1,2,3,...)
     """
     global goto_locations
     for i in range(len(sentences)):
-        sentence = sentences[i]
+        sentence = sentences[i].strip()
         checkphrase_for = 'for each (.+) in (.+)'
         matches_for = re.match(checkphrase_for, sentence)
         checkphrase_function = 'define function (.+)'
         matches_function = re.match(checkphrase_function, sentence)
         checkphrase_class = 'define class (.+)'
         matches_class = re.match(checkphrase_class, sentence)
-        if matches_for or matches_function or matches_class:
-            goto_locations[i] = False
+        if matches_function or matches_class:
+            goto_locations[i] = [False, None]
+        elif matches_for:
+            goto_locations[i] = [False, 0]
     print('  DEBUG goto_locations: ' + str(goto_locations))
 
 def run_commands(sentences):
@@ -61,7 +64,7 @@ def run_commands(sentences):
         if is_note:
             continue # ignore this sentence
         [nested_blocks_ignore,sentence] = check_if(sentence) # one-liner if-statement may contain sentence to run
-        [nested_blocks_ignore,sentence] = check_for(sentence)
+        check_for(sentence, i)
         if nested_blocks_ignore == 0: # whether to not ignore lines after an if-statement
             sentence = check_spell(sentence)
             sentence = check_variable(sentence) # can replace "variable apple" with the value of apple
@@ -433,7 +436,7 @@ please for each index in circle
     please print index
 please end for
 """
-def check_for(sentence):
+def check_for(sentence, i):
     global nested_blocks_ignore
     checkphrase = 'for each (.+) in (.+)'
     matches = re.match(checkphrase, sentence)
@@ -443,16 +446,22 @@ def check_for(sentence):
         print('  DEBUG FOR: sentence = '+sentence)
         print('  DEBUG FOR: element = ' + element)
         print('  DEBUG FOR: list_range = ' + list_range)
-        return [nested_blocks_ignore,sentence]
+        # activate this loop (no need to evaluate true right now)
+        goto_locations[i][0] = True
+        print(goto_locations)
     else:
-        return [nested_blocks_ignore,sentence]
+        checkphrase = 'end for'
+        matches = re.match(checkphrase, sentence)
+        if matches:
+            # check if need to loop back to start index
+            print(goto_locations)
 
 
 
 # initialize global variables:
 
 hide_debug_printouts = False # True = hide debug prints print()
-goto_locations = {} # map indices to statuses of loops, functions, and classes
+goto_locations = {} # map indices to [statuses and indices] of loops, functions, and classes
 nested_blocks_ignore = 0 # to track whether got out of an if-statement that evaluated to False
 variable_dictionary = {} # Python dictionaries are just hashtables (avg time complexity O(1))
 import_dictionary = {}
