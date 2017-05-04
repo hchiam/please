@@ -161,6 +161,20 @@ def check_variable(sentence):
         # if assigning a value then don't replace variable name because dictionary needs variable name kept in sentence
         if not_assign_statement:
             variables_found = dictionary_variables_in_string(sentence)
+            # check for index of variable name to replace
+            checkphrase = '(.*)index (.+) of (variable )?(.+).*'
+            matches = re.match(checkphrase, sentence)
+            if matches:
+                part_before = matches.group(1)
+                index = matches.group(2)
+                variable_name = matches.group(4)
+                variable_index = eval_math(check_math(index))-1
+                variable_list = variable_dictionary[variable_name]
+                replacement_phrase = part_before + str(variable_list[variable_index])
+                print('------'+sentence)
+                sentence = re.sub(checkphrase, replacement_phrase, sentence) # sentence.replace('variable ' + var_found, str(variable_dictionary[var_found]))
+                print('------'+sentence)
+            # check for variable names to replace
             for var_found in variables_found:
                 sentence = sentence.replace('variable ' + var_found, str(variable_dictionary[var_found]))
             return sentence

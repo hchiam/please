@@ -221,6 +221,16 @@ Please use test_function from test
 
 --> This prints twice: `Yay the import test_function() of test.py from the "library" folder works!`
 
+## Access List Index:
+
+```
+Please assign list of one and two and tree bark to variable crazy list
+Please for each item in crazy list
+    Please print index item of crazy list
+Please end for
+```
+--> This prints: `1`, `2`, `'tree bark'`
+
 <br>
 
 # Inspirations for Please:
