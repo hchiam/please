@@ -345,7 +345,7 @@ def check_import(sentence):
             module = importlib.util.module_from_spec(spec)
             # enables use of functions and variables from the module (does the actual import):
             spec.loader.exec_module(module)
-        print(str(module))
+        print_debug('  DEBUG IMPORT: ' + str(module))
         # add to list of imports
         if import_as:
             import_dictionary[import_as] = module
@@ -371,7 +371,7 @@ def check_import(sentence):
                     spec.loader.exec_module(module)
                 except:
                     pass
-            print(str(module))
+            print_debug('  DEBUG IMPORT: ' + str(module))
             # add to list of imports
             import_dictionary[import_name] = module
             print_debug('  DEBUG IMPORT: IMPORT_DICTIONARY, size = ' + str(len(import_dictionary)) + '\n\t = ' + str(import_dictionary))
