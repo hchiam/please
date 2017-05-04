@@ -171,9 +171,7 @@ def check_variable(sentence):
                 variable_index = eval_math(check_math(index))-1
                 variable_list = variable_dictionary[variable_name]
                 replacement_phrase = part_before + str(variable_list[variable_index])
-                print('------'+sentence)
                 sentence = re.sub(checkphrase, replacement_phrase, sentence) # sentence.replace('variable ' + var_found, str(variable_dictionary[var_found]))
-                print('------'+sentence)
             # check for variable names to replace
             for var_found in variables_found:
                 sentence = sentence.replace('variable ' + var_found, str(variable_dictionary[var_found]))
@@ -490,14 +488,14 @@ def check_for(sentence, i):
         print('  DEBUG FOR: list_name = ' + list_name)
         # create loop variable for element to go through the list range
         variable_dictionary[element] = variable_dictionary[list_name][0]
-        print(variable_dictionary)
+        print('  DEBUG VAR DICT: ' + str(variable_dictionary))
         # activate this loop (no need to evaluate true right now)
         current_loop = goto_locations[i]
         current_loop.activate(element, variable_dictionary[list_name])
-        print(goto_locations[i].status)
+        print('  DEBUG GOTO STATUS: ' + str(goto_locations[i].status))
         # track nesting
         goto_stack.append(i)
-        print(goto_stack)
+        print('  DEBUG GOTO STACK: ' + str(goto_stack))
         # don't skip anywhere
         skip_to_line = i
     else:
@@ -508,17 +506,17 @@ def check_for(sentence, i):
             current_loop = goto_locations[last_nested_i]
             # check if at last index in list_name
             loop_index = current_loop.list_index
-            print('--------'+str(current_loop.list_length))
+            print('  DEBUG FOR list len: '+str(current_loop.list_length))
             if loop_index >= current_loop.list_length-1:
                 # remove loop variable
                 element = current_loop.loop_variable
                 variable_dictionary.pop(element)
-                print(variable_dictionary)
+                print('  DEBUG VAR DICT: ' + str(variable_dictionary))
                 # deactivate this loop
                 current_loop.deactivate()
-                print(goto_locations[last_nested_i].status)
+                print('  DEBUG GOTO STATUS: ' + str(goto_locations[last_nested_i].status))
                 goto_stack.pop()
-                print(goto_stack)
+                print('  DEBUG GOTO STACK: ' + str(goto_stack))
                 # don't skip anywhere
                 skip_to_line
             else:
