@@ -55,7 +55,7 @@ def format_lines(text):
     newline_after_endif = False
     for sentence in sentences:
         # immediately de-indent an end-if line
-        if sentence[:7] == ' end if': # TO-DO: or sentence[:8] == ' end for' or sentence[:13] == ' end function' or sentence[:10] == ' end class':
+        if sentence[:7] == ' end if' or sentence[:8] == ' end for': # or sentence[:13] == ' end function' or sentence[:10] == ' end class':
             num_indents -= 1
             newline_after_endif = True
         # remove multiple consecutive space characters per line
@@ -65,7 +65,7 @@ def format_lines(text):
         # indent the next line after a if-statement (multiline ones, not the one-liner if-statements)
         checkphrase = '.*if (.+) then$' # $ for end of sentence
         is_multiline_if_statement = re.match(checkphrase, sentence)
-        if is_multiline_if_statement: # if sentence[:4] == ' if ': # TO-DO: or sentence[:5] == ' for ' or sentence[:17] == ' define function ' or sentence[:14] == ' define class ':
+        if is_multiline_if_statement or sentence[:4] == 'for ': # or sentence[:16] == 'define function ' or sentence[:14] == 'define class ':
             num_indents += 1
         # reset
         newline_after_endif = False
