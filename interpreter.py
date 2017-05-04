@@ -31,7 +31,7 @@ def get_sentences(text):
     return sentences
 
 def run_commands(sentences):
-    global nested_ifs_ignore
+    global nested_blocks_ignore
     for sentence in sentences:
         sentence = sentence.strip()
         # note: order matters, like order of replacing words or ignoring rest of sentence:
@@ -39,8 +39,9 @@ def run_commands(sentences):
         is_note = check_note(sentence)
         if is_note:
             continue # ignore this sentence
-        [nested_ifs_ignore,sentence] = check_if(sentence) # one-liner if-statement may contain sentence to run
-        if nested_ifs_ignore == 0: # whether to not ignore lines after an if-statement
+        [nested_blocks_ignore,sentence] = check_if(sentence) # one-liner if-statement may contain sentence to run
+        # [nested_blocks_ignore,sentence] = check_for(sentence)
+        if nested_blocks_ignore == 0: # whether to not ignore lines after an if-statement
             sentence = check_spell(sentence)
             sentence = check_variable(sentence) # can replace "variable apple" with the value of apple
             is_print = check_print(sentence)
@@ -357,7 +358,7 @@ please if one equals two then
 please end if
 """
 def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nesting)
-    global nested_ifs_ignore
+    global nested_blocks_ignore
     # force 'if' to be first word; DO NOT start regex with '.*'
     checkphrase = 'if (.+) then$' # $ for end of sentence
     matches = re.match(checkphrase, sentence)
@@ -368,48 +369,48 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
         math_expression = check_math(put_in_vals_of_vars)
         if_string = eval_math(math_expression)
         print('  DEBUG if (' + str(if_string) + ') then')
-        if if_string == True and nested_ifs_ignore == 0:
-            # print('  DEBUG nested_ifs_ignore: '+str(nested_ifs_ignore) + ' --- if')
-            return [nested_ifs_ignore,sentence]
+        if if_string == True and nested_blocks_ignore == 0:
+            # print('  DEBUG nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- if')
+            return [nested_blocks_ignore,sentence]
         else:
             print('  DEBUG -> FALSE -> end if')
-            nested_ifs_ignore += 1
-            # print('  DEBUG nested_ifs_ignore: '+str(nested_ifs_ignore) + ' --- if')
-            return [nested_ifs_ignore,sentence]
+            nested_blocks_ignore += 1
+            # print('  DEBUG nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- if')
+            return [nested_blocks_ignore,sentence]
     elif matches_oneliner:
         # treat the rest of the sentence like a new sentence
         put_in_vals_of_vars = check_variable(check_spell(matches_oneliner.group(1)))
         math_expression = check_math(put_in_vals_of_vars)
         if_string = eval_math(math_expression)
         print('  DEBUG if (' + str(if_string) + ') then')
-        if if_string == True and nested_ifs_ignore == 0:
+        if if_string == True and nested_blocks_ignore == 0:
             # run the rest of this sentence as its own command (make sure check_if() happens before other checks)
             sentence = sentence.replace(matches_oneliner.group(), '')
-            # print('  DEBUG nested_ifs_ignore: '+str(nested_ifs_ignore) + ' --- if')
-            return [nested_ifs_ignore,sentence]
+            # print('  DEBUG nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- if')
+            return [nested_blocks_ignore,sentence]
         else:
             print('  DEBUG -> FALSE -> end if')
-            # one-liner if-statement does not add to nestedness, so do not do nested_ifs_ignore += 1
-            # print('  DEBUG nested_ifs_ignore: '+str(nested_ifs_ignore) + ' --- if')
-            return [nested_ifs_ignore,sentence]
+            # one-liner if-statement does not add to nestedness, so do not do nested_blocks_ignore += 1
+            # print('  DEBUG nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- if')
+            return [nested_blocks_ignore,sentence]
     else:
         checkphrase = '.*end if'
         matches = re.match(checkphrase, sentence)
         if matches:
-            nested_ifs_ignore -= 1
-            if nested_ifs_ignore < 0:
-                nested_ifs_ignore = 0
-            # print('  DEBUG nested_ifs_ignore: '+str(nested_ifs_ignore) + ' --- end if')
-            return [nested_ifs_ignore,sentence]
+            nested_blocks_ignore -= 1
+            if nested_blocks_ignore < 0:
+                nested_blocks_ignore = 0
+            # print('  DEBUG nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- end if')
+            return [nested_blocks_ignore,sentence]
         else:
-            return [nested_ifs_ignore,sentence]
+            return [nested_blocks_ignore,sentence]
 
 
 
 # initialize global variables:
 
 hide_debug_printouts = False # True = hide debug prints print()
-nested_ifs_ignore = 0 # to track whether got out of an if-statement that evaluated to False
+nested_blocks_ignore = 0 # to track whether got out of an if-statement that evaluated to False
 variable_dictionary = {} # Python dictionaries are just hashtables (avg time complexity O(1))
 import_dictionary = {}
 math_words_numbers = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,'six':6,'seven':7,'eight':8,'nine':9,
