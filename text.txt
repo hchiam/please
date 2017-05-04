@@ -1,49 +1,11 @@
-please if one equals one then
-    please print a
-please end if
-please if two equals one then
-    please print b
-please end if
-please if one equals one then
-    please print c
-please end if
-please if two equals one then
-	please print d
-	please if one equals one then
-		please print e
-	please end if
+please assign list from one to two to variable circle
 
-	please if two equals one then
-		please print f
-	please end if
-please end if
-please if one equals one then
-	please print g
-	please if one equals one then
-		please print h
-	please end if
+please for each index one in circle
+    please print index one equals variable index one
+    please for each index two in circle
+        please print index two equals variable index two
+    please end for
+please end for
 
-	please if two equals one then
-		please print i
-	please end if
-please end if
-please print you should see a c g h
-
-please print -------
-please assign wow to apple
-please print variable apple equals variable apple
-please print you assigned variable apple to apple
-
-please print -------
-please import spelled with first letters of neptune unicorn moose panda yoda as numb pie
-please use __version__ from numb pie
-please assign use __version__ from numb pie to apple
-please print testing print and variable combined
-please print apple variable apple apple variable apple apple
-
-please print -------
-please print try use array([2,3,4]) from numb pie
-
-please print -------
-please assign one to variable apple
-please if variable apple equals one then print yay
+please import format from library
+please use clean of format
