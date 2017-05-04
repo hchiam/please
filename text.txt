@@ -14,8 +14,10 @@ Please assign list of one and two and tree bark to variable crazy list
 
 please print variable crazy list
 
-Please for each item in crazy list
-    Please print index variable item of crazy list
-Please end for
+please if crazy equals crazy then
+    Please for each item in crazy list
+        Please print index variable item of crazy list
+    Please end for
+please end if
 
 Please print next try to use array([2,3,4]) from numb pie
