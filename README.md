@@ -111,6 +111,11 @@ Please assign list from eight to twelve to durian
 ```
 --> This generates: `durian = [8, 9, 10, 11, 12]`
 
+```
+Please assign list of one and two and tree bark to variable crazy list
+```
+--> This generates: `crazy list = [1, 2, 'tree bark']`
+
 ## Spell Out a Special Word:
 
 ```

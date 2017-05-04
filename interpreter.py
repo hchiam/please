@@ -278,13 +278,35 @@ def check_assign_list_passed(sentence):
         list_stop = int(check_math(matches.group(2)))
         variable_name = matches.group(4)
         print('  DEBUG list start = ' + str(list_start) + ' stop = ' + str(list_stop) + ' ASSIGN TO: ' + variable_name)
-        list_value = list(range(list_start, list_stop+1))
-        variable_dictionary[variable_name] = list_value
+        list_values = list(range(list_start, list_stop+1))
+        variable_dictionary[variable_name] = list_values
         print('  DEBUG variable_dictionary: ' + str(variable_dictionary))
         return True # found assignment of list to variable
     else:
-        # TODO: '.*assign list of (.+) to (variable )?(.+)' --> group(1) --> .split(' and ') --> 'one and two and tree bark' -> [one,two,'tree bark']
-        return False # did not find assignment of list to variable
+        # check if assigning unordered list of items separated by ' and '
+        checkphrase = '.*assign list of (.+) to (variable )?(.+)'
+        matches = re.match(checkphrase, sentence)
+        if matches:
+            unordered_list_items = matches.group(1).split(' and ') # items separated by ' and '
+            unordered_list_items = translate_list_items(unordered_list_items)
+            variable_name = matches.group(3)
+            print('  DEBUG list unordered_list_items = ' + str(unordered_list_items) + ' ASSIGN TO: ' + variable_name)
+            variable_dictionary[variable_name] = unordered_list_items
+            print('  DEBUG variable_dictionary: ' + str(variable_dictionary))
+            return True # found assignment of list to variable
+        else:
+            # TODO: '.*assign list of (.+) to (variable )?(.+)' --> group(1) --> .split(' and ') --> 'one and two and tree bark' -> [one,two,'tree bark']
+            return False # did not find assignment of list to variable
+
+def translate_list_items(list_items):
+    # check if any list items fall under math, variables, or spelled words
+    for i in range(len(list_items)):
+        item = list_items[i]
+        try:
+            list_items[i] = int(check_math(item))
+        except:
+            list_items[i] = check_variable(check_spell(item))
+    return list_items
 
 """
 example:
