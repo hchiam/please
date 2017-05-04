@@ -52,7 +52,8 @@ def get_goto_locations(sentences):
 
 def run_commands(sentences):
     global nested_blocks_ignore
-    for sentence in sentences:
+    for i in range(len(sentences)): # use i to access sentence indices for go-to locations
+        sentence = sentences[i]
         sentence = sentence.strip()
         # note: order matters, like order of replacing words or ignoring rest of sentence:
         # note > if > spell > print > variable > math, assign, import, use
@@ -439,9 +440,9 @@ def check_for(sentence):
     if matches:
         element = matches.group(1)
         list_range = matches.group(2)
-        print('  DEBUG sentence = '+sentence)
-        print('  DEBUG element = ' + element)
-        print('  DEBUG list_range = ' + list_range)
+        print('  DEBUG FOR: sentence = '+sentence)
+        print('  DEBUG FOR: element = ' + element)
+        print('  DEBUG FOR: list_range = ' + list_range)
         return [nested_blocks_ignore,sentence]
     else:
         return [nested_blocks_ignore,sentence]
