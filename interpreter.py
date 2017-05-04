@@ -16,6 +16,7 @@ def interpret():
     text = text.lower() # lowercase
     text = remove_multi_spaces(text)
     sentences = get_sentences(text)
+    get_goto_locations(sentences)
     run_commands(sentences)
 
 def get_text(file_name):
@@ -29,6 +30,25 @@ def get_sentences(text):
     # each sentence is expected to begin with "please "
     sentences = text.split('please ')[1:] # assume index [0] is always empty or invalid before the first "please "
     return sentences
+
+def get_goto_locations(sentences):
+    """
+    initialize go-to locations for loops, functions, and classes
+    track indices of 'header' sentences (0,1,2,3,...)
+    track respective statuses (True/False)
+    """
+    global goto_locations
+    for i in range(len(sentences)):
+        sentence = sentences[i]
+        checkphrase_for = 'for each (.+) in (.+)'
+        matches_for = re.match(checkphrase_for, sentence)
+        checkphrase_function = 'define function (.+)'
+        matches_function = re.match(checkphrase_function, sentence)
+        checkphrase_class = 'define class (.+)'
+        matches_class = re.match(checkphrase_class, sentence)
+        if matches_for or matches_function or matches_class:
+            goto_locations[i] = False
+    print('  DEBUG goto_locations: ' + str(goto_locations))
 
 def run_commands(sentences):
     global nested_blocks_ignore
@@ -431,6 +451,7 @@ def check_for(sentence):
 # initialize global variables:
 
 hide_debug_printouts = False # True = hide debug prints print()
+goto_locations = {} # map indices to statuses of loops, functions, and classes
 nested_blocks_ignore = 0 # to track whether got out of an if-statement that evaluated to False
 variable_dictionary = {} # Python dictionaries are just hashtables (avg time complexity O(1))
 import_dictionary = {}
