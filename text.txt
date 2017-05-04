@@ -7,5 +7,9 @@ please for each index one in circle
     please end for
 please end for
 
-please import format from library
-please use clean of format
+Please assign list of one and two and tree bark to variable crazy list
+Please for each item in crazy list
+    Please print index variable item of crazy list
+Please end for
+
+Please print next try to use array([2,3,4]) from numb pie
