@@ -66,7 +66,7 @@ def run_commands(sentences):
         sentence = sentences[i]
         sentence = sentence.strip()
         # note: order matters, like order of replacing words or ignoring rest of sentence:
-        # note > if > spell > print > variable > math, assign, import, use
+        # note > if > for > function > spell > variable > print > assign > math > import > use
         is_note = check_note(sentence)
         if is_note:
             i += 1
