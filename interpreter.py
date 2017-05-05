@@ -662,6 +662,7 @@ math_words_boolean = {'true':True,'false':False}
 math_words_operators = {'plus':'+','positive':'+','minus':'-','negative':'-',
                         'times':'*','divide':'/','divided':'/',
                         'equals':'==','equal':'==','over':'>','above':'>','under':'<','below':'<',
+                        'not':'!',
                         'modulus':'%','modulo':'%'}
 spell_checkphrases = ['spell with first letters of',
                       'spell with first letter of',
