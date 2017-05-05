@@ -62,6 +62,7 @@ def run_commands(sentences):
     global nested_blocks_ignore
     i = 0
     while i < len(sentences): # use i to access sentence indices for go-to locations
+        print_debug('  DEBUG LINE #' + str(i+1) + ' --------------')
         sentence = sentences[i]
         sentence = sentence.strip()
         # note: order matters, like order of replacing words or ignoring rest of sentence:
