@@ -56,13 +56,13 @@ def get_goto_locations(sentences):
             goto_locations[i] = goto_info
         elif matches_for:
             goto_locations[i] = Goto_data() # [status, list_index, list_length] = [False, 0, None]
-    print_debug('  DEBUG goto_locations: ' + str(goto_locations))
+    print_debug('goto_locations: ' + str(goto_locations))
 
 def run_commands(sentences):
     global nested_blocks_ignore
     i = 0
     while i < len(sentences): # use i to access sentence indices for go-to locations
-        print_debug('  DEBUG LINE #' + str(i+1) + ' --------------')
+        print_debug('LINE #' + str(i+1) + ' --------------')
         sentence = sentences[i]
         sentence = sentence.strip()
         # note: order matters, like order of replacing words or ignoring rest of sentence:
@@ -132,7 +132,7 @@ def check_spell(sentence):
             if matches:
                 words_to_spell_with = matches.group(1) # this is substring found inside '(.+)'
                 spelt_word = spell_with_first_letters(checkphrase, words_to_spell_with)
-                print_debug('  DEBUG SPELL: spelt_word=' + spelt_word)
+                print_debug('SPELL: spelt_word=' + spelt_word)
                 # print(sentence)
                 phrase_to_replace = phrase_start + ' ' + words_to_spell_with
                 sentence = sentence.replace(phrase_to_replace, spelt_word + ' ')
@@ -163,7 +163,7 @@ def check_variable(sentence):
         not_print_statement = not re.match('print .*', sentence) # avoid creating variables within print statement
         if variable_name not in variable_dictionary and not_print_statement:
             variable_dictionary[variable_name] = None
-        print_debug('  DEBUG variable_dictionary: ' + str(variable_dictionary))
+        print_debug('variable_dictionary: ' + str(variable_dictionary))
         not_assign_statement = not re.match('assign .+ to .+',sentence)
         # if assigning a value then don't replace variable name because dictionary needs variable name kept in sentence
         if not_assign_statement:
@@ -234,7 +234,7 @@ def check_math(sentence):
         else: # non-math word detected; time to evaluate expression so far
             try:
                 math_result = eval_math(math_expression)
-                print_debug('  DEBUG MATH: ' + math_expression + ' -> ' + str(math_result) + ' \t replace_expression = ' + replace_expression)
+                print_debug('MATH: ' + math_expression + ' -> ' + str(math_result) + ' \t replace_expression = ' + replace_expression)
                 # if the math works, then replace the section of the sentence
                 replace_expression = replace_expression.strip() # to make sure replaces properly
                 sentence = sentence.replace(replace_expression, str(math_result))
@@ -247,7 +247,7 @@ def check_math(sentence):
         if i == len(words)-1:
             try:
                 math_result = eval_math(math_expression)
-                print_debug('  DEBUG MATH: ' + math_expression + ' -> ' + str(math_result) + ' \t replace_expression = ' + replace_expression)
+                print_debug('MATH: ' + math_expression + ' -> ' + str(math_result) + ' \t replace_expression = ' + replace_expression)
                 # if the math works, then replace the section of the sentence
                 replace_expression = replace_expression.strip() # to make sure replaces properly
                 sentence = sentence.replace(replace_expression, str(math_result))
@@ -287,7 +287,7 @@ def check_assign(sentence):
                 pass
             variable_dictionary[variable_name] = variable_value
             # print(' variable_value = ' + str(variable_value) + ' \t variable_name = ' + variable_name)
-            print_debug('  DEBUG variable_dictionary: ' + str(variable_dictionary))
+            print_debug('variable_dictionary: ' + str(variable_dictionary))
 
 def check_assign_list_passed(sentence):
     checkphrase = '.*assign list from (.+) to (.+) to (variable )?(.+)'
@@ -296,10 +296,10 @@ def check_assign_list_passed(sentence):
         list_start = int(check_math(matches.group(1)))
         list_stop = int(check_math(matches.group(2)))
         variable_name = matches.group(4)
-        print_debug('  DEBUG list start = ' + str(list_start) + ' stop = ' + str(list_stop) + ' ASSIGN TO: ' + variable_name)
+        print_debug('list start = ' + str(list_start) + ' stop = ' + str(list_stop) + ' ASSIGN TO: ' + variable_name)
         list_values = list(range(list_start, list_stop+1))
         variable_dictionary[variable_name] = list_values
-        print_debug('  DEBUG variable_dictionary: ' + str(variable_dictionary))
+        print_debug('variable_dictionary: ' + str(variable_dictionary))
         return True # found assignment of list to variable
     else:
         # check if assigning unordered list of items separated by ' and '
@@ -309,9 +309,9 @@ def check_assign_list_passed(sentence):
             unordered_list_items = matches.group(1).split(' and ') # items separated by ' and '
             unordered_list_items = translate_list_items(unordered_list_items)
             variable_name = matches.group(3)
-            print_debug('  DEBUG list unordered_list_items = ' + str(unordered_list_items) + ' ASSIGN TO: ' + variable_name)
+            print_debug('list unordered_list_items = ' + str(unordered_list_items) + ' ASSIGN TO: ' + variable_name)
             variable_dictionary[variable_name] = unordered_list_items
-            print_debug('  DEBUG variable_dictionary: ' + str(variable_dictionary))
+            print_debug('variable_dictionary: ' + str(variable_dictionary))
             return True # found assignment of list to variable
         else:
             # TODO: '.*assign list of (.+) to (variable )?(.+)' --> group(1) --> .split(' and ') --> 'one and two and tree bark' -> [one,two,'tree bark']
@@ -342,28 +342,28 @@ def check_import(sentence):
         import_name = matches.group(1)
         import_as = matches.group(4)
         import_from = matches.group(6)
-        print_debug('  DEBUG IMPORT:\n\timport_name = ' + str(import_name) + '\n\timport_from = ' + str(import_from) + '\n\timport_as = ' + str(import_as))
+        print_debug('IMPORT:\n\timport_name = ' + str(import_name) + '\n\timport_from = ' + str(import_from) + '\n\timport_as = ' + str(import_as))
         if import_as: # can nickname import module
-            print_debug('  DEBUG IMPORT ... AS ...')
+            print_debug('IMPORT ... AS ...')
             module = import_module(import_name)
         if import_from: # can import from folder
-            print_debug('  DEBUG IMPORT ... FROM ...')
+            print_debug('IMPORT ... FROM ...')
             spec = importlib.util.spec_from_file_location(import_name, import_from + '/' + import_name + '.py')
             module = importlib.util.module_from_spec(spec)
             # enables use of functions and variables from the module (does the actual import):
             spec.loader.exec_module(module)
-        print_debug('  DEBUG IMPORT: ' + str(module))
+        print_debug('IMPORT: ' + str(module))
         # add to list of imports
         if import_as:
             import_dictionary[import_as] = module
         else:
             import_dictionary[import_name] = module
-        print_debug('  DEBUG IMPORT: IMPORT_DICTIONARY, size = ' + str(len(import_dictionary)) + '\n\t = ' + str(import_dictionary))
+        print_debug('IMPORT: IMPORT_DICTIONARY, size = ' + str(len(import_dictionary)) + '\n\t = ' + str(import_dictionary))
     else:
         checkphrase = '.*import (.+)'
         matches = re.match(checkphrase, sentence)
         if matches:
-            print_debug('  DEBUG IMPORT NAME ...')
+            print_debug('IMPORT NAME ...')
             import_name = matches.group(1).strip() # remove final spaces because of regex
             try: # try with .py ending
                 spec = importlib.util.spec_from_file_location(import_name, import_name + '.py')
@@ -378,10 +378,10 @@ def check_import(sentence):
                     spec.loader.exec_module(module)
                 except:
                     pass
-            print_debug('  DEBUG IMPORT: ' + str(module))
+            print_debug('IMPORT: ' + str(module))
             # add to list of imports
             import_dictionary[import_name] = module
-            print_debug('  DEBUG IMPORT: IMPORT_DICTIONARY, size = ' + str(len(import_dictionary)) + '\n\t = ' + str(import_dictionary))
+            print_debug('IMPORT: IMPORT_DICTIONARY, size = ' + str(len(import_dictionary)) + '\n\t = ' + str(import_dictionary))
 
 """
 example:
@@ -396,22 +396,22 @@ def check_use(sentence):
         use_string = matches.group(1)
         from_string = matches.group(3)
         variable_name = matches.group(4)
-        print_debug('  DEBUG USE: ' + use_string + ' from ' + from_string)
+        print_debug('USE: ' + use_string + ' from ' + from_string)
         function_imported = getattr(import_dictionary[from_string], use_string)
         try:
             variable_dictionary[variable_name] = function_imported() # try to use function_imported as a function
-            print_debug('  DEBUG variable_dictionary: ' + str(variable_dictionary))
+            print_debug('variable_dictionary: ' + str(variable_dictionary))
         except:
             print(function_imported) # in case function_imported is just an output value
             variable_dictionary[variable_name] = function_imported # in case function_imported is just an output value
-            print_debug('  DEBUG variable_dictionary: ' + str(variable_dictionary))
+            print_debug('variable_dictionary: ' + str(variable_dictionary))
     else:
         checkphrase = '.*use (.+)( from | of )(.+)' # check less restrictive one after
         matches = re.match(checkphrase, sentence)
         if matches:
             use_string = matches.group(1)
             from_string = matches.group(3)
-            print_debug('  DEBUG USE: ' + use_string + ' from ' + from_string)
+            print_debug('USE: ' + use_string + ' from ' + from_string)
             function_imported = getattr(import_dictionary[from_string], use_string)
             try:
                 function_imported() # try to use function_imported as a function
@@ -441,14 +441,14 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
         if math_expression not in ['True', 'False']:
             math_expression = 'False'
         if_string = eval_math(math_expression)
-        print_debug('  DEBUG if (' + str(if_string) + ') then')
+        print_debug('if (' + str(if_string) + ') then')
         if if_string == True and nested_blocks_ignore == 0:
-            # print_debug('  DEBUG nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- if')
+            # print_debug('nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- if')
             return [nested_blocks_ignore,sentence]
         else:
-            print_debug('  DEBUG -> FALSE -> end if')
+            print_debug('-> FALSE -> end if')
             nested_blocks_ignore += 1
-            # print_debug('  DEBUG nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- if')
+            # print_debug('nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- if')
             return [nested_blocks_ignore,sentence]
     elif matches_oneliner:
         # treat the rest of the sentence like a new sentence
@@ -457,16 +457,16 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
         if math_expression not in ['True', 'False']:
             math_expression = 'False'
         if_string = eval_math(math_expression)
-        print_debug('  DEBUG if (' + str(if_string) + ') then')
+        print_debug('if (' + str(if_string) + ') then')
         if if_string == True and nested_blocks_ignore == 0:
             # run the rest of this sentence as its own command (make sure check_if() happens before other checks)
             sentence = sentence.replace(matches_oneliner.group(), '')
-            # print_debug('  DEBUG nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- if')
+            # print_debug('nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- if')
             return [nested_blocks_ignore,sentence]
         else:
-            print_debug('  DEBUG -> FALSE -> end if')
+            print_debug('-> FALSE -> end if')
             # one-liner if-statement does not add to nestedness, so do not do nested_blocks_ignore += 1
-            # print_debug('  DEBUG nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- if')
+            # print_debug('nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- if')
             return [nested_blocks_ignore,sentence]
     else:
         checkphrase = '.*end if'
@@ -475,7 +475,7 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
             nested_blocks_ignore -= 1
             if nested_blocks_ignore < 0:
                 nested_blocks_ignore = 0
-            # print_debug('  DEBUG nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- end if')
+            # print_debug('nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- end if')
             return [nested_blocks_ignore,sentence]
         else:
             return [nested_blocks_ignore,sentence]
@@ -494,19 +494,19 @@ def check_for(sentence, i):
     if matches:
         element = matches.group(2)
         list_name = matches.group(4)
-        print_debug('  DEBUG FOR: sentence = '+sentence)
-        print_debug('  DEBUG FOR: element = ' + element)
-        print_debug('  DEBUG FOR: list_name = ' + list_name)
+        print_debug('FOR: sentence = '+sentence)
+        print_debug('FOR: element = ' + element)
+        print_debug('FOR: list_name = ' + list_name)
         # create loop variable for element to go through the list range
         variable_dictionary[element] = variable_dictionary[list_name][0]
-        print_debug('  DEBUG VAR DICT: ' + str(variable_dictionary))
+        print_debug('VAR DICT: ' + str(variable_dictionary))
         # activate this loop (no need to evaluate true right now)
         current_loop = goto_locations[i]
         current_loop.activate(element, variable_dictionary[list_name])
-        print_debug('  DEBUG GOTO STATUS: ' + str(goto_locations[i].status))
+        print_debug('GOTO STATUS: ' + str(goto_locations[i].status))
         # track nesting
         goto_stack.append(i)
-        print_debug('  DEBUG GOTO STACK: ' + str(goto_stack))
+        print_debug('GOTO STACK: ' + str(goto_stack))
         # don't skip anywhere
         skip_to_line = i
     else:
@@ -517,17 +517,17 @@ def check_for(sentence, i):
             current_loop = goto_locations[last_nested_i]
             # check if at last index in list_name
             loop_index = current_loop.list_index
-            print_debug('  DEBUG FOR list len: '+str(current_loop.list_length))
+            print_debug('FOR list len: '+str(current_loop.list_length))
             if loop_index >= current_loop.list_length-1:
                 # remove loop variable
                 element = current_loop.loop_variable
                 variable_dictionary.pop(element)
-                print_debug('  DEBUG VAR DICT: ' + str(variable_dictionary))
+                print_debug('VAR DICT: ' + str(variable_dictionary))
                 # deactivate this loop
                 current_loop.deactivate()
-                print_debug('  DEBUG GOTO STATUS: ' + str(goto_locations[last_nested_i].status))
+                print_debug('GOTO STATUS: ' + str(goto_locations[last_nested_i].status))
                 goto_stack.pop()
-                print_debug('  DEBUG GOTO STACK: ' + str(goto_stack))
+                print_debug('GOTO STACK: ' + str(goto_stack))
                 # don't skip anywhere
                 skip_to_line
             else:
@@ -547,14 +547,14 @@ def check_function(sentence, i):
     if matches:
         function_name = matches.group(1)
         input_names = matches.group(4).split(' and ')
-        print_debug('  DEBUG FUNCTION: ' + function_name + ' (' + str(input_names) + ')')
+        print_debug('FUNCTION: ' + function_name + ' (' + str(input_names) + ')')
         # create function if have not already
         if function_name not in function_dictionary:
             function = Function_data()
             function_dictionary[function_name] = function
             for local_variable in input_names:
                 function.local_variables[local_variable] = None # initialize
-            print_debug('  DEBUG FUNCTION: ' + str(function.local_variables))
+            print_debug('FUNCTION: ' + str(function.local_variables))
         # check if function not being called
         function = function_dictionary[function_name]
         if not function.being_called: # (just carry on reading linearly if it is being called)
@@ -578,7 +578,7 @@ def check_function(sentence, i):
                     goto_stack.pop()
                     # skip back to where function was called
                     i = function.index_called_from
-                    print_debug('  DEBUG END FUNCTION: called from i = '+str(i))
+                    print_debug('END FUNCTION: called from i = '+str(i))
         else:
             checkphrase = '.*use function (.+)( on (.+))?'
             matches = re.match(checkphrase, sentence)
@@ -589,7 +589,7 @@ def check_function(sentence, i):
                 for index in goto_locations:
                     # find function
                     if goto_locations[index].name == function_name:
-                        print_debug('  DEBUG CALL FUNCTION: ' + function_name)
+                        print_debug('CALL FUNCTION: ' + function_name)
                         # create function if have not already
                         if function_name not in function_dictionary:
                             function = Function_data()
@@ -599,12 +599,12 @@ def check_function(sentence, i):
                         function.being_called = True
                         i = index
                         goto_stack.append(index)
-    print_debug('  DEBUG FUNCTION: goto_stack: '+str(goto_stack))
+    print_debug('FUNCTION: goto_stack: '+str(goto_stack))
     return [i, nested_blocks_ignore]
 
 def print_debug(string):
     if hide_debug_printouts == False:
-        print(string)
+        print('  DEBUG ' + string)
 
 
 
