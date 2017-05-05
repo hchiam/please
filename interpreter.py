@@ -641,7 +641,7 @@ math_words_numbers = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,
 math_words_boolean = {'true':True,'false':False}
 math_words_operators = {'plus':'+','positive':'+','minus':'-','negative':'-',
                         'times':'*','divide':'/','divided':'/',
-                        'equals':'==','equal':'==',
+                        'equals':'==','equal':'==','over':'>','above':'>','under':'<','below':'<',
                         'modulus':'%','modulo':'%'}
 spell_checkphrases = ['spell with first letters of',
                       'spell with first letter of',
