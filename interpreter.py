@@ -43,12 +43,17 @@ def get_goto_locations(sentences):
         sentence = sentences[i].strip()
         checkphrase_for = 'for each (.+) in (.+)'
         matches_for = re.match(checkphrase_for, sentence)
-        checkphrase_function = 'define function (.+)'
+        checkphrase_function = 'define function (.+) (with |using )(inputs )?(.+)$'
         matches_function = re.match(checkphrase_function, sentence)
         checkphrase_class = 'define class (.+)'
         matches_class = re.match(checkphrase_class, sentence)
-        if matches_function or matches_class:
-            goto_locations[i] = Goto_data() # [status, list_index, list_length] = [False, 0, None]
+        if matches_function:
+            goto_info = Goto_data() # [status, list_index, list_length] = [False, 0, None]
+            goto_info.name = matches_function.group(1)
+            goto_locations[i] = goto_info
+        elif matches_class:
+            goto_info = Goto_data() # [status, list_index, list_length] = [False, 0, None]
+            goto_locations[i] = goto_info
         elif matches_for:
             goto_locations[i] = Goto_data() # [status, list_index, list_length] = [False, 0, None]
     print_debug('  DEBUG goto_locations: ' + str(goto_locations))
@@ -67,6 +72,7 @@ def run_commands(sentences):
             continue # ignore this sentence
         [nested_blocks_ignore,sentence] = check_if(sentence) # one-liner if-statement may contain sentence to run
         i = check_for(sentence, i) # can skip back to top part of for loop
+        [i,nested_blocks_ignore] = check_function(sentence, i) # can skip to top of function or back to where function was called
         if nested_blocks_ignore == 0: # whether to not ignore lines after an if-statement
             sentence = check_spell(sentence)
             sentence = check_variable(sentence) # can replace "variable apple" with the value of apple
@@ -533,6 +539,68 @@ def check_for(sentence, i):
             skip_to_line = i
     return skip_to_line
 
+def check_function(sentence, i):
+    global nested_blocks_ignore
+    checkphrase = 'define function (.+)( with | using )(inputs )?(.+)$' # input names separated by ' and '
+    matches = re.match(checkphrase, sentence)
+    if matches:
+        function_name = matches.group(1)
+        input_names = matches.group(4).split(' and ')
+        print_debug('  DEBUG FUNCTION: ' + function_name + ' (' + str(input_names) + ')')
+        # create function if have not already
+        if function_name not in function_dictionary:
+            function = Function_data()
+            function_dictionary[function_name] = function
+            for local_variable in input_names:
+                function.local_variables[local_variable] = None # initialize
+            print_debug('  DEBUG FUNCTION: ' + str(function.local_variables))
+        # check if function not being called
+        function = function_dictionary[function_name]
+        if not function.being_called: # (just carry on reading linearly if it is being called)
+            nested_blocks_ignore += 1
+    else:
+        # check end function and setting nested_blocks_ignore -= 1 or = 0
+        checkphrase = '.*end function'
+        matches = re.match(checkphrase, sentence)
+        if matches:
+            nested_blocks_ignore -= 1
+            if nested_blocks_ignore < 0:
+                nested_blocks_ignore = 0
+            # there's anything on the goto_stack
+            if goto_stack:
+                # get last goto stack item index because such goto blocks can only be within each other
+                index = goto_stack[-1]
+                function_name = goto_locations[index].name
+                function = function_dictionary[function_name]
+                if function.being_called:
+                    function.being_called = False
+                    goto_stack.pop()
+                    # skip back to where function was called
+                    i = function.index_called_from
+                    print_debug('  DEBUG END FUNCTION: called from i = '+str(i))
+        else:
+            checkphrase = '.*use function (.+)( on (.+))?'
+            matches = re.match(checkphrase, sentence)
+            if matches:
+                # try to find function index and then skip to top of function
+                function_name = matches.group(1)
+                variable = matches.group(3)
+                for index in goto_locations:
+                    # find function
+                    if goto_locations[index].name == function_name:
+                        print_debug('  DEBUG CALL FUNCTION: ' + function_name)
+                        # create function if have not already
+                        if function_name not in function_dictionary:
+                            function = Function_data()
+                            function_dictionary[function_name] = function
+                        function = function_dictionary[function_name]
+                        function.index_called_from = i
+                        function.being_called = True
+                        i = index
+                        goto_stack.append(index)
+    print_debug('  DEBUG FUNCTION: goto_stack: '+str(goto_stack))
+    return [i, nested_blocks_ignore]
+
 def print_debug(string):
     if hide_debug_printouts == False:
         print(string)
@@ -541,11 +609,12 @@ def print_debug(string):
 
 # initialize global variables:
 
-hide_debug_printouts = True # True = hide debug prints print()
-goto_stack = [] # track nesting of loops, functions, or classes by appending/popping their header indices
-goto_locations = {} # map indices to [statuses and indices] of loops, functions, and classes
+hide_debug_printouts = True # True = hide debug prints
+goto_stack = [] # append/pop "header" indices to track nesting of loops, functions, or classes ; {#,#,#,...}
+goto_locations = {} # map indices to Goto_data of loops, functions, and classes ; {#:<Goto_data()>,#:<Goto_data()>,...}
 class Goto_data:
     status = False
+    name = '' # functions
     list_index = 0 # for loops
     loop_variable = '' # for loops
     list_length = None # for loops
@@ -560,14 +629,20 @@ class Goto_data:
 nested_blocks_ignore = 0 # to track whether got out of an if-statement that evaluated to False
 variable_dictionary = {} # Python dictionaries are just hashtables (avg time complexity O(1))
 import_dictionary = {}
-math_words_numbers = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,'six':6,'seven':7,'eight':8,'nine':9,
-                      'ten':10,'eleven':11,'twelve':12,'thirteen':13,'fourteen':14,'fifteen':15,
+math_words_numbers = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,
+                      'six':6,'seven':7,'eight':8,'nine':9,'ten':10,
+                      'eleven':11,'twelve':12,'thirteen':13,'fourteen':14,'fifteen':15,
                       'sixteen':16,'seventeen':17,'eighteen':18,'nineteen':19,
-                      'twenty':20,'thirty':30,'forty':40,'fifty':50,'sixty':60,'seventy':70,'eighty':80,'ninety':90,
-                      'hundred':'00','thousand':'000','million':'000000','billion':'000000000','trillion':'000000000',
+                      'twenty':20,'thirty':30,'forty':40,'fifty':50,
+                      'sixty':60,'seventy':70,'eighty':80,'ninety':90,
+                      'hundred':'00','thousand':'000','million':'000000',
+                      'billion':'000000000','trillion':'000000000',
                       '0':0,'1':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9}
 math_words_boolean = {'true':True,'false':False}
-math_words_operators = {'plus':'+','positive':'+','minus':'-','negative':'-','times':'*','divide':'/','divided':'/','equals':'==','equal':'==','modulus':'%','modulo':'%'}
+math_words_operators = {'plus':'+','positive':'+','minus':'-','negative':'-',
+                        'times':'*','divide':'/','divided':'/',
+                        'equals':'==','equal':'==',
+                        'modulus':'%','modulo':'%'}
 spell_checkphrases = ['spell with first letters of',
                       'spell with first letter of',
                       'spelled with first letters of',
@@ -586,6 +661,11 @@ spell_checkphrases = ['spell with first letters of',
                       'spelt using the first letter of',
                      ]
 spell_finish_words = ['to', 'as', 'from', 'then', '$'] # $ for end of line for regex
+function_dictionary = {} # map function names to Function_data instead of doing {'function_name' : {'local_variable_name':'value'}, ...}
+class Function_data:
+    being_called = False
+    local_variables = {}
+    index_called_from = None
 
 
 
