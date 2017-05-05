@@ -161,30 +161,41 @@ def check_variable(sentence):
     if matches:
         variable_name = matches.group(1) # this is substring found inside '(.+)'
         not_print_statement = not re.match('print .*', sentence) # avoid creating variables within print statement
-        if variable_name not in variable_dictionary and not_print_statement:
+        checkphrase_assign = 'assign .+ to .+'
+        assigning_value = re.match(checkphrase_assign,sentence)
+        if variable_name not in variable_dictionary and not_print_statement and not assigning_value:
             variable_dictionary[variable_name] = None
-        print_debug('variable_dictionary: ' + str(variable_dictionary))
-        not_assign_statement = not re.match('assign .+ to .+',sentence)
-        # if assigning a value then don't replace variable name because dictionary needs variable name kept in sentence
-        if not_assign_statement:
-            variables_found = dictionary_variables_in_string(sentence)
-            # check for index of variable name to replace
-            checkphrase = '(.*)index (.+) of (variable )?(.+).*'
-            matches = re.match(checkphrase, sentence)
-            if matches:
-                part_before = matches.group(1)
-                index = matches.group(2)
-                variable_name = matches.group(4)
-                variable_index = eval_math(check_math(index))-1
-                variable_list = variable_dictionary[variable_name]
-                replacement_phrase = part_before + str(variable_list[variable_index])
-                sentence = re.sub(checkphrase, replacement_phrase, sentence) # sentence.replace('variable ' + var_found, str(variable_dictionary[var_found]))
-            # check for variable names to replace
-            for var_found in variables_found:
-                sentence = sentence.replace('variable ' + var_found, str(variable_dictionary[var_found]))
-            return sentence
-        else:
-            return sentence
+        print_debug('variable_dictionary1: ' + str(variable_dictionary))
+        # if assigning value then don't replace last variable name (after ' to ') because dictionary needs variable name kept in sentence
+        checkphrase = '(.+)( to (variable )?.+)$' # $ for end of sentence
+        matches = re.match(checkphrase, sentence)
+        replaceable_part = sentence # intialize
+        irreplaceable_part = '' # intialize
+        if matches:
+            replaceable_part = matches.group(1)
+            irreplaceable_part = matches.group(2)
+            sentence = replaceable_part
+        # print_debug('---1----=='+sentence)
+        # check for index of variable name to replace
+        checkphrase = '(.*)index (.+) of (variable )?(.+).*'
+        matches = re.match(checkphrase, sentence)
+        if matches:
+            part_before = matches.group(1)
+            index = matches.group(2)
+            variable_name = matches.group(4)
+            variable_index = eval_math(check_math(index))-1
+            variable_list = variable_dictionary[variable_name]
+            replacement_phrase = part_before + str(variable_list[variable_index])
+            sentence = re.sub(checkphrase, replacement_phrase, sentence) # sentence.replace('variable ' + var_found, str(variable_dictionary[var_found]))
+        # check for variable names to replace
+        variables_found = dictionary_variables_in_string(sentence)
+        for var_found in variables_found:
+            sentence = sentence.replace('variable ' + var_found, str(variable_dictionary[var_found]))
+        # put back part that should not have variable replaced
+        # print_debug('----2---=='+sentence)
+        sentence = sentence + irreplaceable_part
+        # print_debug('------3-=='+sentence)
+        return sentence
     else:
         return sentence
 
@@ -212,7 +223,7 @@ def check_math(sentence):
             # only do this after non-math word or end of sentence: sentence = sentence.replace(word, str(math_words_numbers[word]))
             math_expression += str(math_words_numbers[word])
             replace_expression += ' ' + word
-        elif word.isdigit():
+        elif is_digit(word):
             math_expression += str(word)
             replace_expression += ' ' + word
         elif word in math_words_boolean:
@@ -234,7 +245,7 @@ def check_math(sentence):
         else: # non-math word detected; time to evaluate expression so far
             try:
                 math_result = eval_math(math_expression)
-                print_debug('MATH: ' + math_expression + ' -> ' + str(math_result) + ' \t replace_expression = ' + replace_expression)
+                print_debug('MATH1: ' + math_expression + ' -> ' + str(math_result) + ' \t replace_expression = ' + replace_expression)
                 # if the math works, then replace the section of the sentence
                 replace_expression = replace_expression.strip() # to make sure replaces properly
                 sentence = sentence.replace(replace_expression, str(math_result))
@@ -247,7 +258,7 @@ def check_math(sentence):
         if i == len(words)-1:
             try:
                 math_result = eval_math(math_expression)
-                print_debug('MATH: ' + math_expression + ' -> ' + str(math_result) + ' \t replace_expression = ' + replace_expression)
+                print_debug('MATH2: ' + math_expression + ' -> ' + str(math_result) + ' \t replace_expression = ' + replace_expression)
                 # if the math works, then replace the section of the sentence
                 replace_expression = replace_expression.strip() # to make sure replaces properly
                 sentence = sentence.replace(replace_expression, str(math_result))
@@ -257,6 +268,14 @@ def check_math(sentence):
             math_expression = ''
             replace_expression = ''
     return sentence
+
+def is_digit(string):
+    # built-in isdigit() doesn't work with negative numbers
+    try:
+        int(string)
+        return True
+    except:
+        return False
 
 def eval_math(expression):
     # be conservative to try to restrict to only math and avoid abuse
@@ -287,7 +306,7 @@ def check_assign(sentence):
                 pass
             variable_dictionary[variable_name] = variable_value
             # print(' variable_value = ' + str(variable_value) + ' \t variable_name = ' + variable_name)
-            print_debug('variable_dictionary: ' + str(variable_dictionary))
+            print_debug('variable_dictionary2: ' + str(variable_dictionary))
 
 def check_assign_list_passed(sentence):
     checkphrase = '.*assign list from (.+) to (.+) to (variable )?(.+)'
@@ -299,7 +318,7 @@ def check_assign_list_passed(sentence):
         print_debug('list start = ' + str(list_start) + ' stop = ' + str(list_stop) + ' ASSIGN TO: ' + variable_name)
         list_values = list(range(list_start, list_stop+1))
         variable_dictionary[variable_name] = list_values
-        print_debug('variable_dictionary: ' + str(variable_dictionary))
+        print_debug('variable_dictionary3: ' + str(variable_dictionary))
         return True # found assignment of list to variable
     else:
         # check if assigning unordered list of items separated by ' and '
@@ -311,7 +330,7 @@ def check_assign_list_passed(sentence):
             variable_name = matches.group(3)
             print_debug('list unordered_list_items = ' + str(unordered_list_items) + ' ASSIGN TO: ' + variable_name)
             variable_dictionary[variable_name] = unordered_list_items
-            print_debug('variable_dictionary: ' + str(variable_dictionary))
+            print_debug('variable_dictionary4: ' + str(variable_dictionary))
             return True # found assignment of list to variable
         else:
             # TODO: '.*assign list of (.+) to (variable )?(.+)' --> group(1) --> .split(' and ') --> 'one and two and tree bark' -> [one,two,'tree bark']
@@ -400,11 +419,11 @@ def check_use(sentence):
         function_imported = getattr(import_dictionary[from_string], use_string)
         try:
             variable_dictionary[variable_name] = function_imported() # try to use function_imported as a function
-            print_debug('variable_dictionary: ' + str(variable_dictionary))
+            print_debug('variable_dictionary5: ' + str(variable_dictionary))
         except:
             print(function_imported) # in case function_imported is just an output value
             variable_dictionary[variable_name] = function_imported # in case function_imported is just an output value
-            print_debug('variable_dictionary: ' + str(variable_dictionary))
+            print_debug('variable_dictionary6: ' + str(variable_dictionary))
     else:
         checkphrase = '.*use (.+)( from | of )(.+)' # check less restrictive one after
         matches = re.match(checkphrase, sentence)
