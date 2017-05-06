@@ -41,12 +41,9 @@ def get_goto_locations(sentences):
     global goto_locations
     for i in range(len(sentences)):
         sentence = sentences[i].strip()
-        checkphrase_for = 'for each (.+) in (.+)'
-        matches_for = re.match(checkphrase_for, sentence)
-        checkphrase_function = 'define function (.+) (with |using )(inputs )?(.+)$'
-        matches_function = re.match(checkphrase_function, sentence)
-        checkphrase_class = 'define class (.+)'
-        matches_class = re.match(checkphrase_class, sentence)
+        matches_for = re.match('for each (.+) in (.+)', sentence)
+        matches_function = re.match('define function (.+) (with |using )(inputs )?(.+)$', sentence)
+        matches_class = re.match('define class (.+)', sentence)
         if matches_function:
             goto_info = Goto_data() # [status, list_index, list_length] = [False, 0, None]
             goto_info.name = matches_function.group(1)
@@ -156,19 +153,16 @@ please print you assigned variable apple to apple
 """
 def check_variable(sentence):
     global variable_dictionary
-    checkphrase = '.*variable (.+).*'
-    matches = re.match(checkphrase, sentence)
+    matches = re.match('.*variable (.+).*', sentence)
     if matches:
         variable_name = matches.group(1) # this is substring found inside '(.+)'
         not_print_statement = not re.match('print .*', sentence) # avoid creating variables within print statement
-        checkphrase_assign = 'assign .+ to .+'
-        assigning_value = re.match(checkphrase_assign,sentence)
+        assigning_value = re.match('assign .+ to .+',sentence)
         if variable_name not in variable_dictionary and not_print_statement and not assigning_value:
             variable_dictionary[variable_name] = None
         print_debug('variable_dictionary1: ' + str(variable_dictionary))
         # if assigning value then don't replace last variable name (after ' to ') because dictionary needs variable name kept in sentence
-        checkphrase = '(.+)( to (variable )?.+)$' # $ for end of sentence
-        matches = re.match(checkphrase, sentence)
+        matches = re.match('(.+)( to (variable )?.+)$', sentence) # $ for end of sentence
         replaceable_part = sentence # intialize
         irreplaceable_part = '' # intialize
         if matches:
@@ -177,8 +171,7 @@ def check_variable(sentence):
             sentence = replaceable_part
         # print_debug('---1----=='+sentence)
         # check for index of variable name to replace
-        checkphrase = '(.*)index (.+) of (variable )?(.+).*'
-        matches = re.match(checkphrase, sentence)
+        matches = re.match('(.*)index (.+) of (variable )?(.+).*', sentence)
         if matches:
             part_before = matches.group(1)
             index = matches.group(2)
@@ -304,8 +297,7 @@ Please assign some words to variable coconut
 """
 def check_assign(sentence):
     if not check_assign_list_passed(sentence):
-        checkphrase = '.*assign (.+) to (variable )?(.+)'
-        matches = re.match(checkphrase, sentence)
+        matches = re.match('.*assign (.+) to (variable )?(.+)', sentence)
         if matches:
             variable_value = matches.group(1)
             variable_name = matches.group(3)
@@ -321,8 +313,7 @@ def check_assign(sentence):
 
 def check_assign_list_passed(sentence):
     # check if assigning ordered list of items
-    checkphrase = '.*assign list from (.+) to (.+) to (variable )?(.+)'
-    matches = re.match(checkphrase, sentence)
+    matches = re.match('.*assign list from (.+) to (.+) to (variable )?(.+)', sentence)
     if matches:
         list_start = int(check_math(matches.group(1)))
         list_stop = int(check_math(matches.group(2)))
@@ -333,8 +324,7 @@ def check_assign_list_passed(sentence):
         print_debug('variable_dictionary3: ' + str(variable_dictionary))
         return True # found assignment of list to variable
     # check if assigning unordered list of items separated by ' and '
-    checkphrase = '.*assign list of (.+) to (variable )?(.+)'
-    matches = re.match(checkphrase, sentence)
+    matches = re.match('.*assign list of (.+) to (variable )?(.+)', sentence)
     if matches:
         unordered_list_items = matches.group(1).split(' and ') # items separated by ' and '
         unordered_list_items = translate_list_items(unordered_list_items)
@@ -364,9 +354,8 @@ Please import numpy as nectarine pony
 """
 def check_import(sentence):
     global import_dictionary
-    module = None
-    checkphrase = '.*import (.+)(( as (.+))|( from (.+)))'
-    matches = re.match(checkphrase, sentence)
+    module = None 
+    matches = re.match('.*import (.+)(( as (.+))|( from (.+)))', sentence)
     if matches:
         import_name = matches.group(1)
         import_as = matches.group(4)
@@ -389,8 +378,7 @@ def check_import(sentence):
             import_dictionary[import_name] = module
         print_debug('IMPORT: IMPORT_DICTIONARY, size = ' + str(len(import_dictionary)) + '\n\t = ' + str(import_dictionary))
     else:
-        checkphrase = '.*import (.+)'
-        matches = re.match(checkphrase, sentence)
+        matches = re.match('.*import (.+)', sentence)
         if matches:
             print_debug('IMPORT NAME ...')
             import_name = matches.group(1).strip() # remove final spaces because of regex
@@ -419,8 +407,8 @@ Please use test_function from test
 """
 def check_use(sentence):
     global import_dictionary
-    checkphrase = '.*use (.+)( from | of )(.+) to (.+)' # check more restrictive one first
-    matches = re.match(checkphrase, sentence)
+    # check more restrictive one first
+    matches = re.match('.*use (.+)( from | of )(.+) to (.+)', sentence)
     if matches:
         use_string = matches.group(1)
         from_string = matches.group(3)
@@ -435,8 +423,8 @@ def check_use(sentence):
             variable_dictionary[variable_name] = function_imported # in case function_imported is just an output value
             print_debug('variable_dictionary6: ' + str(variable_dictionary))
     else:
-        checkphrase = '.*use (.+)( from | of )(.+)' # check less restrictive one after
-        matches = re.match(checkphrase, sentence)
+        # check less restrictive one after
+        matches = re.match('.*use (.+)( from | of )(.+)', sentence)
         if matches:
             use_string = matches.group(1)
             from_string = matches.group(3)
@@ -460,10 +448,8 @@ Please end if
 def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nesting)
     global nested_blocks_ignore
     # force 'if' to be first word; DO NOT start regex with '.*'
-    checkphrase = 'if (.+) then$' # $ for end of sentence
-    matches = re.match(checkphrase, sentence)
-    checkphrase_oneliner = 'if (.+) then ' # space after WITHOUT $ for continuing sentence
-    matches_oneliner = re.match(checkphrase_oneliner, sentence)
+    matches = re.match('if (.+) then$', sentence) # $ for end of sentence
+    matches_oneliner = re.match('if (.+) then ', sentence) # space after WITHOUT $ for continuing sentence
     if matches:
         put_in_vals_of_vars = check_variable(check_spell(matches.group(1)))
         math_expression = check_math(put_in_vals_of_vars)
@@ -498,8 +484,7 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
             # print_debug('nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- if')
             return [nested_blocks_ignore,sentence]
     else:
-        checkphrase = '.*end if'
-        matches = re.match(checkphrase, sentence)
+        matches = re.match('.*end if', sentence)
         if matches:
             nested_blocks_ignore -= 1
             if nested_blocks_ignore < 0:
@@ -518,8 +503,7 @@ Please end for
 def check_for(sentence, i):
     global nested_blocks_ignore
     skip_to_line = i
-    checkphrase = 'for each (variable )?(.+) in (variable )?(.+)'
-    matches = re.match(checkphrase, sentence)
+    matches = re.match('for each (variable )?(.+) in (variable )?(.+)', sentence)
     if matches:
         element = matches.group(2)
         list_name = matches.group(4)
@@ -539,8 +523,7 @@ def check_for(sentence, i):
         # don't skip anywhere
         skip_to_line = i
     else:
-        checkphrase = 'end for'
-        matches = re.match(checkphrase, sentence)
+        matches = re.match('end for', sentence)
         if matches: # check if need to loop back to header index
             last_nested_i = goto_stack[-1]
             current_loop = goto_locations[last_nested_i]
@@ -571,8 +554,8 @@ def check_for(sentence, i):
 
 def check_function(sentence, i):
     global nested_blocks_ignore
-    checkphrase = 'define function (.+)( with | using )(inputs )?(.+)$' # input names separated by ' and '
-    matches = re.match(checkphrase, sentence)
+    # input names expected to be separated by ' and '
+    matches = re.match('define function (.+)( with | using )(inputs )?(.+)$', sentence)
     if matches:
         function_name = matches.group(1)
         input_names = matches.group(4).split(' and ')
@@ -595,8 +578,7 @@ def check_function(sentence, i):
                 function.local_variables[i] = local_variables[i]
     else:
         # check end function and setting nested_blocks_ignore -= 1 or = 0
-        checkphrase = '.*end function'
-        matches = re.match(checkphrase, sentence)
+        matches = re.match('.*end function', sentence)
         if matches:
             nested_blocks_ignore -= 1
             if nested_blocks_ignore < 0:
@@ -614,8 +596,7 @@ def check_function(sentence, i):
                     i = function.index_called_from
                     print_debug('END FUNCTION: called from i = '+str(i))
         else:
-            checkphrase = '.*use function (((.+) on (.+))|(.+))'
-            matches = re.match(checkphrase, sentence)
+            matches = re.match('.*use function (((.+) on (.+))|(.+))', sentence)
             if matches:
                 # try to find function index and then skip to top of function
                 has_input_values = matches.group(2)
