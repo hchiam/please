@@ -188,7 +188,7 @@ def check_variable(sentence):
             replacement_phrase = part_before + str(variable_list[variable_index])
             sentence = re.sub(checkphrase, replacement_phrase, sentence) # sentence.replace('variable ' + var_found, str(variable_dictionary[var_found]))
         # check for variable names to replace
-        variables_found = dictionary_variables_in_string(sentence)
+        variables_found = dictionary_variables_in_string(sentence, variable_dictionary)
         for var_found in variables_found:
             sentence = sentence.replace('variable ' + var_found, str(variable_dictionary[var_found]))
         # put back part that should not have variable replaced
@@ -199,14 +199,25 @@ def check_variable(sentence):
     else:
         return sentence
 
-def dictionary_variables_in_string(string):
-    global variable_dictionary
-    # find 'variable <variable_name>' in string for each variable in variable_dictionary
+def dictionary_variables_in_string(string, dictionary): # dictionary could be variable_dictionary or local_variables
+    # find 'variable <variable_name>' in string for each variable in dictionary
     variables_found = []
-    for variable_name in variable_dictionary:
+    for variable_name in dictionary:
         if re.match('.*variable ' + variable_name+'.*', string):
             variables_found.append(variable_name)
     return variables_found
+
+def get_local_variables():
+    global goto_stack # to access local_variables of current function
+    global goto_locations # to access local_variables of current function
+    global function_dictionary # to access local_variables of current function
+    local_variables = []
+    if goto_stack:
+        function_called = goto_locations[goto_stack[-1]].name
+    if function_called:
+        function = function_dictionary[function_called]
+        local_variables = function.local_variables
+    return local_variables
 
 """
 example:
@@ -578,6 +589,11 @@ def check_function(sentence, i):
         function = function_dictionary[function_name]
         if not function.being_called: # (just carry on reading linearly if it is being called)
             nested_blocks_ignore += 1
+        else:
+            # get variable values from variable_inputs_string
+            local_variables = function.variable_inputs_string.split(' and ')
+            for i in range(len(local_variables)):
+                function.local_variables[i] = local_variables[i]
     else:
         # check end function and setting nested_blocks_ignore -= 1 or = 0
         checkphrase = '.*end function'
@@ -599,12 +615,19 @@ def check_function(sentence, i):
                     i = function.index_called_from
                     print_debug('END FUNCTION: called from i = '+str(i))
         else:
-            checkphrase = '.*use function (.+)( on (.+))?'
+            checkphrase = '.*use function (((.+) on (.+))|(.+))'
             matches = re.match(checkphrase, sentence)
             if matches:
                 # try to find function index and then skip to top of function
-                function_name = matches.group(1)
-                variable = matches.group(3)
+                has_input_values = matches.group(2)
+                if has_input_values:
+                    function_name = matches.group(3)
+                    input_values = matches.group(4)
+                    print('function_name = ' + str(function_name) + ' : input_values = ' + str(input_values))
+                else:
+                    function_name = matches.group(5)
+                    input_values = None
+                    print('function_name = ' + str(function_name) + ' : (no input_values)')
                 for index in goto_locations:
                     # find function
                     if goto_locations[index].name == function_name:
@@ -616,6 +639,8 @@ def check_function(sentence, i):
                         function = function_dictionary[function_name]
                         function.index_called_from = i
                         function.being_called = True
+                        function.variable_inputs_string = input_values
+                        print('function.variable_inputs_string = '+str(function.variable_inputs_string))
                         i = index
                         goto_stack.append(index)
     print_debug('FUNCTION: goto_stack: '+str(goto_stack))
@@ -685,6 +710,7 @@ spell_finish_words = ['to', 'as', 'from', 'then', '$'] # $ for end of line for r
 function_dictionary = {} # map function names to Function_data instead of doing {'function_name' : {'local_variable_name':'value'}, ...}
 class Function_data:
     being_called = False
+    variable_inputs_string = ''
     local_variables = {}
     index_called_from = None
 
