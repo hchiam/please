@@ -320,6 +320,7 @@ def check_assign(sentence):
             print_debug('variable_dictionary2: ' + str(variable_dictionary))
 
 def check_assign_list_passed(sentence):
+    # check if assigning ordered list of items
     checkphrase = '.*assign list from (.+) to (.+) to (variable )?(.+)'
     matches = re.match(checkphrase, sentence)
     if matches:
@@ -331,21 +332,19 @@ def check_assign_list_passed(sentence):
         variable_dictionary[variable_name] = list_values
         print_debug('variable_dictionary3: ' + str(variable_dictionary))
         return True # found assignment of list to variable
-    else:
-        # check if assigning unordered list of items separated by ' and '
-        checkphrase = '.*assign list of (.+) to (variable )?(.+)'
-        matches = re.match(checkphrase, sentence)
-        if matches:
-            unordered_list_items = matches.group(1).split(' and ') # items separated by ' and '
-            unordered_list_items = translate_list_items(unordered_list_items)
-            variable_name = matches.group(3)
-            print_debug('list unordered_list_items = ' + str(unordered_list_items) + ' ASSIGN TO: ' + variable_name)
-            variable_dictionary[variable_name] = unordered_list_items
-            print_debug('variable_dictionary4: ' + str(variable_dictionary))
-            return True # found assignment of list to variable
-        else:
-            # TODO: '.*assign list of (.+) to (variable )?(.+)' --> group(1) --> .split(' and ') --> 'one and two and tree bark' -> [one,two,'tree bark']
-            return False # did not find assignment of list to variable
+    # check if assigning unordered list of items separated by ' and '
+    checkphrase = '.*assign list of (.+) to (variable )?(.+)'
+    matches = re.match(checkphrase, sentence)
+    if matches:
+        unordered_list_items = matches.group(1).split(' and ') # items separated by ' and '
+        unordered_list_items = translate_list_items(unordered_list_items)
+        variable_name = matches.group(3)
+        print_debug('list unordered_list_items = ' + str(unordered_list_items) + ' ASSIGN TO: ' + variable_name)
+        variable_dictionary[variable_name] = unordered_list_items
+        print_debug('variable_dictionary4: ' + str(variable_dictionary))
+        return True # found assignment of list to variable
+    # TODO: '.*assign list of (.+) to (variable )?(.+)' --> group(1) --> .split(' and ') --> 'one and two and tree bark' -> [one,two,'tree bark']
+    return False # did not find assignment of list to variable
 
 def translate_list_items(list_items):
     # check if any list items fall under math, variables, or spelled words
