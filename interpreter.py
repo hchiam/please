@@ -484,16 +484,24 @@ def check_use(sentence, i):
     """
     try to use your own functions
     """
-    # check use of function from variable_dictionary
+    # explanation on +? at http://stackoverflow.com/questions/2301285/what-do-lazy-and-greedy-mean-in-the-context-of-regular-expressions
     function_name = ''
     input_values = [None]
-    matches_with_inputs = re.match('.*use function (.+) (on|with) (.+)', sentence) # check more restrictive phrasing first
+    output_variable = ''
+    # check for output variable to assign value to
+    matches_with_output = re.match('.*use function (.+) (on|with) (.+) to variable (.+)', sentence)
+    if matches_with_output:
+        output_variable = matches_with_output.group(4)
+    # check use of function from variable_dictionary, with or without input values
+    # check more restrictive phrasing first
+    matches_with_inputs = re.match('.*use function (.+) (on|with) (.+)( to variable (.+))+?', sentence)
     if matches_with_inputs:
         function_name = matches_with_inputs.group(1)
         input_values = matches_with_inputs.group(3).split(' and ')
         print_debug('function_name = ' + str(function_name) + ' : input_values = ' + str(input_values))
     else:
-        matches_without_inputs = re.match('.*use function (.+)', sentence) # check less restrictive phrasing after
+        # check less restrictive phrasing after
+        matches_without_inputs = re.match('.*use function (.+)( to variable (.+))+?', sentence)
         if matches_without_inputs:
             function_name = matches_without_inputs.group(1)
             # input_values = [None]
@@ -505,6 +513,7 @@ def check_use(sentence, i):
                 print_debug('CALL FUNCTION: ' + function_name)
                 function = variable_dictionary[function_name]
                 function.activate(input_values, i)
+                function.output_variable = output_variable
                 goto_stack.append(index)
                 # change output i if function found
                 i = index
@@ -661,7 +670,36 @@ def check_function(sentence, i):
                 function.deactivate()
                 goto_stack.pop()
                 print_debug('END FUNCTION: called from i = '+str(i))
+    # check return statement and setting nested_blocks_ignore -= 1 or = 0
+    matches = re.match('return (variable )?(.+)', sentence)
+    if matches:
+        output_value = matches.group(2)
+        outputting_variable_value = matches.group(1)
+        # if ignoring current function insides, can stop ignoring it now
+        nested_blocks_ignore -= 1
+        if nested_blocks_ignore < 0:
+            nested_blocks_ignore = 0
+        # check if there's anything on the goto_stack (like for loop or function)
+        if goto_stack:
+            # get last goto stack item index because such goto blocks can only be within each other
+            index = goto_stack[-1]
+            function_name = goto_locations[index].name
+            function = variable_dictionary[function_name]
+            if function.being_called:
+                if output_value: # otherwise could just be "please return"
+                    if outputting_variable_value:
+                        output_value =  function.local_variables[output_value]
+                    # output return value
+                    output_variable = function.output_variable
+                    variable_dictionary[output_variable] = output_value
+                # get index of where function was called
+                i = function.index_called_from
+                # then reset function local variables etc.
+                function.deactivate()
+                goto_stack.pop()
+                print_debug('RETURN FUNCTION: called from i = '+str(i) + ' : output ' + str(output_value) + ' to variable ' + output_variable)
     print_debug('FUNCTION: goto_stack: '+str(goto_stack))
+    # print_debug(variable_dictionary)
     return [i, nested_blocks_ignore]
 
 def print_debug(string):
@@ -700,6 +738,7 @@ class Function_data:
     being_called = False
     local_variables = {} # (except local variable names are set at beginning)
     index_called_from = None
+    output_variable = ''
     def __init__(self, location, list_of_variable_names):
         self.location = location
         for variable in list_of_variable_names:
@@ -716,6 +755,7 @@ class Function_data:
         for name in self.local_variables:
             self.local_variables[name] = None
         self.index_called_from = None
+        self.output_variable = ''
 math_words_numbers = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,
                       'six':6,'seven':7,'eight':8,'nine':9,'ten':10,
                       'eleven':11,'twelve':12,'thirteen':13,'fourteen':14,'fifteen':15,
