@@ -703,7 +703,7 @@ def check_function(sentence, i):
     # check return statement and setting nested_blocks_ignore -= 1 or = 0
     matches = re.match('return (variable )?(.+)', sentence)
     if matches:
-        output_value = matches.group(2)
+        output_value = check_math(matches.group(2))
         outputting_variable_value = matches.group(1)
         # check if there's anything on the goto_stack (like for loop or function)
         if goto_stack:
