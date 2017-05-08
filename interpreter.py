@@ -89,7 +89,7 @@ def run_commands(sentences):
             check_assign(sentence)
             sentence = check_math(sentence) # math after assign: avoid creating variables named None
             check_import(sentence)
-            check_use(sentence)
+            i = check_use(sentence, i)
         # go to next sentence
         i += 1
 
@@ -413,7 +413,7 @@ example:
 Please use test_function of test
 Please use test_function from test
 """
-def check_use(sentence):
+def check_use(sentence, i):
     global import_dictionary
     # check more restrictive one first
     matches = re.match('.*use (.+)( from | of )(.+) to (.+)', sentence)
@@ -430,18 +430,47 @@ def check_use(sentence):
             print(function_imported) # in case function_imported is just an output value
             variable_dictionary[variable_name] = function_imported # in case function_imported is just an output value
             print_debug('variable_dictionary6: ' + str(variable_dictionary))
-    else:
-        # check less restrictive one after
-        matches = re.match('.*use (.+)( from | of )(.+)', sentence)
-        if matches:
-            use_string = matches.group(1)
-            from_string = matches.group(3)
-            print_debug('USE: ' + use_string + ' from ' + from_string)
-            function_imported = getattr(import_dictionary[from_string], use_string)
-            try:
-                function_imported() # try to use function_imported as a function
-            except:
-                print(function_imported) # in case function_imported is just an output value
+        return i
+    # check less restrictive one after
+    matches = re.match('.*use (.+)( from | of )(.+)', sentence)
+    if matches:
+        use_string = matches.group(1)
+        from_string = matches.group(3)
+        print_debug('USE: ' + use_string + ' from ' + from_string)
+        function_imported = getattr(import_dictionary[from_string], use_string)
+        try:
+            function_imported() # try to use function_imported as a function
+        except:
+            print(function_imported) # in case function_imported is just an output value
+        return i
+    # check use of function in variable_dictionary
+    matches = re.match('.*use function (((.+) (on|with) (.+))|(.+))', sentence)
+    if matches:
+        has_input_values = matches.group(2)
+        # account for function calls with or without inputs
+        if has_input_values:
+            function_name = matches.group(3)
+            input_values = matches.group(5)
+            print_debug('function_name = ' + str(function_name) + ' : input_values = ' + str(input_values))
+        else:
+            function_name = matches.group(6)
+            input_values = None
+            print_debug('function_name = ' + str(function_name) + ' : (no input_values)')
+        # either way, try to find function index and then skip to top of function
+        for index in goto_locations:
+            if goto_locations[index].name == function_name:
+                print_debug('CALL FUNCTION: ' + function_name)
+                function = variable_dictionary[function_name]
+                function.index_called_from = i
+                function.being_called = True
+                function.variable_inputs_string = input_values
+                print_debug('function.variable_inputs_string = '+str(function.variable_inputs_string))
+                goto_stack.append(index)
+                # change output i if function found
+                i = index
+        return i
+    # otherwise no change to i
+    return i
 
 """
 example:
@@ -596,31 +625,6 @@ def check_function(sentence, i):
                     # skip back to where function was called
                     i = function.index_called_from
                     print_debug('END FUNCTION: called from i = '+str(i))
-        else:
-            matches = re.match('.*use function (((.+) (on|with) (.+))|(.+))', sentence)
-            if matches:
-                # try to find function index and then skip to top of function
-                has_input_values = matches.group(2)
-                # account for function calls with or without inputs
-                if has_input_values:
-                    function_name = matches.group(3)
-                    input_values = matches.group(5)
-                    print_debug('function_name = ' + str(function_name) + ' : input_values = ' + str(input_values))
-                else:
-                    function_name = matches.group(6)
-                    input_values = None
-                    print_debug('function_name = ' + str(function_name) + ' : (no input_values)')
-                # either way, find and go to function
-                for index in goto_locations:
-                    if goto_locations[index].name == function_name:
-                        print_debug('CALL FUNCTION: ' + function_name)
-                        function = variable_dictionary[function_name]
-                        function.index_called_from = i
-                        function.being_called = True
-                        function.variable_inputs_string = input_values
-                        print_debug('function.variable_inputs_string = '+str(function.variable_inputs_string))
-                        i = index
-                        goto_stack.append(index)
     print_debug('FUNCTION: goto_stack: '+str(goto_stack))
     return [i, nested_blocks_ignore]
 
