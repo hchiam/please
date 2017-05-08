@@ -261,10 +261,7 @@ def check_math(sentence):
                 variable_value = '\'' + variable_value + '\''
             math_expression += variable_value
             replace_expression += ' variable ' + word
-        elif word not in ['print','variable','assign','if','then','to','of','from','import','for','as','end','each','in','list','use']:
-            math_expression += '\'' + word + '\''
-            replace_expression += ' ' + word
-        else: # non-math word detected; time to evaluate expression so far
+        elif word not in ['print','variable','assign','if','then','to','of','from','import','for','as','end','each','in','list','use']: # non-math word detected; time to evaluate expression so far
             try:
                 math_result = eval_math(math_expression)
                 print_debug('MATH1: ' + math_expression + ' -> ' + str(math_result) + ' \t replace_expression = ' + replace_expression)
@@ -709,7 +706,7 @@ math_words_operators = {'plus':'+','positive':'+','minus':'-','negative':'-',
                         'times':'*','divide':'/','divided':'/',
                         'equals':'==','equal':'==','over':'>','above':'>','under':'<','below':'<',
                         'not':'!',
-                        'modulus':'%','modulo':'%'}
+                        'modulus':'%','modulo':'%'} # add more functions later as needed
 spell_checkphrases = ['spell with first letters of',
                       'spell with first letter of',
                       'spelled with first letters of',
