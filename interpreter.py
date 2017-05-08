@@ -193,13 +193,14 @@ def check_variable(sentence):
             sentence = replaceable_part
         # print_debug('---1----=='+sentence)
         # check for index of variable name to replace
-        matches = re.match('(.*)index (.+) of (variable )?(.+).*', sentence)
+        checkphrase = '(.*)index (.+) of (variable )?(.+).*'
+        matches = re.match(checkphrase, sentence)
         if matches:
             part_before = matches.group(1)
             index = matches.group(2)
             variable_name = matches.group(4)
             variable_index = eval_math(check_math(index))-1
-            if local_var_dictionary[variable_name]:
+            if variable_name in local_var_dictionary:
                 variable_list = local_var_dictionary[variable_name]
             else:
                 variable_list = variable_dictionary[variable_name]
