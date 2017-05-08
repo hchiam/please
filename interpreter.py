@@ -741,8 +741,15 @@ def print_debug(string):
 # initialize global variables:
 
 hide_debug_printouts = True # True = hide debug prints
+nested_blocks_ignore = 0 # track nesting to know whether got out of an if-statement that evaluated to False (to ignore lines)
 goto_stack = [] # append/pop "header" indices to track nesting of loops, functions, or classes ; {#,#,#,...}
-goto_locations = {} # map indices to Goto_data of loops, functions, and classes ; {#:<Goto_data()>,#:<Goto_data()>,...}
+
+# Python dictionaries are hashtables (avg time complexity O(1)):
+goto_locations = {} # map indices to Goto_data of loops, functions, and classes ; {#:<Goto_data()>, #:<Goto_data()>,...}
+variable_dictionary = {} # map variable names to variable values ; {'...':#, '...':'...', ...}
+import_dictionary = {} # map import names to import modules ; {'...':<...>, '...':<...>, ...}
+
+# classes to group together variables and setup steps:
 class Goto_data:
     status = False
     name = '' # functions
@@ -757,9 +764,6 @@ class Goto_data:
         self.status = False
         self.list_index = 0
         self.loop_variable = ''
-nested_blocks_ignore = 0 # to track whether got out of an if-statement that evaluated to False
-variable_dictionary = {} # Python dictionaries are just hashtables (avg time complexity O(1))
-import_dictionary = {}
 class Function_data:
     # set once:
     location = None
@@ -786,6 +790,8 @@ class Function_data:
             self.local_variables[name] = None
         self.index_called_from = None
         self.output_variable = ''
+
+# recognize words for numbers, math operations, spelling checkphases, etc.
 math_words_numbers = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,
                       'six':6,'seven':7,'eight':8,'nine':9,'ten':10,
                       'eleven':11,'twelve':12,'thirteen':13,'fourteen':14,'fifteen':15,
