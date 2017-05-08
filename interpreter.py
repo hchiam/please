@@ -429,6 +429,9 @@ please assign it works to other
 please use function test on variable other
 """
 def check_use(sentence, i):
+    """
+    try to use imported functions
+    """
     global import_dictionary
     # check even more restrictive one first
     # assign ouput of imported function given input values/variables
@@ -478,6 +481,9 @@ def check_use(sentence, i):
         except:
             print(function_imported) # in case function_imported is just an output value
         return i
+    """
+    try to use your own functions
+    """
     # check use of function from variable_dictionary
     function_name = ''
     input_values = [None]
