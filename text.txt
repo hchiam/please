@@ -21,3 +21,9 @@ please if crazy equals crazy then
 please end if
 
 Please print next try to use array([2,3,4]) from numb pie
+
+Please define function test with item
+    Please print variable item
+Please end function
+Please assign it works to other
+Please use function test on variable other
