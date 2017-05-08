@@ -1,13 +1,23 @@
-please define function fibonacci with number
-	please if variable number equals zero then return zero
-	please if variable number equals one then return one
-	please assign use function fibonacci on variable number minus one to variable answer
-	please return variable answer
+please note the following are examples
+please print on smaller screens hit the pencil icon
+please print
+please print this string of words
+please assign one plus two thousand plus sixteen to result
+please print may variable result
+please print
+please assign list of one and two and tree bark to variable crazy list
+please print variable crazy list
+please if crazy equals crazy then
+	please for each item in crazy list
+		please print index variable item of crazy list
+	please end for
+
+please end if
+
+please print next try to use array([2,3,4]) from numb pie
+please define function test with item
+	please print variable item
 please end function
 
-please assign use function fibonacci with zero to variable output
-please print variable output
-please assign use function fibonacci with one to variable output
-please print variable output
-please assign use function fibonacci with two to variable output
-please print variable output
+please assign it works to other
+please use function test on variable other
