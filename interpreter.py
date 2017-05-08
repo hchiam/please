@@ -16,7 +16,7 @@ def interpret():
     text = text.lower() # lowercase
     text = remove_multi_spaces(text)
     sentences = get_sentences(text)
-    get_goto_locations(sentences)
+    setup_goto_locations_and_functions(sentences)
     run_commands(sentences)
 
 def get_text(file_name):
@@ -31,7 +31,7 @@ def get_sentences(text):
     sentences = text.split('please ')[1:] # assume index [0] is always empty or invalid before the first "please "
     return sentences
 
-def get_goto_locations(sentences):
+def setup_goto_locations_and_functions(sentences):
     """
     initialize go-to locations for loops, functions, and classes
     track indices of 'header' sentences (0,1,2,3,...)
@@ -39,15 +39,23 @@ def get_goto_locations(sentences):
     track loop indices (0,1,2,3,...)
     """
     global goto_locations
+    global variable_dictionary
     for i in range(len(sentences)):
         sentence = sentences[i].strip()
         matches_for = re.match('for each (.+) in (.+)', sentence)
         matches_function = re.match('define function (.+) (with |using )(inputs )?(.+)$', sentence)
         matches_class = re.match('define class (.+)', sentence)
         if matches_function:
+            # add function to goto locations
             goto_info = Goto_data() # [status, list_index, list_length] = [False, 0, None]
             goto_info.name = matches_function.group(1)
             goto_locations[i] = goto_info
+            # add function to variable dictionary
+            function_name = matches_function.group(1)
+            function_variables = matches_function.group(4).split(' and ')
+            function = Function_data(i, function_variables)
+            print_debug('FUNCTION: ' + function_name + ' (' + str(function_variables) + ')')
+            variable_dictionary[function_name] = function
         elif matches_class:
             goto_info = Goto_data() # [status, list_index, list_length] = [False, 0, None]
             goto_locations[i] = goto_info
@@ -203,12 +211,12 @@ def dictionary_variables_in_string(string, dictionary): # dictionary could be va
 def get_local_variables():
     global goto_stack # to access local_variables of current function
     global goto_locations # to access local_variables of current function
-    global function_dictionary # to access local_variables of current function
+    global variable_dictionary # to access local_variables of current function
     local_variables = []
     if goto_stack:
         function_called = goto_locations[goto_stack[-1]].name
     if function_called:
-        function = function_dictionary[function_called]
+        function = variable_dictionary[function_called]
         local_variables = function.local_variables
     return local_variables
 
@@ -560,15 +568,8 @@ def check_function(sentence, i):
         function_name = matches.group(1)
         input_names = matches.group(4).split(' and ')
         print_debug('FUNCTION: ' + function_name + ' (' + str(input_names) + ')')
-        # create function if have not already
-        if function_name not in function_dictionary:
-            function = Function_data()
-            function_dictionary[function_name] = function
-            for local_variable in input_names:
-                function.local_variables[local_variable] = None # initialize
-            print_debug('FUNCTION: ' + str(function.local_variables))
         # check if function not being called
-        function = function_dictionary[function_name]
+        function = variable_dictionary[function_name]
         if not function.being_called: # (just carry on reading linearly if it is being called)
             nested_blocks_ignore += 1
         else:
@@ -588,7 +589,7 @@ def check_function(sentence, i):
                 # get last goto stack item index because such goto blocks can only be within each other
                 index = goto_stack[-1]
                 function_name = goto_locations[index].name
-                function = function_dictionary[function_name]
+                function = variable_dictionary[function_name]
                 if function.being_called:
                     function.being_called = False
                     goto_stack.pop()
@@ -596,31 +597,28 @@ def check_function(sentence, i):
                     i = function.index_called_from
                     print_debug('END FUNCTION: called from i = '+str(i))
         else:
-            matches = re.match('.*use function (((.+) on (.+))|(.+))', sentence)
+            matches = re.match('.*use function (((.+) (on|with) (.+))|(.+))', sentence)
             if matches:
                 # try to find function index and then skip to top of function
                 has_input_values = matches.group(2)
+                # account for function calls with or without inputs
                 if has_input_values:
                     function_name = matches.group(3)
-                    input_values = matches.group(4)
-                    print('function_name = ' + str(function_name) + ' : input_values = ' + str(input_values))
+                    input_values = matches.group(5)
+                    print_debug('function_name = ' + str(function_name) + ' : input_values = ' + str(input_values))
                 else:
-                    function_name = matches.group(5)
+                    function_name = matches.group(6)
                     input_values = None
-                    print('function_name = ' + str(function_name) + ' : (no input_values)')
+                    print_debug('function_name = ' + str(function_name) + ' : (no input_values)')
+                # either way, find and go to function
                 for index in goto_locations:
-                    # find function
                     if goto_locations[index].name == function_name:
                         print_debug('CALL FUNCTION: ' + function_name)
-                        # create function if have not already
-                        if function_name not in function_dictionary:
-                            function = Function_data()
-                            function_dictionary[function_name] = function
-                        function = function_dictionary[function_name]
+                        function = variable_dictionary[function_name]
                         function.index_called_from = i
                         function.being_called = True
                         function.variable_inputs_string = input_values
-                        print('function.variable_inputs_string = '+str(function.variable_inputs_string))
+                        print_debug('function.variable_inputs_string = '+str(function.variable_inputs_string))
                         i = index
                         goto_stack.append(index)
     print_debug('FUNCTION: goto_stack: '+str(goto_stack))
@@ -654,6 +652,15 @@ class Goto_data:
 nested_blocks_ignore = 0 # to track whether got out of an if-statement that evaluated to False
 variable_dictionary = {} # Python dictionaries are just hashtables (avg time complexity O(1))
 import_dictionary = {}
+class Function_data:
+    location = None
+    local_variables = {}
+    being_called = False
+    index_called_from = None
+    def __init__(self, location, variables): # variables assumed to be a list
+        self.location = location
+        for variable in variables: # variables assumed to be a list
+            self.local_variables[variable] = None
 math_words_numbers = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,
                       'six':6,'seven':7,'eight':8,'nine':9,'ten':10,
                       'eleven':11,'twelve':12,'thirteen':13,'fourteen':14,'fifteen':15,
@@ -687,12 +694,6 @@ spell_checkphrases = ['spell with first letters of',
                       'spelt using the first letter of',
                      ]
 spell_finish_words = ['to', 'as', 'from', 'then', '$'] # $ for end of line for regex
-function_dictionary = {} # map function names to Function_data instead of doing {'function_name' : {'local_variable_name':'value'}, ...}
-class Function_data:
-    being_called = False
-    variable_inputs_string = ''
-    local_variables = {}
-    index_called_from = None
 
 
 
