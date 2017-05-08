@@ -5,11 +5,10 @@
 FUTURE: Puts indents when it sees if-statements (and later for-loops, and de-indents at any end-if's).
 """
 
-from sys import *
+import sys
 import re
 
 
-progress_bar = 0
 
 def clean():
     file_name = 'text.txt'
@@ -29,6 +28,7 @@ def clean():
     update_progress_bar_display()
     text = reformat(text)
     rewrite_file(file_name, text)
+    finish_progress_bar_display()
     print('\n---Formatter Finished---\n')
 
 def get_text(file_name):
@@ -86,9 +86,11 @@ def rewrite_file(file_name, text):
             update_progress_bar_display()
 
 def update_progress_bar_display():
-    global progress_bar
-    progress_bar += 1
-    print(str(progress_bar) + ' .........Still Formatting.........')
+    sys.stderr.write('.') # adds to Terminal output without creating new line
+
+def finish_progress_bar_display(): # so that print() starts on new line
+    sys.stderr.write('\n')
+
 
 
 if __name__ == '__main__': # only perform the following if running this file directly

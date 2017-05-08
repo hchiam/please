@@ -1,7 +1,7 @@
 please define function fibonacci with number
 	please if variable number equals zero then return zero
 	please if variable number equals one then return one
-	please assign function with number minus one to answer
+	please assign use function fibonacci on variable number minus one to variable answer
 	please return variable answer
 please end function
 
@@ -9,5 +9,5 @@ please assign use function fibonacci with zero to variable output
 please print variable output
 please assign use function fibonacci with one to variable output
 please print variable output
-please import format from library
-please use clean of format
+please assign use function fibonacci with two to variable output
+please print variable output
