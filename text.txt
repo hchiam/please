@@ -1,29 +1,15 @@
-please note to rerun the code you should hit the triangle run button
+please define function fibonacci with number
+    please if variable number equals zero then return zero
+    please if variable number equals one then return one
+    please assign function with number minus one to answer
+    please return variable answer
+please end function
 
-please print on smaller screens hit the pencil icon
+please assign use function fibonacci with zero to variable output
+please print variable output
 
-please print
- PLeAsE  print    this string  of words   
-   
-please assign one plus two thousand plus sixteen to result
-please print may variable result
+please assign use function fibonacci with one to variable output
+please print variable output
 
-please print
-
-Please assign list of one and two and tree bark to variable crazy list
-
-please print variable crazy list
-
-please if crazy equals crazy then
-    Please for each item in crazy list
-        Please print index variable item of crazy list
-    Please end for
-please end if
-
-Please print next try to use array([2,3,4]) from numb pie
-
-Please define function test with item
-    Please print variable item
-Please end function
-Please assign it works to other
-Please use function test on variable other
+please assign use function fibonacci with two to variable output
+please print variable output

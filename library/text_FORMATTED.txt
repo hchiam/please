@@ -1,8 +1,13 @@
-please assign list from one to two to variable circle
-please for each index one in circle
-	please print index one equals variable index one
-	please for each index two in circle
-		please print index two equals variable index two
-	please end for
+please define function fibonacci with number
+	please if variable number equals zero then return zero
+	please if variable number equals one then return one
+	please assign function with number minus one to answer
+	please return variable answer
+please end function
 
-please end for
+please assign use function fibonacci with zero to variable output
+please print variable output
+please assign use function fibonacci with one to variable output
+please print variable output
+please import format from library
+please use clean of format
