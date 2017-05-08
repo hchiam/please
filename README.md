@@ -66,7 +66,7 @@ I don't intend to replace Python. In fact, python import capability is built rig
 
 # More Example Code:
 
-Currently you can: [print](#print) strings and variable values, create [variables](#create-variables), assign [values/lists to variables](#assign-values-lists-to-variables), do [basic math](#math), use (nested) [if-then-(end-if) statements](#if-statements) and [one-liner if-then statements](#if-statements), use (nested) [for loops](#for-loops), write [comments](#comments-notes), [spell out words](#spell-out-a-special-word), do [imports](#import-to-add-functionality), use [imported functions](#use-an-import-modules-function), use [your own defined functions](#use-your-own-functions), access [list indices](#access-list-index), ... 
+Currently you can: [print](#print) strings and variable values, create [variables](#create-variables), assign [values/lists to variables](#assign-valueslists-to-variables), do [basic math](#math), use (nested) [if-then-(end-if) statements](#if-statements) and [one-liner if-then statements](#if-statements), use (nested) [for loops](#for-loops), write [comments](#commentsnotes), [spell out words](#spell-out-a-special-word), do [imports](#import-to-add-functionality), use [imported functions](#use-an-import-modules-function), use [your own defined functions](#use-your-own-functions), access [list indices](#access-list-index), ... 
 
 ## Print:
 
