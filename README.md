@@ -238,6 +238,20 @@ Please use test_function from test
 
 --> This prints twice: `Yay the import test_function() of test.py from the "library" folder works!`
 
+## Access List Index:
+
+```
+Please assign list of one and two and tree bark to variable crazy list
+Please for each item in crazy list
+    Please print index variable item of crazy list
+Please end for
+```
+--> This prints: `1`, `2`, `'tree bark'`
+
+## Example Using numpy.array
+
+Requires numpy already installed to work:
+
 ```
 please import spelled with the first letters of Neptune unicorn moose panda Yoda as numb pie
 
@@ -250,17 +264,9 @@ please assign use array of numb pie on variable array to output
 please print output of array of numb pie is variable output
 
 ```
---> This imports `numpy`, creates/prints a variable `array = [2,3,4]`, runs `output = numpy.array([2,3,4])`, and finally prints `output` as `[2,3,4]`.
+--> This imports `numpy`, creates `array = [2,3,4]`, and runs `output = numpy.array([2,3,4])`
 
-## Access List Index:
-
-```
-Please assign list of one and two and tree bark to variable crazy list
-Please for each item in crazy list
-    Please print index variable item of crazy list
-Please end for
-```
---> This prints: `1`, `2`, `'tree bark'`
+--> This also prints: `array is [2, 3, 4]`. `use array of numb pie on [2, 3, 4]`, and `output of array of numb pie is [2, 3, 4]`
 
 <br>
 
