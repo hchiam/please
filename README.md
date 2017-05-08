@@ -266,7 +266,7 @@ please print output of array of numb pie is variable output
 ```
 --> This imports `numpy`, creates `array = [2,3,4]`, and runs `output = numpy.array([2,3,4])`
 
---> This also prints: `array is [2, 3, 4]`. `use array of numb pie on [2, 3, 4]`, and `output of array of numb pie is [2, 3, 4]`
+--> This also prints `array is [2, 3, 4]`, `use array of numb pie on [2, 3, 4]`, and `output of array of numb pie is [2, 3, 4]`
 
 <br>
 
