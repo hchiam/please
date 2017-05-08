@@ -412,6 +412,8 @@ def check_import(sentence):
 example:
 Please use test_function of test
 Please use test_function from test
+
+Please use function test on variable other
 """
 def check_use(sentence, i):
     global import_dictionary
@@ -436,7 +438,7 @@ def check_use(sentence, i):
     if matches:
         use_string = matches.group(1)
         from_string = matches.group(3)
-        print_debug('USE: ' + use_string + ' from ' + from_string)
+        print('USE: ' + use_string + ' from ' + from_string)
         function_imported = getattr(import_dictionary[from_string], use_string)
         try:
             function_imported() # try to use function_imported as a function
@@ -461,10 +463,7 @@ def check_use(sentence, i):
             if goto_locations[index].name == function_name:
                 print_debug('CALL FUNCTION: ' + function_name)
                 function = variable_dictionary[function_name]
-                function.index_called_from = i
-                function.being_called = True
-                function.variable_inputs_string = input_values
-                print_debug('function.variable_inputs_string = '+str(function.variable_inputs_string))
+                function.activate(input_values, i)
                 goto_stack.append(index)
                 # change output i if function found
                 i = index
@@ -657,14 +656,27 @@ nested_blocks_ignore = 0 # to track whether got out of an if-statement that eval
 variable_dictionary = {} # Python dictionaries are just hashtables (avg time complexity O(1))
 import_dictionary = {}
 class Function_data:
+    # set once:
     location = None
-    local_variables = {}
+    # set values each time call function:
     being_called = False
+    local_variables = {} # (except local variable names are set at beginning)
     index_called_from = None
-    def __init__(self, location, variables): # variables assumed to be a list
+    def __init__(self, location, list_of_variable_names):
         self.location = location
-        for variable in variables: # variables assumed to be a list
+        for variable in list_of_variable_names:
             self.local_variables[variable] = None
+    def activate(self, list_of_input_values, index_called_from):
+        self.being_called = True
+        if list_of_input_values:
+            for i in range(len(list_of_input_values)):
+                self.local_variables[i] = list_of_input_values[i]
+        self.index_called_from = index_called_from
+    def deactivate(self):
+        self.being_called = False
+        for i in range(len(self.local_variables)):
+            self.local_variables[i] = None
+        self.index_called_from = None
 math_words_numbers = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,
                       'six':6,'seven':7,'eight':8,'nine':9,'ten':10,
                       'eleven':11,'twelve':12,'thirteen':13,'fourteen':14,'fifteen':15,
