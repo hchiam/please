@@ -66,7 +66,7 @@ I don't intend to replace Python. In fact, python import capability is built rig
 
 # More Example Code:
 
-Currently you can: [print out](#print) strings and variable values, create [variables](#create-variables), assign [values/lists to variables](#assign-valueslists-to-variables), [spell out uncommon words](#spell-out-a-special-word), do [basic math](#math), use nested [if statements](#if-statements), use nested [for loops](#for-loops), write [comments](#commentsnotes), [import](#import-to-add-functionality) Python modules, use [imports](#use-an-import-modules-function), use [your own defined functions](#use-your-own-functions), access [list indices](#access-list-index), ... 
+Currently you can: [print out](#print) strings and variable values, create [variables](#create-variables), assign [values/lists to variables](#assign-valueslists-to-variables), [spell out uncommon words](#spell-out-a-special-word), do [basic math](#math), use nested [if statements](#if-statements), use nested [for loops](#for-loops), write [comments](#commentsnotes), [import](#import-to-add-functionality) Python modules, use [imports](#use-an-import-modules-function), use [your own defined functions](#make-and-use-your-own-functions), access [list indices](#access-list-index), ... 
 
 ## Print:
 
@@ -189,6 +189,17 @@ Please note this is a comment
 ```
 --> (The interpreter ignores this sentence.)
 
+## Make and Use Your Own Functions:
+
+```
+Please define function test with item
+    Please print variable item
+Please end function
+Please assign it works to other
+Please use function test on variable other
+```
+--> This prints: `it works`
+
 ## Import to Add Functionality:
 
 ```
@@ -227,16 +238,19 @@ Please use test_function from test
 
 --> This prints twice: `Yay the import test_function() of test.py from the "library" folder works!`
 
-## Use Your Own Functions:
+```
+please import spelled with the first letters of Neptune unicorn moose panda Yoda as numb pie
+
+please assign list from two to four to array
+please print array is variable array
+
+please print use array of numb pie on variable array
+please assign use array of numb pie on variable array to output
+
+please print output of array of numb pie is variable output
 
 ```
-Please define function test with item
-    Please print variable item
-Please end function
-Please assign it works to other
-Please use function test on variable other
-```
---> This prints: `it works`
+--> This imports `numpy`, creates/prints a variable `array = [2,3,4]`, runs `output = numpy.array([2,3,4])`, and finally prints `output` as `[2,3,4]`.
 
 ## Access List Index:
 

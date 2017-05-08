@@ -430,13 +430,32 @@ please use function test on variable other
 """
 def check_use(sentence, i):
     global import_dictionary
+    # check even more restrictive one first
+    # assign ouput of imported function given input value/variable
+    matches = re.match('.*use (.+)( from | of )(.+)( on (.+)) to (.+)', sentence)
+    if matches:
+        use_string = matches.group(1)
+        from_string = matches.group(3)
+        input_variables = matches.group(5)
+        variable_name = matches.group(6)
+        print_debug('USE: ' + use_string + '\n  from ' + from_string + '\n  on ' + input_variables + '\n  to ' + variable_name)
+        function_imported = getattr(import_dictionary[from_string], use_string)
+        try:
+            variable_dictionary[variable_name] = function_imported(input_variables) # try to use function_imported as a function
+            print_debug('variable_dictionary5: ' + str(variable_dictionary))
+        except:
+            print(function_imported) # in case function_imported is just an output value
+            variable_dictionary[variable_name] = function_imported # in case function_imported is just an output value
+            print_debug('variable_dictionary6: ' + str(variable_dictionary))
+        return i
     # check more restrictive one first
+    # assign output of imported function to variable
     matches = re.match('.*use (.+)( from | of )(.+) to (.+)', sentence)
     if matches:
         use_string = matches.group(1)
         from_string = matches.group(3)
         variable_name = matches.group(4)
-        print_debug('USE: ' + use_string + ' from ' + from_string)
+        print_debug('USE: ' + use_string + ' from ' + from_string + ' to ' + variable_name)
         function_imported = getattr(import_dictionary[from_string], use_string)
         try:
             variable_dictionary[variable_name] = function_imported() # try to use function_imported as a function
@@ -447,6 +466,7 @@ def check_use(sentence, i):
             print_debug('variable_dictionary6: ' + str(variable_dictionary))
         return i
     # check less restrictive one after
+    # use imported function
     matches = re.match('.*use (.+)( from | of )(.+)', sentence)
     if matches:
         use_string = matches.group(1)
@@ -458,18 +478,16 @@ def check_use(sentence, i):
         except:
             print(function_imported) # in case function_imported is just an output value
         return i
-    # check use of function in variable_dictionary
+    # check use of function from variable_dictionary
     function_name = ''
     input_values = [None]
-    # check more restrictive one first
-    matches_with_inputs = re.match('.*use function (.+) (on|with) (.+)', sentence)
+    matches_with_inputs = re.match('.*use function (.+) (on|with) (.+)', sentence) # check more restrictive phrasing first
     if matches_with_inputs:
         function_name = matches_with_inputs.group(1)
         input_values = matches_with_inputs.group(3).split(' and ')
         print_debug('function_name = ' + str(function_name) + ' : input_values = ' + str(input_values))
     else:
-        # check less restrictive one after
-        matches_without_inputs = re.match('.*use function (.+)', sentence)
+        matches_without_inputs = re.match('.*use function (.+)', sentence) # check less restrictive phrasing after
         if matches_without_inputs:
             function_name = matches_without_inputs.group(1)
             # input_values = [None]
