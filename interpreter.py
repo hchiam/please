@@ -431,17 +431,17 @@ please use function test on variable other
 def check_use(sentence, i):
     global import_dictionary
     # check even more restrictive one first
-    # assign ouput of imported function given input value/variable
+    # assign ouput of imported function given input values/variables
     matches = re.match('.*use (.+)( from | of )(.+)( on (.+)) to (.+)', sentence)
     if matches:
         use_string = matches.group(1)
         from_string = matches.group(3)
-        input_variables = matches.group(5)
+        input_variables = matches.group(5).split(' and ') # later convert to args list with a star: *input_variables
         variable_name = matches.group(6)
-        print_debug('USE: ' + use_string + '\n  from ' + from_string + '\n  on ' + input_variables + '\n  to ' + variable_name)
+        print_debug('USE: ' + use_string + '\n  from ' + from_string + '\n  on ' + str(input_variables) + '\n  to ' + variable_name)
         function_imported = getattr(import_dictionary[from_string], use_string)
         try:
-            variable_dictionary[variable_name] = function_imported(input_variables) # try to use function_imported as a function
+            variable_dictionary[variable_name] = function_imported(*input_variables) # try to use function_imported as a function
             print_debug('variable_dictionary5: ' + str(variable_dictionary))
         except:
             print(function_imported) # in case function_imported is just an output value
