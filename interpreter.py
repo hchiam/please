@@ -161,28 +161,29 @@ please print you assigned variable apple to apple
 """
 def check_variable(sentence):
     global variable_dictionary
-    local_var_dictionary = {}
+    global nested_blocks_ignore
     in_function = False
     if goto_stack:
         function_name = goto_locations[goto_stack[-1]].name
         if function_name:
             function = variable_dictionary[function_name]
             in_function = function.being_called
-            if in_function:
-                local_var_dictionary = function.local_variables
     matches = re.match('.*variable (.+).*', sentence)
     if matches:
         variable_name = matches.group(1) # this is substring found inside '(.+)'
         not_print_statement = not re.match('print .*', sentence) # avoid creating variables within print statement
-        assigning_value = re.match('assign .+ to .+',sentence)
-        if not in_function:
-            if variable_name not in variable_dictionary and not_print_statement and not assigning_value:
+        not_return_statement = not re.match('return .*', sentence) # avoid creating variables within return statements
+        assigning_value = re.match('assign (.+) to .+',sentence)
+        if not in_function and nested_blocks_ignore == 0:
+            if variable_name not in variable_dictionary and not_print_statement and not_return_statement:
                 variable_dictionary[variable_name] = None
                 print_debug('variable_dictionary1: ' + str(variable_dictionary))
-        elif in_function:
-            if variable_name not in local_var_dictionary and variable_name not in variable_dictionary and not_print_statement and not assigning_value:
-                local_var_dictionary[variable_name] = None
-                print_debug('local_var_dictionary: ' + str(local_var_dictionary))
+        elif in_function and nested_blocks_ignore == 0:
+            if variable_name not in function.local_variables and variable_name not in variable_dictionary and not_print_statement and not_return_statement:
+                function.local_variables[variable_name] = None
+                if assigning_value:
+                    function.local_variables[variable_name] = check_math(assigning_value.group(1))
+                print_debug('function.local_variables['+variable_name+']: ' + str(function.local_variables[variable_name]))
         # if assigning value then don't replace last variable name (after ' to ') because dictionary needs variable name kept in sentence
         matches = re.match('(.+)( to (variable )?.+)$', sentence) # $ for end of sentence
         replaceable_part = sentence # intialize
@@ -200,16 +201,18 @@ def check_variable(sentence):
             index = matches.group(2)
             variable_name = matches.group(4)
             variable_index = eval_math(check_math(index))-1
-            if variable_name in local_var_dictionary:
-                variable_list = local_var_dictionary[variable_name]
+            if in_function:
+                if variable_name in function.local_variables:
+                    variable_list = function.local_variables[variable_name]
             else:
                 variable_list = variable_dictionary[variable_name]
             replacement_phrase = part_before + str(variable_list[variable_index])
             sentence = re.sub(checkphrase, replacement_phrase, sentence)
-        # check for variable names to replace
-        variables_found = dictionary_variables_in_string(sentence, local_var_dictionary)
-        for var_found in variables_found:
-            sentence = sentence.replace('variable ' + var_found, str(local_var_dictionary[var_found]))
+        if in_function:
+            # check for local variable names to replace
+            variables_found = dictionary_variables_in_string(sentence, function.local_variables)
+            for var_found in variables_found:
+                sentence = sentence.replace('variable ' + var_found, str(function.local_variables[var_found]))
         # check for variable names to replace
         variables_found = dictionary_variables_in_string(sentence, variable_dictionary)
         for var_found in variables_found:
@@ -311,6 +314,12 @@ Please assign three hundred to variable banana
 Please assign some words to variable coconut
 """
 def check_assign(sentence):
+    in_function = False
+    if goto_stack:
+        function_name = goto_locations[goto_stack[-1]].name
+        if function_name:
+            function = variable_dictionary[function_name]
+            in_function = function.being_called
     if not check_assign_list_passed(sentence):
         matches = re.match('.*assign (.+) to (variable )?(.+)', sentence)
         if matches:
@@ -322,11 +331,22 @@ def check_assign(sentence):
             except:
                 # it could be a string
                 pass
-            variable_dictionary[variable_name] = variable_value
+            # check whether to add to local variables dictionary
+            if not in_function and nested_blocks_ignore == 0:
+                variable_dictionary[variable_name] = variable_value
+                print_debug('variable_dictionary2: ' + str(variable_dictionary))
+            elif in_function and nested_blocks_ignore == 0:
+                function.local_variables[variable_name] = variable_value
+                print_debug('function.local_variables: ' + str(function.local_variables))
             # print(' variable_value = ' + str(variable_value) + ' \t variable_name = ' + variable_name)
-            print_debug('variable_dictionary2: ' + str(variable_dictionary))
 
 def check_assign_list_passed(sentence):
+    in_function = False
+    if goto_stack:
+        function_name = goto_locations[goto_stack[-1]].name
+        if function_name:
+            function = variable_dictionary[function_name]
+            in_function = function.being_called
     # check if assigning ordered list of items
     matches = re.match('.*assign list from (.+) to (.+) to (variable )?(.+)', sentence)
     if matches:
@@ -335,8 +355,13 @@ def check_assign_list_passed(sentence):
         variable_name = matches.group(4)
         print_debug('list start = ' + str(list_start) + ' stop = ' + str(list_stop) + ' ASSIGN TO: ' + variable_name)
         list_values = list(range(list_start, list_stop+1))
-        variable_dictionary[variable_name] = list_values
-        print_debug('variable_dictionary3: ' + str(variable_dictionary))
+        # check whether to add to local variables dictionary
+        if not in_function and nested_blocks_ignore == 0:
+            variable_dictionary[variable_name] = list_values
+            print_debug('variable_dictionary3: ' + str(variable_dictionary))
+        elif in_function and nested_blocks_ignore == 0:
+            function.local_variables[variable_name] = list_values
+            print_debug('function.local_variables: ' + str(function.local_variables))
         return True # found assignment of list to variable
     # check if assigning unordered list of items separated by ' and '
     matches = re.match('.*assign list of (.+) to (variable )?(.+)', sentence)
@@ -345,8 +370,13 @@ def check_assign_list_passed(sentence):
         unordered_list_items = translate_list_items(unordered_list_items)
         variable_name = matches.group(3)
         print_debug('list unordered_list_items = ' + str(unordered_list_items) + ' ASSIGN TO: ' + variable_name)
-        variable_dictionary[variable_name] = unordered_list_items
-        print_debug('variable_dictionary4: ' + str(variable_dictionary))
+        # check whether to add to local variables dictionary
+        if not in_function and nested_blocks_ignore == 0:
+            variable_dictionary[variable_name] = unordered_list_items
+            print_debug('variable_dictionary4: ' + str(variable_dictionary))
+        elif in_function and nested_blocks_ignore == 0:
+            function.local_variables[variable_name] = unordered_list_items
+            print_debug('function.local_variables: ' + str(function.local_variables))
         return True # found assignment of list to variable
     # TODO: '.*assign list of (.+) to (variable )?(.+)' --> group(1) --> .split(' and ') --> 'one and two and tree bark' -> [one,two,'tree bark']
     return False # did not find assignment of list to variable
@@ -675,10 +705,6 @@ def check_function(sentence, i):
     if matches:
         output_value = matches.group(2)
         outputting_variable_value = matches.group(1)
-        # if ignoring current function insides, can stop ignoring it now
-        nested_blocks_ignore -= 1
-        if nested_blocks_ignore < 0:
-            nested_blocks_ignore = 0
         # check if there's anything on the goto_stack (like for loop or function)
         if goto_stack:
             # get last goto stack item index because such goto blocks can only be within each other
@@ -686,6 +712,10 @@ def check_function(sentence, i):
             function_name = goto_locations[index].name
             function = variable_dictionary[function_name]
             if function.being_called:
+                # if ignoring current function insides, can stop ignoring it now
+                nested_blocks_ignore -= 1
+                if nested_blocks_ignore < 0:
+                    nested_blocks_ignore = 0
                 if output_value: # otherwise could just be "please return"
                     if outputting_variable_value:
                         output_value =  function.local_variables[output_value]
@@ -699,7 +729,7 @@ def check_function(sentence, i):
                 goto_stack.pop()
                 print_debug('RETURN FUNCTION: called from i = '+str(i) + ' : output ' + str(output_value) + ' to variable ' + output_variable)
     print_debug('FUNCTION: goto_stack: '+str(goto_stack))
-    # print_debug(variable_dictionary)
+    # print(variable_dictionary)
     return [i, nested_blocks_ignore]
 
 def print_debug(string):
