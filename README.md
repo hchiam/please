@@ -66,7 +66,7 @@ I don't intend to replace Python. In fact, python import capability is built rig
 
 # More Example Code:
 
-Currently you can: print, create variables, assign values/lists to variables, do basic math, use nested if-then-(end-if) statements, use one-liner if-then statements, use for loops, write comments, spell out words, import, use imported functions, access list indices, ... 
+Currently you can: print, create variables, assign values/lists to variables, do basic math, use nested if-then-(end-if) statements, use one-liner if-then statements, use (nested) for loops, write comments, spell out words, import, use imported functions, use your own defined functions, access list indices, ... 
 
 ## Print:
 
@@ -226,6 +226,17 @@ Please use test_function from test
 --> This performs twice: `test.test_function()`
 
 --> This prints twice: `Yay the import test_function() of test.py from the "library" folder works!`
+
+## Use Your Own Functions:
+
+```
+Please define function test with item
+    Please print variable item
+Please end function
+Please assign it works to other
+Please use function test on variable other
+```
+--> This prints: `it works`
 
 ## Access List Index:
 

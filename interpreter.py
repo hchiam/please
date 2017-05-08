@@ -161,14 +161,28 @@ please print you assigned variable apple to apple
 """
 def check_variable(sentence):
     global variable_dictionary
+    local_var_dictionary = {}
+    in_function = False
+    if goto_stack:
+        function_name = goto_locations[goto_stack[-1]].name
+        if function_name:
+            function = variable_dictionary[function_name]
+            in_function = function.being_called
+            if in_function:
+                local_var_dictionary = function.local_variables
     matches = re.match('.*variable (.+).*', sentence)
     if matches:
         variable_name = matches.group(1) # this is substring found inside '(.+)'
         not_print_statement = not re.match('print .*', sentence) # avoid creating variables within print statement
         assigning_value = re.match('assign .+ to .+',sentence)
-        if variable_name not in variable_dictionary and not_print_statement and not assigning_value:
-            variable_dictionary[variable_name] = None
-        print_debug('variable_dictionary1: ' + str(variable_dictionary))
+        if not in_function:
+            if variable_name not in variable_dictionary and not_print_statement and not assigning_value:
+                variable_dictionary[variable_name] = None
+                print_debug('variable_dictionary1: ' + str(variable_dictionary))
+        elif in_function:
+            if variable_name not in local_var_dictionary and variable_name not in variable_dictionary and not_print_statement and not assigning_value:
+                local_var_dictionary[variable_name] = None
+                print_debug('local_var_dictionary: ' + str(local_var_dictionary))
         # if assigning value then don't replace last variable name (after ' to ') because dictionary needs variable name kept in sentence
         matches = re.match('(.+)( to (variable )?.+)$', sentence) # $ for end of sentence
         replaceable_part = sentence # intialize
@@ -185,9 +199,16 @@ def check_variable(sentence):
             index = matches.group(2)
             variable_name = matches.group(4)
             variable_index = eval_math(check_math(index))-1
-            variable_list = variable_dictionary[variable_name]
+            if local_var_dictionary[variable_name]:
+                variable_list = local_var_dictionary[variable_name]
+            else:
+                variable_list = variable_dictionary[variable_name]
             replacement_phrase = part_before + str(variable_list[variable_index])
-            sentence = re.sub(checkphrase, replacement_phrase, sentence) # sentence.replace('variable ' + var_found, str(variable_dictionary[var_found]))
+            sentence = re.sub(checkphrase, replacement_phrase, sentence)
+        # check for variable names to replace
+        variables_found = dictionary_variables_in_string(sentence, local_var_dictionary)
+        for var_found in variables_found:
+            sentence = sentence.replace('variable ' + var_found, str(local_var_dictionary[var_found]))
         # check for variable names to replace
         variables_found = dictionary_variables_in_string(sentence, variable_dictionary)
         for var_found in variables_found:
@@ -207,18 +228,6 @@ def dictionary_variables_in_string(string, dictionary): # dictionary could be va
         if re.match('.*variable ' + variable_name+'.*', string):
             variables_found.append(variable_name)
     return variables_found
-
-def get_local_variables():
-    global goto_stack # to access local_variables of current function
-    global goto_locations # to access local_variables of current function
-    global variable_dictionary # to access local_variables of current function
-    local_variables = []
-    if goto_stack:
-        function_called = goto_locations[goto_stack[-1]].name
-    if function_called:
-        function = variable_dictionary[function_called]
-        local_variables = function.local_variables
-    return local_variables
 
 """
 example:
@@ -409,11 +418,17 @@ def check_import(sentence):
             print_debug('IMPORT: IMPORT_DICTIONARY, size = ' + str(len(import_dictionary)) + '\n\t = ' + str(import_dictionary))
 
 """
-example:
+example 1:
 Please use test_function of test
 Please use test_function from test
-
-Please use function test on variable other
+"""
+"""
+example 2:
+please define function test with item
+    please print variable item
+please end function
+please assign it works to other
+please use function test on variable other
 """
 def check_use(sentence, i):
     global import_dictionary
@@ -438,7 +453,7 @@ def check_use(sentence, i):
     if matches:
         use_string = matches.group(1)
         from_string = matches.group(3)
-        print('USE: ' + use_string + ' from ' + from_string)
+        print_debug('USE: ' + use_string + ' from ' + from_string)
         function_imported = getattr(import_dictionary[from_string], use_string)
         try:
             function_imported() # try to use function_imported as a function
@@ -446,19 +461,23 @@ def check_use(sentence, i):
             print(function_imported) # in case function_imported is just an output value
         return i
     # check use of function in variable_dictionary
-    matches = re.match('.*use function (((.+) (on|with) (.+))|(.+))', sentence)
-    if matches:
-        has_input_values = matches.group(2)
-        # account for function calls with or without inputs
-        if has_input_values:
-            function_name = matches.group(3)
-            input_values = matches.group(5)
-            print_debug('function_name = ' + str(function_name) + ' : input_values = ' + str(input_values))
-        else:
-            function_name = matches.group(6)
-            input_values = None
+    function_name = ''
+    input_values = [None]
+    # check more restrictive one first
+    matches_with_inputs = re.match('.*use function (.+) (on|with) (.+)', sentence)
+    if matches_with_inputs:
+        function_name = matches_with_inputs.group(1)
+        input_values = matches_with_inputs.group(3).split(' and ')
+        print_debug('function_name = ' + str(function_name) + ' : input_values = ' + str(input_values))
+    else:
+        # check less restrictive one after
+        matches_without_inputs = re.match('.*use function (.+)', sentence)
+        if matches_without_inputs:
+            function_name = matches_without_inputs.group(1)
+            # input_values = [None]
             print_debug('function_name = ' + str(function_name) + ' : (no input_values)')
-        # either way, try to find function index and then skip to top of function
+    # either way, try to find function index and then skip to top of function
+    if matches_with_inputs or matches_without_inputs:
         for index in goto_locations:
             if goto_locations[index].name == function_name:
                 print_debug('CALL FUNCTION: ' + function_name)
@@ -468,7 +487,7 @@ def check_use(sentence, i):
                 # change output i if function found
                 i = index
         return i
-    # otherwise no change to i
+    # if not using any function, then no change to i
     return i
 
 """
@@ -600,30 +619,26 @@ def check_function(sentence, i):
         function = variable_dictionary[function_name]
         if not function.being_called: # (just carry on reading linearly if it is being called)
             nested_blocks_ignore += 1
-        else:
-            # get variable values from variable_inputs_string
-            local_variables = function.variable_inputs_string.split(' and ')
-            for i in range(len(local_variables)):
-                function.local_variables[i] = local_variables[i]
-    else:
-        # check end function and setting nested_blocks_ignore -= 1 or = 0
-        matches = re.match('.*end function', sentence)
-        if matches:
-            nested_blocks_ignore -= 1
-            if nested_blocks_ignore < 0:
-                nested_blocks_ignore = 0
-            # there's anything on the goto_stack
-            if goto_stack:
-                # get last goto stack item index because such goto blocks can only be within each other
-                index = goto_stack[-1]
-                function_name = goto_locations[index].name
-                function = variable_dictionary[function_name]
-                if function.being_called:
-                    function.being_called = False
-                    goto_stack.pop()
-                    # skip back to where function was called
-                    i = function.index_called_from
-                    print_debug('END FUNCTION: called from i = '+str(i))
+        return [i, nested_blocks_ignore]
+    # check end function and setting nested_blocks_ignore -= 1 or = 0
+    if re.match('.*end function', sentence):
+        # if ignoring current function insides, can stop ignoring it now
+        nested_blocks_ignore -= 1
+        if nested_blocks_ignore < 0:
+            nested_blocks_ignore = 0
+        # check if there's anything on the goto_stack (like for loop or function)
+        if goto_stack:
+            # get last goto stack item index because such goto blocks can only be within each other
+            index = goto_stack[-1]
+            function_name = goto_locations[index].name
+            function = variable_dictionary[function_name]
+            if function.being_called:
+                # get index of where function was called
+                i = function.index_called_from
+                # then reset function local variables etc.
+                function.deactivate()
+                goto_stack.pop()
+                print_debug('END FUNCTION: called from i = '+str(i))
     print_debug('FUNCTION: goto_stack: '+str(goto_stack))
     return [i, nested_blocks_ignore]
 
@@ -658,6 +673,7 @@ import_dictionary = {}
 class Function_data:
     # set once:
     location = None
+    ordered_names = []
     # set values each time call function:
     being_called = False
     local_variables = {} # (except local variable names are set at beginning)
@@ -666,16 +682,17 @@ class Function_data:
         self.location = location
         for variable in list_of_variable_names:
             self.local_variables[variable] = None
+            self.ordered_names.append(variable)
     def activate(self, list_of_input_values, index_called_from):
         self.being_called = True
         if list_of_input_values:
             for i in range(len(list_of_input_values)):
-                self.local_variables[i] = list_of_input_values[i]
+                self.local_variables[self.ordered_names[i]] = list_of_input_values[i]
         self.index_called_from = index_called_from
     def deactivate(self):
         self.being_called = False
-        for i in range(len(self.local_variables)):
-            self.local_variables[i] = None
+        for name in self.local_variables:
+            self.local_variables[name] = None
         self.index_called_from = None
 math_words_numbers = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,
                       'six':6,'seven':7,'eight':8,'nine':9,'ten':10,
