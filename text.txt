@@ -1,29 +1,43 @@
-please note the following are examples
-
-please print on smaller screens hit the pencil icon
-
-please print
- PLeAsE  print    this string  of words   
-   
-please assign one plus two thousand plus sixteen to result
-please print may variable result
-
-please print
-
+Please print this string of words
+Please create variable apple
+Please variable banana
+Please assign one to variable apple
+Please print variable apple
+Please assign three hundred to variable banana
+Please assign some words to variable coconut
+Please assign list from eight to twelve to durian
 Please assign list of one and two and tree bark to variable crazy list
-
-please print variable crazy list
-
-please if crazy equals crazy then
-    Please for each item in crazy list
-        Please print index variable item of crazy list
-    Please end for
-please end if
-
-Please print next try to use array([2,3,4]) from numb pie
-
+Please assign one plus two to variable result
+Please print variable result
+Please if true then print this is a one line if statement
+Please if one equals one then
+    Please print this should print
+Please end if
+Please if one equals two then
+    Please print it should not print this
+Please end if
+Please if one equals two then please print it should not print this please end if
+Please assign list from negative one to three to variable circle
+Please for each index in circle
+    Please print variable index
+Please end for
+Please note this is a comment
 Please define function test with item
     Please print variable item
 Please end function
 Please assign it works to other
 Please use function test on variable other
+Please import alternate
+Please import test from library
+Please use test_function of test
+Please use test_function from test
+Please assign list of one and two and tree bark to variable crazy list
+Please for each item in crazy list
+    Please print index variable item of crazy list
+Please end for
+please import spelled with the first letters of Neptune unicorn moose panda Yoda as numb pie
+please assign list from two to four to array
+please print array is variable array
+please print use array of numb pie on variable array
+please assign use array of numb pie on variable array to output
+please print output of array of numb pie is variable output
