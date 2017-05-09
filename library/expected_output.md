@@ -1,11 +1,18 @@
 The variable dictionary should look like:
+
+```
 {'test':<…>, 'apple':1, 'banana':300, 'coconut':'some words', 'durian':[8,9,10,11,12], 'crazy list':[1,2,'tree bark'], 'result':3,'circle':[-1,0,1,2,3], 'other':'it works', 'array':[2,3,4], 'output':[2,3,4]}
+```
 
 The import dictionary should look like:
+
+```
 {'alternate':<…>,'test':<…>,'numbpie':<…>}
+```
 
 And this should print out in Terminal:
 
+```
 this string of words
 1
 3
@@ -27,9 +34,11 @@ tree bark
 array is [2,3,4]
 use array of numb pie on [2,3,4]
 output of array of numb pie is [2,3,4]
+```
 
 For this input code:
 
+```
 Please print this string of words
 Please create variable apple
 Please variable banana
@@ -75,3 +84,4 @@ please print array is variable array
 please print use array of numb pie on variable array
 please assign use array of numb pie on variable array to output
 please print output of array of numb pie is variable output
+```
