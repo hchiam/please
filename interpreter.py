@@ -180,7 +180,11 @@ def check_variable(sentence):
         assigning_value = re.match('assign (.+) to .+',sentence)
         if not in_function and nested_blocks_ignore == 0:
             if variable_name not in variable_dictionary and not_in_certain_statements:
-                variable_dictionary[variable_name] = None
+                # NOTE: WORKAROUND: var_name_not_of AND var_name_not_to TO AVOID CREATING VARIABLES WHEN ACTUALLY USING "SUBVARIABLES"
+                var_name_not_of = re.match('(.+) of (.+)', variable_name)
+                var_name_not_to = re.match('(.+) to (.+)', variable_name)
+                if var_name_not_of and var_name_not_to:
+                    variable_dictionary[variable_name] = None
                 print_debug('variable_dictionary1: ' + str(variable_dictionary))
         elif in_function and nested_blocks_ignore == 0:
             if variable_name not in function.local_variables and variable_name not in variable_dictionary and not_in_certain_statements:
@@ -245,7 +249,6 @@ def check_math(sentence):
     words = get_words(sentence)
     math_expression = ''
     replace_expression = ''
-    name_found = False
     # need to find math expressions word-by-word (since sometimes embedded in sentences like if...then)
     for i in range(len(words)):
         word = words[i]
@@ -260,7 +263,6 @@ def check_math(sentence):
             math_expression += str(math_words_boolean[word])
             replace_expression += ' ' + word
         elif word in math_words_operators:
-            name_found = False
             math_expression += math_words_operators[word] # already a string
             replace_expression += ' ' + word
         elif word in variable_dictionary:
@@ -271,7 +273,6 @@ def check_math(sentence):
             math_expression += variable_value
             replace_expression += ' variable ' + word
         elif word in ['print','variable','assign','if','then','to','of','from','import','for','as','end','each','in','list','use','function']:
-            name_found = False
             # non-math word detected; time to evaluate expression so far
             try:
                 math_result = eval_math(math_expression)
@@ -285,14 +286,11 @@ def check_math(sentence):
             # reset variables
             math_expression = ''
             replace_expression = ''
-            # skip to end of variable name if variable keyword found
-            if word == 'variable' or word == 'function':
-                name_found = True
         elif re.match('use .*', sentence):
             pass
         else:
             # surround value with quotes if string
-            if not is_digit(word) and name_found == False:
+            if not is_digit(word):
                 # math_expression += ' \'' + word + '\''
                 math_expression += '\'' + word + '\''
                 replace_expression += ' ' + word
@@ -490,7 +488,7 @@ def check_use(sentence, i):
     matches = re.match('.*use (.+)( from | of )(.+)( on (.+)) to (.+)', sentence)
     if matches:
         use_string = matches.group(1)
-        from_string = matches.group(3).replace(' ','')
+        from_string = matches.group(3).replace(' ','') # remove spaces in import names for now
         input_variables = matches.group(5).split(' and ') # later convert to args list with a star: *input_variables
         variable_name = matches.group(6)
         print_debug('USE: ' + use_string + '\n  from ' + from_string + '\n  on ' + str(input_variables) + '\n  to ' + variable_name)
@@ -514,11 +512,11 @@ def check_use(sentence, i):
         function_imported = getattr(import_dictionary[from_string], use_string)
         try:
             variable_dictionary[variable_name] = function_imported() # try to use function_imported as a function
-            print_debug('variable_dictionary5: ' + str(variable_dictionary))
+            print_debug('variable_dictionary7: ' + str(variable_dictionary))
         except:
             print(function_imported) # in case function_imported is just an output value
             variable_dictionary[variable_name] = function_imported # in case function_imported is just an output value
-            print_debug('variable_dictionary6: ' + str(variable_dictionary))
+            print_debug('variable_dictionary8: ' + str(variable_dictionary))
         return i
     # check less restrictive one after
     # use imported function
@@ -858,5 +856,5 @@ if __name__ == '__main__':
     # run this interpreter:
     interpret()
     print('\n...THANK YOU!\n')
-    print_debug(str(variable_dictionary))
-    print_debug(str(import_dictionary))
+    print(str(variable_dictionary))
+    print(str(import_dictionary))
