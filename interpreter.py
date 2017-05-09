@@ -293,7 +293,8 @@ def check_math(sentence):
         else:
             # surround value with quotes if string
             if not is_digit(word) and name_found == False:
-                math_expression += ' \'' + word + '\''
+                # math_expression += ' \'' + word + '\''
+                math_expression += '\'' + word + '\''
                 replace_expression += ' ' + word
         # separate if-statement for end of sentence; time to evaluate (may (not) have been a math word)
         if i == len(words)-1:
@@ -489,7 +490,7 @@ def check_use(sentence, i):
     matches = re.match('.*use (.+)( from | of )(.+)( on (.+)) to (.+)', sentence)
     if matches:
         use_string = matches.group(1)
-        from_string = matches.group(3)
+        from_string = matches.group(3).replace(' ','')
         input_variables = matches.group(5).split(' and ') # later convert to args list with a star: *input_variables
         variable_name = matches.group(6)
         print_debug('USE: ' + use_string + '\n  from ' + from_string + '\n  on ' + str(input_variables) + '\n  to ' + variable_name)
@@ -858,4 +859,4 @@ if __name__ == '__main__':
     interpret()
     print('\n...THANK YOU!\n')
     print_debug(str(variable_dictionary))
-    
+    print_debug(str(import_dictionary))
