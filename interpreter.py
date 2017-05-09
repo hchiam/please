@@ -67,7 +67,7 @@ def run_commands(sentences):
     global nested_blocks_ignore
     i = 0
     while i < len(sentences): # use i to access sentence indices for go-to locations
-        print_debug('LINE #' + str(i+1) + ' --------------')
+        print_debug('-------------- LINE #' + str(i+1) + ' --------------')
         sentence = sentences[i]
         sentence = sentence.strip()
         # note: order matters, like order of replacing words or ignoring rest of sentence:
@@ -90,6 +90,8 @@ def run_commands(sentences):
             sentence = check_math(sentence) # math after assign: avoid creating variables named None
             check_import(sentence)
             i = check_use(sentence, i)
+        # print(i+1)
+        print_debug(str(variable_dictionary))
         # go to next sentence
         i += 1
 
@@ -173,13 +175,15 @@ def check_variable(sentence):
         variable_name = matches.group(1) # this is substring found inside '(.+)'
         not_print_statement = not re.match('print .*', sentence) # avoid creating variables within print statement
         not_return_statement = not re.match('return .*', sentence) # avoid creating variables within return statements
+        not_if_statement = not re.match('if .*', sentence) # avoid creating variables within if statements
+        not_in_certain_statements = not_return_statement and not_return_statement and not_if_statement
         assigning_value = re.match('assign (.+) to .+',sentence)
         if not in_function and nested_blocks_ignore == 0:
-            if variable_name not in variable_dictionary and not_print_statement and not_return_statement:
+            if variable_name not in variable_dictionary and not_in_certain_statements:
                 variable_dictionary[variable_name] = None
                 print_debug('variable_dictionary1: ' + str(variable_dictionary))
         elif in_function and nested_blocks_ignore == 0:
-            if variable_name not in function.local_variables and variable_name not in variable_dictionary and not_print_statement and not_return_statement:
+            if variable_name not in function.local_variables and variable_name not in variable_dictionary and not_in_certain_statements:
                 function.local_variables[variable_name] = None
                 if assigning_value:
                     function.local_variables[variable_name] = check_math(assigning_value.group(1))
@@ -290,6 +294,7 @@ def check_math(sentence):
                 # if the math works, then replace the section of the sentence
                 replace_expression = replace_expression.strip() # to make sure replaces properly
                 sentence = sentence.replace(replace_expression, str(math_result))
+                # print_debug(sentence)
             except:
                 pass
             # reset variables
@@ -520,7 +525,6 @@ def check_use(sentence, i):
     """
     try to use your own functions
     """
-    # explanation on +? at http://stackoverflow.com/questions/2301285/what-do-lazy-and-greedy-mean-in-the-context-of-regular-expressions
     function_name = ''
     input_values = [None]
     output_variable = ''
@@ -530,14 +534,14 @@ def check_use(sentence, i):
         output_variable = matches_with_output.group(4)
     # check use of function from variable_dictionary, with or without input values
     # check more restrictive phrasing first
-    matches_with_inputs = re.match('.*use function (.+) (on|with) (.+)( to variable (.+))+?', sentence)
+    matches_with_inputs = re.match('.*use function (.+) (on|with) (.+)( to variable (.+))?', sentence)
     if matches_with_inputs:
         function_name = matches_with_inputs.group(1)
         input_values = matches_with_inputs.group(3).split(' and ')
         print_debug('function_name = ' + str(function_name) + ' : input_values = ' + str(input_values))
     else:
         # check less restrictive phrasing after
-        matches_without_inputs = re.match('.*use function (.+)( to variable (.+))+?', sentence)
+        matches_without_inputs = re.match('.*use function (.+)( to variable (.+))?', sentence)
         if matches_without_inputs:
             function_name = matches_without_inputs.group(1)
             # input_values = [None]
@@ -840,4 +844,4 @@ if __name__ == '__main__':
     # run this interpreter:
     interpret()
     print('\n...THANK YOU!\n')
-    
+    print(variable_dictionary)
