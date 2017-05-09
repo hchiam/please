@@ -245,6 +245,7 @@ def check_math(sentence):
     words = get_words(sentence)
     math_expression = ''
     replace_expression = ''
+    name_found = False
     # need to find math expressions word-by-word (since sometimes embedded in sentences like if...then)
     for i in range(len(words)):
         word = words[i]
@@ -259,6 +260,7 @@ def check_math(sentence):
             math_expression += str(math_words_boolean[word])
             replace_expression += ' ' + word
         elif word in math_words_operators:
+            name_found = False
             math_expression += math_words_operators[word] # already a string
             replace_expression += ' ' + word
         elif word in variable_dictionary:
@@ -268,35 +270,41 @@ def check_math(sentence):
                 variable_value = '\'' + variable_value + '\''
             math_expression += variable_value
             replace_expression += ' variable ' + word
-        elif word in ['print','variable','assign','if','then','to','of','from','import','for','as','end','each','in','list','use']:
+        elif word in ['print','variable','assign','if','then','to','of','from','import','for','as','end','each','in','list','use','function']:
+            name_found = False
             # non-math word detected; time to evaluate expression so far
             try:
                 math_result = eval_math(math_expression)
-                print_debug('MATH1: "' + math_expression + '" -> "' + str(math_result) + '" \t replace_expression = "' + replace_expression + '"')
-                # if the math works, then replace the section of the sentence
-                replace_expression = replace_expression.strip() # to make sure replaces properly
-                sentence = sentence.replace(replace_expression, str(math_result))
+                if math_result:
+                    print_debug('MATH1: "' + math_expression + '" -> "' + str(math_result) + '" \t replace_expression = "' + replace_expression + '"')
+                    # if the math works, then replace the section of the sentence
+                    replace_expression = replace_expression.strip() # to make sure replaces properly
+                    sentence = sentence.replace(replace_expression, str(math_result))
             except:
                 pass
             # reset variables
             math_expression = ''
             replace_expression = ''
+            # skip to end of variable name if variable keyword found
+            if word == 'variable' or word == 'function':
+                name_found = True
         elif re.match('use .*', sentence):
             pass
         else:
             # surround value with quotes if string
-            if not is_digit(word):
-                math_expression += '\'' + word + '\''
+            if not is_digit(word) and name_found == False:
+                math_expression += ' \'' + word + '\''
                 replace_expression += ' ' + word
         # separate if-statement for end of sentence; time to evaluate (may (not) have been a math word)
         if i == len(words)-1:
             try:
                 math_result = eval_math(math_expression)
-                print_debug('MATH2: "' + math_expression + '" -> "' + str(math_result) + '" \t replace_expression = "' + replace_expression + '"')
-                # if the math works, then replace the section of the sentence
-                replace_expression = replace_expression.strip() # to make sure replaces properly
-                sentence = sentence.replace(replace_expression, str(math_result))
-                # print_debug(sentence)
+                if math_result:
+                    print_debug('MATH2: "' + math_expression + '" -> "' + str(math_result) + '" \t replace_expression = "' + replace_expression + '"')
+                    # if the math works, then replace the section of the sentence
+                    replace_expression = replace_expression.strip() # to make sure replaces properly
+                    sentence = sentence.replace(replace_expression, str(math_result))
+                    # print_debug(sentence)
             except:
                 pass
             # reset variables
@@ -838,7 +846,8 @@ spell_checkphrases = ['spell with first letters of',
 spell_finish_words = ['to', 'as', 'from', 'then', '$'] # $ for end of line for regex
 
 # True = hide debug prints:
-hide_debug_printouts = False
+# False = show debug prints:
+hide_debug_printouts = True
 
 
 
