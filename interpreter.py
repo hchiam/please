@@ -752,7 +752,6 @@ def print_debug(string):
 
 # initialize global variables:
 
-hide_debug_printouts = True # True = hide debug prints
 nested_blocks_ignore = 0 # track nesting to know whether got out of an if-statement that evaluated to False (to ignore lines)
 goto_stack = [] # append/pop "header" indices to track nesting of loops, functions, or classes ; {#,#,#,...}
 
@@ -838,6 +837,9 @@ spell_checkphrases = ['spell with first letters of',
                      ]
 spell_finish_words = ['to', 'as', 'from', 'then', '$'] # $ for end of line for regex
 
+# True = hide debug prints:
+hide_debug_printouts = False
+
 
 
 # (this if statement lets code after it only run if you're running this file directly)
@@ -847,3 +849,4 @@ if __name__ == '__main__':
     interpret()
     print('\n...THANK YOU!\n')
     print_debug(str(variable_dictionary))
+    
