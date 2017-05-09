@@ -856,5 +856,5 @@ if __name__ == '__main__':
     # run this interpreter:
     interpret()
     print('\n...THANK YOU!\n')
-    print(str(variable_dictionary))
-    print(str(import_dictionary))
+    print_debug(str(variable_dictionary))
+    print_debug(str(import_dictionary))
