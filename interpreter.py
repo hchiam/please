@@ -264,10 +264,11 @@ def check_math(sentence):
                 variable_value = '\'' + variable_value + '\''
             math_expression += variable_value
             replace_expression += ' variable ' + word
-        elif word not in ['print','variable','assign','if','then','to','of','from','import','for','as','end','each','in','list','use']: # non-math word detected; time to evaluate expression so far
+        elif word in ['print','variable','assign','if','then','to','of','from','import','for','as','end','each','in','list','use']:
+            # non-math word detected; time to evaluate expression so far
             try:
                 math_result = eval_math(math_expression)
-                print_debug('MATH1: ' + math_expression + ' -> ' + str(math_result) + ' \t replace_expression = ' + replace_expression)
+                print_debug('MATH1: "' + math_expression + '" -> "' + str(math_result) + '" \t replace_expression = "' + replace_expression + '"')
                 # if the math works, then replace the section of the sentence
                 replace_expression = replace_expression.strip() # to make sure replaces properly
                 sentence = sentence.replace(replace_expression, str(math_result))
@@ -276,11 +277,16 @@ def check_math(sentence):
             # reset variables
             math_expression = ''
             replace_expression = ''
+        else:
+            # surround value with quotes if string
+            if not word.isdigit():
+                math_expression += '\'' + word + '\''
+                replace_expression += ' ' + word
         # separate if-statement for end of sentence; time to evaluate (may (not) have been a math word)
         if i == len(words)-1:
             try:
                 math_result = eval_math(math_expression)
-                print_debug('MATH2: ' + math_expression + ' -> ' + str(math_result) + ' \t replace_expression = ' + replace_expression)
+                print_debug('MATH2: "' + math_expression + '" -> "' + str(math_result) + '" \t replace_expression = "' + replace_expression + '"')
                 # if the math works, then replace the section of the sentence
                 replace_expression = replace_expression.strip() # to make sure replaces properly
                 sentence = sentence.replace(replace_expression, str(math_result))
