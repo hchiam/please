@@ -91,7 +91,7 @@ def run_commands(sentences):
             check_import(sentence)
             i = check_use(sentence, i)
         # print(i+1)
-        print_debug(str(variable_dictionary))
+        # print(variable_dictionary)
         # go to next sentence
         i += 1
 
@@ -844,4 +844,4 @@ if __name__ == '__main__':
     # run this interpreter:
     interpret()
     print('\n...THANK YOU!\n')
-    print(variable_dictionary)
+    print_debug(str(variable_dictionary))
