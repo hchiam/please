@@ -281,9 +281,11 @@ def check_math(sentence):
             # reset variables
             math_expression = ''
             replace_expression = ''
+        elif re.match('use .*', sentence):
+            pass
         else:
             # surround value with quotes if string
-            if not word.isdigit():
+            if not is_digit(word):
                 math_expression += '\'' + word + '\''
                 replace_expression += ' ' + word
         # separate if-statement for end of sentence; time to evaluate (may (not) have been a math word)
