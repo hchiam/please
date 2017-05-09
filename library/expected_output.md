@@ -54,10 +54,14 @@ please print output of array of numb pie is variable output
 
 # Outputs
 
+**Instructions:**
+
 1. At the bottom of interpreter.py, change these lines:
   * `print_debug(str(variable_dictionary))` -> `print_debug(str(import_dictionary))`
   * `print_debug(str(variable_dictionary))` -> `print_debug(str(import_dictionary))`
 2. Use Terminal/Commandline/Bash: `python interpreter.py text.txt`
+
+<br>
 
 The variable dictionary should look like this:
 
