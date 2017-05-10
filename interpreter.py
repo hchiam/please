@@ -630,6 +630,7 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
             return [nested_blocks_ignore,sentence]
 
 """
+example:
 Please assign list from negative one to three to variable circle
 Please for each index in circle
     Please print variable index
@@ -687,6 +688,14 @@ def check_for(sentence, i):
             skip_to_line = i
     return skip_to_line
 
+"""
+example:
+Please define function test with item
+    Please print variable item
+Please end function
+Please assign it works to other
+Please use function test on variable other
+"""
 def check_function(sentence, i):
     global nested_blocks_ignore
     # input names expected to be separated by ' and '
