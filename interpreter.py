@@ -193,12 +193,12 @@ def check_variable(sentence):
                     function.local_variables[variable_name] = check_math(assigning_value.group(1))
                 print_debug('function.local_variables['+variable_name+']: ' + str(function.local_variables[variable_name]))
         # if assigning value then don't replace last variable name (after ' to ') because dictionary needs variable name kept in sentence
-        matches = re.match('(.+)( to (variable )?.+)$', sentence) # $ for end of sentence
+        matches = re.match('(assign .+)( to (variable )?.+)$', sentence) # $ for end of sentence
         replaceable_part = sentence # intialize
         irreplaceable_part = '' # intialize
         if matches:
             replaceable_part = matches.group(1)
-            irreplaceable_part = matches.group(2)
+            irreplaceable_part = matches.group(2) # put back later
             sentence = replaceable_part
         # print_debug('---1----=='+sentence)
         # check for index of variable name to replace
@@ -246,6 +246,14 @@ example:
 Please one plus two
 """
 def check_math(sentence):
+    # if assigning value then don't replace last variable name (after ' to ') because dictionary needs variable name kept in sentence
+    matches = re.match('(assign .+)( to (variable )?.+)$', sentence) # $ for end of sentence
+    replaceable_part = sentence # intialize
+    irreplaceable_part = '' # intialize
+    if matches:
+        replaceable_part = matches.group(1)
+        irreplaceable_part = matches.group(2) # put back later
+        sentence = replaceable_part
     words = get_words(sentence)
     math_expression = ''
     replace_expression = ''
@@ -272,7 +280,7 @@ def check_math(sentence):
                 variable_value = '\'' + variable_value + '\''
             math_expression += variable_value
             replace_expression += ' variable ' + word
-        elif word in ['print','variable','assign','if','then','to','of','from','import','for','as','end','each','in','list','use','function']:
+        elif word in ['print','variable','assign','if','then','to','of','from','import','for','as','end','each','in','list','use','function','return']:
             # non-math word detected; time to evaluate expression so far
             try:
                 math_result = eval_math(math_expression)
@@ -309,6 +317,7 @@ def check_math(sentence):
             # reset variables
             math_expression = ''
             replace_expression = ''
+    sentence = sentence + irreplaceable_part
     return sentence
 
 def is_digit(string):
@@ -538,23 +547,27 @@ def check_use(sentence, i):
     input_values = [None]
     output_variable = ''
     # check for output variable to assign value to
-    matches_with_output = re.match('.*use function (.+) (on|with) (.+) to variable (.+)', sentence)
+    matches_with_output = re.match('assign use function (.+) (on|with) (.+) to (variable )?(.+)', sentence)
     if matches_with_output:
-        output_variable = matches_with_output.group(4)
+        output_variable = matches_with_output.group(5)
+        function_name = matches_with_output.group(1)
+        input_values = matches_with_output.group(3).split(' and ')
+        print_debug('function_name1 = ' + str(function_name) + ' : input_values = ' + str(input_values) + ' : output_variable = ' + str(output_variable))
     # check use of function from variable_dictionary, with or without input values
     # check more restrictive phrasing first
-    matches_with_inputs = re.match('.*use function (.+) (on|with) (.+)( to variable (.+))?', sentence)
-    if matches_with_inputs:
-        function_name = matches_with_inputs.group(1)
-        input_values = matches_with_inputs.group(3).split(' and ')
-        print_debug('function_name = ' + str(function_name) + ' : input_values = ' + str(input_values))
-    else:
-        # check less restrictive phrasing after
-        matches_without_inputs = re.match('.*use function (.+)( to variable (.+))?', sentence)
-        if matches_without_inputs:
-            function_name = matches_without_inputs.group(1)
-            # input_values = [None]
-            print_debug('function_name = ' + str(function_name) + ' : (no input_values)')
+    matches_with_inputs = re.match('.*use function (.+) (on|with) (.+)', sentence)
+    if not matches_with_output:
+        if matches_with_inputs:
+            function_name = matches_with_inputs.group(1)
+            input_values = matches_with_inputs.group(4).split(' and ')
+            print_debug('function_name2 = ' + str(function_name) + ' : input_values = ' + str(input_values))
+        else:
+            # check less restrictive phrasing after
+            matches_without_inputs = re.match('.*use function (.+)', sentence)
+            if matches_without_inputs:
+                function_name = matches_without_inputs.group(1)
+                # input_values = [None]
+                print_debug('function_name3 = ' + str(function_name) + ' : (no input_values)')
     # either way, try to find function index and then skip to top of function
     if matches_with_inputs or matches_without_inputs:
         for index in goto_locations:
@@ -739,6 +752,8 @@ def check_function(sentence, i):
             index = goto_stack[-1]
             function_name = goto_locations[index].name
             function = variable_dictionary[function_name]
+            print_debug('function.local_variables = '+str(function.local_variables))
+            print_debug('variable_dictionary = '+str(variable_dictionary))
             if function.being_called:
                 # if ignoring current function insides, can stop ignoring it now
                 nested_blocks_ignore -= 1
@@ -755,7 +770,7 @@ def check_function(sentence, i):
                 # then reset function local variables etc.
                 function.deactivate()
                 goto_stack.pop()
-                print_debug('RETURN FUNCTION: called from i = '+str(i) + ' : output ' + str(output_value) + ' to variable ' + output_variable)
+                print_debug('RETURN FUNCTION: called from line #'+str(i+1) + ' : output =' + str(output_value) + ' --> variable =' + output_variable)
     print_debug('FUNCTION: goto_stack: '+str(goto_stack))
     # print(variable_dictionary)
     return [i, nested_blocks_ignore]
@@ -865,5 +880,5 @@ if __name__ == '__main__':
     # run this interpreter:
     interpret()
     print('\n...THANK YOU!\n')
-    print_debug(str(variable_dictionary))
-    print_debug(str(import_dictionary))
+    print(str(variable_dictionary))
+    print(str(import_dictionary))
