@@ -96,7 +96,7 @@ Yay the import test_function() of test.py from the "library" folder works!
 1
 2
 tree bark
-array is [2,3,4]
-use array of numb pie on [2,3,4]
-output of array of numb pie is [2,3,4]
+array is [2, 3, 4]
+use array of numb pie on [2, 3, 4]
+output of array of numb pie is [2, 3, 4]
 ```
