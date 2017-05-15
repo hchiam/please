@@ -559,7 +559,7 @@ def check_use(sentence, i):
     if not matches_with_output:
         if matches_with_inputs:
             function_name = matches_with_inputs.group(1)
-            input_values = matches_with_inputs.group(4).split(' and ')
+            input_values = matches_with_inputs.group(3).split(' and ')
             print_debug('function_name2 = ' + str(function_name) + ' : input_values = ' + str(input_values))
         else:
             # check less restrictive phrasing after
@@ -880,5 +880,5 @@ if __name__ == '__main__':
     # run this interpreter:
     interpret()
     print('\n...THANK YOU!\n')
-    print(str(variable_dictionary))
-    print(str(import_dictionary))
+    print_debug(str(variable_dictionary))
+    print_debug(str(import_dictionary))
