@@ -429,11 +429,11 @@ Please import numpy as nectarine pony
 def check_import(sentence):
     global import_dictionary
     module = None 
-    matches = re.match('.*import (.+)(( as (.+))|( from (.+)))', sentence)
-    if matches:
-        import_name = matches.group(1)
-        import_as = matches.group(4)
-        import_from = matches.group(6)
+    matches_as_from = re.match('.*import (.+)(( as (.+))|( from (.+)))', sentence)
+    if matches_as_from:
+        import_name = matches_as_from.group(1)
+        import_as   = matches_as_from.group(4)
+        import_from = matches_as_from.group(6)
         print_debug('IMPORT:\n\timport_name = ' + str(import_name) + '\n\timport_from = ' + str(import_from) + '\n\timport_as = ' + str(import_as))
         if import_as: # can nickname import module
             print_debug('IMPORT ... AS ...')
@@ -452,10 +452,10 @@ def check_import(sentence):
             import_dictionary[import_name] = module
         print_debug('IMPORT: IMPORT_DICTIONARY, size = ' + str(len(import_dictionary)) + '\n\t = ' + str(import_dictionary))
     else:
-        matches = re.match('.*import (.+)', sentence)
-        if matches:
+        matches_just_name = re.match('.*import (.+)', sentence)
+        if matches_just_name:
             print_debug('IMPORT NAME ...')
-            import_name = matches.group(1).strip() # remove final spaces because of regex
+            import_name = matches_just_name.group(1).strip() # remove final spaces because of regex
             try: # try with .py ending
                 spec = importlib.util.spec_from_file_location(import_name, import_name + '.py')
                 module = importlib.util.module_from_spec(spec)
