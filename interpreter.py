@@ -46,7 +46,9 @@ def setup_goto_locations_and_functions(sentences):
         matches_for = re.match('for each (.+) in (.+)', sentence)
         matches_function = re.match('define function (.+) (with |using )(inputs )?(.+)$', sentence)
         matches_class = re.match('define class (.+)', sentence)
-        if matches_function:
+        if matches_for:
+            goto_locations[i] = Goto_data() # [status, list_index, list_length] = [False, 0, None]
+        elif matches_function:
             # add function to goto locations
             goto_info = Goto_data() # [status, list_index, list_length] = [False, 0, None]
             goto_info.name = matches_function.group(1)
@@ -60,8 +62,6 @@ def setup_goto_locations_and_functions(sentences):
         elif matches_class:
             goto_info = Goto_data() # [status, list_index, list_length] = [False, 0, None]
             goto_locations[i] = goto_info
-        elif matches_for:
-            goto_locations[i] = Goto_data() # [status, list_index, list_length] = [False, 0, None]
     print_debug('goto_locations: ' + str(goto_locations))
 
 def run_commands(sentences):
@@ -172,7 +172,9 @@ def check_variable(sentence):
             function = goto_stack[-1][1] # variable_dictionary[function_name]
             in_function = function.being_called
     matches = re.match('.*variable (.+).*', sentence)
-    if matches:
+    if not matches:
+        return sentence
+    else:
         variable_name = matches.group(1) # this is substring found inside '(.+)'
         not_print_statement = not re.match('print .*', sentence) # avoid creating variables within print statement
         not_return_statement = not re.match('return .*', sentence) # avoid creating variables within return statements
@@ -210,11 +212,11 @@ def check_variable(sentence):
             index = matches.group(2)
             variable_name = matches.group(4)
             variable_index = eval_math(check_math(index))-1
-            if in_function:
+            if not in_function:
+                variable_list = variable_dictionary[variable_name]
+            elif in_function:
                 if variable_name in function.local_variables:
                     variable_list = function.local_variables[variable_name]
-            else:
-                variable_list = variable_dictionary[variable_name]
             replacement_phrase = part_before + str(variable_list[variable_index])
             sentence = re.sub(checkphrase, replacement_phrase, sentence)
         if in_function:
@@ -230,8 +232,6 @@ def check_variable(sentence):
         # print_debug('----2---=='+sentence)
         sentence = sentence + irreplaceable_part
         # print_debug('------3-=='+sentence)
-        return sentence
-    else:
         return sentence
 
 def dictionary_variables_in_string(string, dictionary): # dictionary could be variable_dictionary or local_variables
@@ -635,13 +635,13 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
             return [nested_blocks_ignore,sentence]
     else:
         matches = re.match('.*end if', sentence)
-        if matches:
+        if not matches:
+            return [nested_blocks_ignore,sentence]
+        else:
             nested_blocks_ignore -= 1
             if nested_blocks_ignore < 0:
                 nested_blocks_ignore = 0
             # print_debug('nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- end if')
-            return [nested_blocks_ignore,sentence]
-        else:
             return [nested_blocks_ignore,sentence]
 
 """
@@ -675,7 +675,10 @@ def check_for(sentence, i):
         skip_to_line = i
     else:
         matches = re.match('end for', sentence)
-        if matches: # check if need to loop back to header index
+        if not matches:
+            # don't skip anywhere
+            skip_to_line = i
+        else: # check if need to loop back to header index
             last_nested_i = goto_stack[-1][0]
             current_loop = goto_locations[last_nested_i]
             # check if at last index in list_name
@@ -698,9 +701,6 @@ def check_for(sentence, i):
                 variable_dictionary[current_loop.loop_variable] += 1
                 # skip back to the beginning of loop
                 skip_to_line = last_nested_i
-        else:
-            # don't skip anywhere
-            skip_to_line = i
     return skip_to_line
 
 """
@@ -766,12 +766,12 @@ def check_function(sentence, i):
                         output_value = function.local_variables[output_value]
                     # output return value
                     output_variable = function.output_variable
-                    if len(goto_stack) > 1:
+                    if len(goto_stack) == 1: # TODO currently assume no function calling current function, so just outputting to global variable_dictionary
+                        variable_dictionary[output_variable] = output_value
+                    else:
                         is_a_function = goto_stack[-2][1].local_variables
                         if is_a_function:
                             goto_stack[-2][1].local_variables[output_variable] = output_value
-                    else: # TODO currently assume no function calling current function, so just outputting to global variable_dictionary
-                        variable_dictionary[output_variable] = output_value
                 # get index of where function was called
                 i = function.index_called_from
                 # then remove function from call stack
