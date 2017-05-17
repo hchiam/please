@@ -378,11 +378,11 @@ def check_assign_list_passed(sentence):
             function = variable_dictionary[function_name]
             in_function = function.being_called
     # check if assigning ordered list of items
-    matches = re.match('.*assign list from (.+) to (.+) to (variable )?(.+)', sentence)
-    if matches:
-        list_start = int(check_math(matches.group(1)))
-        list_stop = int(check_math(matches.group(2)))
-        variable_name = matches.group(4)
+    matches_list_ordered = re.match('.*assign list from (.+) to (.+) to (variable )?(.+)', sentence)
+    if matches_list_ordered:
+        list_start      = int(check_math(matches_list_ordered.group(1)))
+        list_stop       = int(check_math(matches_list_ordered.group(2)))
+        variable_name   = matches_list_ordered.group(4)
         print_debug('list start = ' + str(list_start) + ' stop = ' + str(list_stop) + ' ASSIGN TO: ' + variable_name)
         list_values = list(range(list_start, list_stop+1))
         # check whether to add to local variables dictionary
@@ -394,11 +394,11 @@ def check_assign_list_passed(sentence):
             print_debug('function.local_variables: ' + str(function.local_variables))
         return True # found assignment of list to variable
     # check if assigning unordered list of items separated by ' and '
-    matches = re.match('.*assign list of (.+) to (variable )?(.+)', sentence)
-    if matches:
-        unordered_list_items = matches.group(1).split(' and ') # items separated by ' and '
-        unordered_list_items = translate_list_items(unordered_list_items)
-        variable_name = matches.group(3)
+    matches_list_unordered = re.match('.*assign list of (.+) to (variable )?(.+)', sentence)
+    if matches_list_unordered:
+        variable_name           = matches_list_unordered.group(3)
+        unordered_list_items    = matches_list_unordered.group(1).split(' and ') # items separated by ' and '
+        unordered_list_items    = translate_list_items(unordered_list_items)
         print_debug('list unordered_list_items = ' + str(unordered_list_items) + ' ASSIGN TO: ' + variable_name)
         # check whether to add to local variables dictionary
         if not in_function and nested_blocks_ignore == 0:
