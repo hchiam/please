@@ -1,23 +1,18 @@
-please note the following are examples
-please print on smaller screens hit the pencil icon
-please print
-please print this string of words
-please assign one plus two thousand plus sixteen to result
-please print may variable result
-please print
-please assign list of one and two and tree bark to variable crazy list
-please print variable crazy list
-please if crazy equals crazy then
-	please for each item in crazy list
-		please print index variable item of crazy list
-	please end for
+define function fibonacci with number
+	if variable number equals zero then return zero
+	if variable number equals one then return one
+	assign use function fibonacci on variable number minus one to variable answer
+	print debug : answer = variable answer
+	return variable answer
+end function
 
-please end if
-
-please print next try to use array([2,3,4]) from numb pie
-please define function test with item
-	please print variable item
-please end function
-
-please assign it works to other
-please use function test on variable other
+assign use function fibonacci with zero to variable output
+print step 1: output = variable output
+assign use function fibonacci with one to variable output
+print step 2: output = variable output
+assign use function fibonacci with two to variable output
+print step 3: output = variable output
+assign use function fibonacci with three to variable output
+print step 4: output = variable output
+import format from library
+use clean from format
