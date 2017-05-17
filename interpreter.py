@@ -5,6 +5,7 @@ from sys import *
 import re
 from importlib import import_module
 import importlib.util
+import copy
 
 
 
@@ -67,7 +68,7 @@ def run_commands(sentences):
     global nested_blocks_ignore
     i = 0
     while i < len(sentences): # use i to access sentence indices for go-to locations
-        print_debug('-------------- LINE #' + str(i+1) + ' --------------')
+        print_debug('-------------- LINE #' + str(i+1) + ' --------------'+str(len(goto_stack)))
         sentence = sentences[i]
         sentence = sentence.strip()
         # note: order matters, like order of replacing words or ignoring rest of sentence:
@@ -166,9 +167,9 @@ def check_variable(sentence):
     global nested_blocks_ignore
     in_function = False
     if goto_stack:
-        function_name = goto_locations[goto_stack[-1]].name
+        function_name = goto_locations[goto_stack[-1][0]].name
         if function_name:
-            function = variable_dictionary[function_name]
+            function = goto_stack[-1][1] # variable_dictionary[function_name]
             in_function = function.being_called
     matches = re.match('.*variable (.+).*', sentence)
     if matches:
@@ -345,7 +346,7 @@ Please assign some words to variable coconut
 def check_assign(sentence):
     in_function = False
     if goto_stack:
-        function_name = goto_locations[goto_stack[-1]].name
+        function_name = goto_locations[goto_stack[-1][0]].name
         if function_name:
             function = variable_dictionary[function_name]
             in_function = function.being_called
@@ -372,7 +373,7 @@ def check_assign(sentence):
 def check_assign_list_passed(sentence):
     in_function = False
     if goto_stack:
-        function_name = goto_locations[goto_stack[-1]].name
+        function_name = goto_locations[goto_stack[-1][0]].name
         if function_name:
             function = variable_dictionary[function_name]
             in_function = function.being_called
@@ -573,10 +574,11 @@ def check_use(sentence, i):
         for index in goto_locations:
             if goto_locations[index].name == function_name:
                 print_debug('CALL FUNCTION: ' + function_name)
-                function = variable_dictionary[function_name]
+                # function = variable_dictionary[function_name] # TODO make a copy?
+                function = copy.deepcopy(variable_dictionary[function_name]) # variable_dictionary[function_name] would point to same object
                 function.activate(input_values, i)
                 function.output_variable = output_variable
-                goto_stack.append(index)
+                goto_stack.append([index,function])
                 # change output i if function found
                 i = index
         return i
@@ -597,7 +599,7 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
     global nested_blocks_ignore
     # force 'if' to be first word; DO NOT start regex with '.*'
     matches = re.match('if (.+) then$', sentence) # $ for end of sentence
-    matches_oneliner = re.match('if (.+) then ', sentence) # space after WITHOUT $ for continuing sentence
+    matches_oneliner = re.match('(if (.+) then ).+', sentence) # space after WITHOUT $ for continuing sentence
     if matches:
         put_in_vals_of_vars = check_variable(check_spell(matches.group(1)))
         math_expression = check_math(put_in_vals_of_vars)
@@ -615,7 +617,7 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
             return [nested_blocks_ignore,sentence]
     elif matches_oneliner:
         # treat the rest of the sentence like a new sentence
-        put_in_vals_of_vars = check_variable(check_spell(matches_oneliner.group(1)))
+        put_in_vals_of_vars = check_variable(check_spell(matches_oneliner.group(2)))
         math_expression = check_math(put_in_vals_of_vars)
         if math_expression not in ['True', 'False']:
             math_expression = 'False'
@@ -623,7 +625,7 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
         print_debug('if (' + str(if_string) + ') then')
         if if_string == True and nested_blocks_ignore == 0:
             # run the rest of this sentence as its own command (make sure check_if() happens before other checks)
-            sentence = sentence.replace(matches_oneliner.group(), '')
+            sentence = sentence.replace(matches_oneliner.group(1), '')
             # print_debug('nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- if')
             return [nested_blocks_ignore,sentence]
         else:
@@ -667,14 +669,14 @@ def check_for(sentence, i):
         current_loop.activate(element, variable_dictionary[list_name])
         print_debug('GOTO STATUS: ' + str(goto_locations[i].status))
         # track nesting
-        goto_stack.append(i)
+        goto_stack.append([i,current_loop])
         print_debug('GOTO STACK: ' + str(goto_stack))
         # don't skip anywhere
         skip_to_line = i
     else:
         matches = re.match('end for', sentence)
         if matches: # check if need to loop back to header index
-            last_nested_i = goto_stack[-1]
+            last_nested_i = goto_stack[-1][0]
             current_loop = goto_locations[last_nested_i]
             # check if at last index in list_name
             loop_index = current_loop.list_index
@@ -723,7 +725,7 @@ def check_function(sentence, i):
             nested_blocks_ignore += 1
         return [i, nested_blocks_ignore]
     # check end function and setting nested_blocks_ignore -= 1 or = 0
-    if re.match('.*end function', sentence):
+    if re.match('end function', sentence):
         # if ignoring current function insides, can stop ignoring it now
         nested_blocks_ignore -= 1
         if nested_blocks_ignore < 0:
@@ -731,12 +733,15 @@ def check_function(sentence, i):
         # check if there's anything on the goto_stack (like for loop or function)
         if goto_stack:
             # get last goto stack item index because such goto blocks can only be within each other
-            index = goto_stack[-1]
+            index = goto_stack[-1][0]
             function_name = goto_locations[index].name
-            function = variable_dictionary[function_name]
-            if function.being_called:
+            function = goto_stack[-1][1] #variable_dictionary[function_name]
+            
+            if function.being_called: # TODO
+                
                 # get index of where function was called
                 i = function.index_called_from
+                
                 # then reset function local variables etc.
                 function.deactivate()
                 goto_stack.pop()
@@ -749,9 +754,9 @@ def check_function(sentence, i):
         # check if there's anything on the goto_stack (like for loop or function)
         if goto_stack:
             # get last goto stack item index because such goto blocks can only be within each other
-            index = goto_stack[-1]
+            index = goto_stack[-1][0]
             function_name = goto_locations[index].name
-            function = variable_dictionary[function_name]
+            function = goto_stack[-1][1] #variable_dictionary[function_name]
             print_debug('function.local_variables = '+str(function.local_variables))
             print_debug('variable_dictionary = '+str(variable_dictionary))
             if function.being_called:
@@ -784,7 +789,8 @@ def print_debug(string):
 # initialize global variables:
 
 nested_blocks_ignore = 0 # track nesting to know whether got out of an if-statement that evaluated to False (to ignore lines)
-goto_stack = [] # append/pop "header" indices to track nesting of loops, functions, or classes ; {#,#,#,...}
+goto_stack = [] # append/pop "header" indices to track nesting of loops, functions, or classes ; [#,#,#,...]
+# goto_stack may have multiple copies of a function if there's recursion
 
 # Python dictionaries are hashtables (avg time complexity O(1)):
 goto_locations = {} # map indices to Goto_data of loops, functions, and classes ; {#:<Goto_data()>, #:<Goto_data()>,...}
@@ -880,5 +886,5 @@ if __name__ == '__main__':
     # run this interpreter:
     interpret()
     print('\n...THANK YOU!\n')
-    print_debug(str(variable_dictionary))
-    print_debug(str(import_dictionary))
+    print(str(variable_dictionary))
+    print(str(import_dictionary))
