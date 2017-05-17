@@ -132,7 +132,7 @@ please  note this is a comment
 """
 def check_note(sentence):
     words = get_words(sentence)
-    if words[0] == 'note':
+    if words and words[0] == 'note':
         return True
     else:
         return False
@@ -143,7 +143,7 @@ please  print this string of words
 """
 def check_print(sentence):
     words = get_words(sentence)
-    if words[0] == 'print':
+    if words and words[0] == 'print':
         print(' '.join(words[1:]))
         return True
     else:
