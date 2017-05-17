@@ -199,7 +199,7 @@ def check_variable(sentence):
         matches_assign_to = re.match('(assign .+)( to (variable )?.+)$', sentence) # $ for end of sentence
         replaceable_part = sentence # intialize
         irreplaceable_part = '' # intialize
-        if matches_assign_variable:
+        if matches_assign_to:
             replaceable_part    = matches_assign_to.group(1)
             irreplaceable_part  = matches_assign_to.group(2) # put back later
             sentence = replaceable_part
@@ -598,15 +598,28 @@ Please end if
 def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nesting)
     global nested_blocks_ignore
     # force 'if' to be first word; DO NOT start regex with '.*'
-    matches = re.match('if (.+) then$', sentence) # $ for end of sentence
-    matches_oneliner = re.match('(if (.+) then ).+', sentence) # space after WITHOUT $ for continuing sentence
-    if matches:
-        put_in_vals_of_vars = check_variable(check_spell(matches.group(1)))
+    matches_multiliner  = re.match('if (.+) then$', sentence) # $ for end of sentence
+    matches_oneliner    = re.match('(if (.+) then ).+', sentence) # space after WITHOUT $ for continuing sentence
+    matches_end_if      = re.match('.*end if', sentence)
+    
+    # escape early if no matches
+    if not matches_multiliner and not matches_oneliner and not matches_end_if:
+        return [nested_blocks_ignore,sentence]
+    
+    # common setup for if statements, whether multilines or oneliners
+    if matches_multiliner or matches_oneliner:
+        if matches_multiliner:
+            put_in_vals_of_vars = check_variable(check_spell(matches_multiliner.group(1)))
+        elif matches_oneliner:
+            put_in_vals_of_vars = check_variable(check_spell(matches_oneliner.group(2)))
         math_expression = check_math(put_in_vals_of_vars)
         if math_expression not in ['True', 'False']:
             math_expression = 'False'
         if_string = eval_math(math_expression)
         print_debug('if (' + str(if_string) + ') then')
+    
+    # actions that are more different for different matches
+    if matches_multiliner:
         if if_string == True and nested_blocks_ignore == 0:
             # print_debug('nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- if')
             return [nested_blocks_ignore,sentence]
@@ -616,13 +629,6 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
             # print_debug('nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- if')
             return [nested_blocks_ignore,sentence]
     elif matches_oneliner:
-        # treat the rest of the sentence like a new sentence
-        put_in_vals_of_vars = check_variable(check_spell(matches_oneliner.group(2)))
-        math_expression = check_math(put_in_vals_of_vars)
-        if math_expression not in ['True', 'False']:
-            math_expression = 'False'
-        if_string = eval_math(math_expression)
-        print_debug('if (' + str(if_string) + ') then')
         if if_string == True and nested_blocks_ignore == 0:
             # run the rest of this sentence as its own command (make sure check_if() happens before other checks)
             sentence = sentence.replace(matches_oneliner.group(1), '')
@@ -633,16 +639,12 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
             # one-liner if-statement does not add to nestedness, so do not do nested_blocks_ignore += 1
             # print_debug('nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- if')
             return [nested_blocks_ignore,sentence]
-    else:
-        matches = re.match('.*end if', sentence)
-        if not matches:
-            return [nested_blocks_ignore,sentence]
-        else:
-            nested_blocks_ignore -= 1
-            if nested_blocks_ignore < 0:
-                nested_blocks_ignore = 0
-            # print_debug('nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- end if')
-            return [nested_blocks_ignore,sentence]
+    elif matches_end_if:
+        nested_blocks_ignore -= 1
+        if nested_blocks_ignore < 0:
+            nested_blocks_ignore = 0
+        # print_debug('nested_blocks_ignore: '+str(nested_blocks_ignore) + ' --- end if')
+        return [nested_blocks_ignore,sentence]
 
 """
 example:
