@@ -1,3 +1,4 @@
+please no need to say please
 define function fibonacci with number
 	if variable number equals zero then return zero
 	if variable number equals one then return one

@@ -45,32 +45,23 @@ def get_text(file_name):
     return open(file_name, 'r').read()
 
 def reformat(text):
-    text = remove_terse_mode_line(text)
     
     # put each "please" at new lines (doesn't affect terse mode)
-    text = text.lower().replace(' please','\nplease') # just one long string to parse
+    if not terse_mode_on:
+        text = text.lower().replace(' please','\nplease') # just one long string to parse
     
     # FUTURE: put indents when it sees if-statements (and later for-loops, and de-indents at any end-if's).
     text = format_lines(text)
     
     return text
 
-def remove_terse_mode_line(text):
-    if terse_mode_on:
-        checkphrases = ['please no need to say please',
-                    'please use enter mode',
-                    'please use short mode']
-        for checkphrase in checkphrases:
-            if text.startswith(checkphrase):
-                return text.replace(checkphrase,'please ')
-    return text
-
 def format_lines(text):
+    global terse_mode_on
     # edit line by line instead of as one long string (so can track indents)
     if terse_mode_on:
-        sentences = text.split('\n')[1:] # index 0 is []
+        sentences = text.split('\n') # index 0 is the line indicating terse mode is on
     else:
-        sentences = text.split('please')[1:] # index 0 is []
+        sentences = text.split('please ')[1:] # index 0 is []
     text = ''
     num_indents = 0
     newline_after_endif = False
@@ -123,7 +114,7 @@ def finish_progress_bar_display(): # so that print() starts on new line
 def check_terse_mode(text):
     """
     example:
-    please  no need to say please
+    please no need to say please
     print this works
     print no need to say please before each line
     """
