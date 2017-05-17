@@ -58,7 +58,7 @@ Here are 3 ground rules to make commands easier to say, but also easier for spee
 
 1. **Just say words that use your ABCs and spaces between**. No special non-letter characters like "?". Why? Speed and recognition. Saying "question mark" just to type out "?" is slow and could be faulty if the speech recognition software thinks you literally want the words "question mark". Please also doesn't differentiate (non-)capital letters because it's a speech-based language (vs. a "written language").
 2. **Avoid specialized words or names**. Why? So you don't have to specifically train your speech recognition software to recognize uncommon words like "numpy" (mine thought I said "numb pie"). Workaround/trade-off: you have to spell it out, maybe using the first letters of more common words, like "**N**eptune **u**nicorn **m**oose **p**anda **Y**oda" to spell out "numpy". Afterwards, you can reassign "numpy" to a shorter label that uses more common words, like "numb pie" or "pneumatic".
-3. **"Say please"**. Each new sentence starts with "please" and roughly marks out a new command or line in the code. Some devices or interfaces don't let you enter the newline character.
+3. **"Say please"**. Start each new sentence with "please" to mark out a new command or line in the code. (*But* you don't have to: on devices or interfaces that let you enter the newline character, just start your code with "please no need to say please". See [terse mode](#terse-mode).)
 
 I don't intend to replace Python. In fact, python import capability is built right into Please. See [import examples](#import-to-add-functionality) below.
 
@@ -266,6 +266,15 @@ please print output of array of numb pie is variable output
 --> This imports `numpy`, creates `array = [2,3,4]`, and runs `output = numpy.array([2,3,4])`
 
 --> This also prints `array is [2, 3, 4]`, `use array of numb pie on [2, 3, 4]`, and `output of array of numb pie is [2, 3, 4]`
+
+## Terse Mode
+
+```
+Please no need to say please
+Print this works
+Print no need to say please before each line
+```
+--> This prints out: `this works` and `no need to say please before each line`
 
 <br>
 
