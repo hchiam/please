@@ -716,10 +716,10 @@ Please use function test on variable other
 def check_function(sentence, i):
     global nested_blocks_ignore
     # input names expected to be separated by ' and '
-    matches = re.match('define function (.+)( with | using )(inputs )?(.+)$', sentence)
-    if matches:
-        function_name = matches.group(1)
-        input_names = matches.group(4).split(' and ')
+    matches_define_function = re.match('define function (.+)( with | using )(inputs )?(.+)$', sentence)
+    if matches_define_function:
+        function_name   = matches_define_function.group(1)
+        input_names     = matches_define_function.group(4).split(' and ')
         print_debug('FUNCTION: ' + function_name + ' (' + str(input_names) + ')')
         # check if function not being called
         function = variable_dictionary[function_name]
@@ -727,7 +727,8 @@ def check_function(sentence, i):
             nested_blocks_ignore += 1
         return [i, nested_blocks_ignore]
     # check end function and setting nested_blocks_ignore -= 1 or = 0
-    if re.match('end function', sentence):
+    matches_end_function = re.match('end function', sentence)
+    if matches_end_function:
         # if ignoring current function insides, can stop ignoring it now
         nested_blocks_ignore -= 1
         if nested_blocks_ignore < 0:
@@ -745,10 +746,10 @@ def check_function(sentence, i):
                 goto_stack.pop()
                 print_debug('END FUNCTION: called from i = '+str(i))
     # check return statement and setting nested_blocks_ignore -= 1 or = 0
-    matches = re.match('return (variable )?(.+)', sentence)
-    if matches:
-        output_value = check_math(matches.group(2)) # will either output the literal value "...", or the value of "variable ..."
-        outputting_variable_value = matches.group(1)
+    matches_return = re.match('return (variable )?(.+)', sentence)
+    if matches_return:
+        output_value = check_math(matches_return.group(2)) # will either output the literal value "...", or the value of "variable ..."
+        outputting_variable_value = matches_return.group(1)
         # check if there's anything on the goto_stack (like for loop or function)
         if goto_stack:
             # get last goto stack item index because such goto blocks can only be within each other
