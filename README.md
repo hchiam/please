@@ -13,7 +13,7 @@
 First transcribe this code:
 
 ```
-Please print this string of words
+please print this string of words
 ```
 
 When you run that code, it prints out:
@@ -71,13 +71,13 @@ Currently you can: [print out](#print) strings and variable values, create [vari
 ## Print:
 
 ```
-Please print this string of words
+please print this string of words
 ```
 --> This prints out: `this string of words`
 
 ```
-Please assign one to variable apple
-Please print variable apple
+please assign one to variable apple
+please print variable apple
 ```
 --> This prints out: `1`
 
@@ -86,40 +86,40 @@ Please print variable apple
 By design, Please encourages you to use words instead of letters and short forms -- you're saying it out loud.
 
 ```
-Please create variable apple
+please create variable apple
 ```
 
 or
 
 ```
-Please variable banana
+please variable banana
 ```
 
 ## Assign Values/Lists to Variables:
 
 ```
-Please assign one to variable apple
-Please assign three hundred to variable banana
-Please assign some words to variable coconut
+please assign one to variable apple
+please assign three hundred to variable banana
+please assign some words to variable coconut
 ```
 --> This generates: `apple = 1`, `banana = 300`, `coconut = 'some words'`
 
 Note: variables automatically get created if you didn't already create them.
 
 ```
-Please assign list from eight to twelve to durian
+please assign list from eight to twelve to durian
 ```
 --> This generates: `durian = [8, 9, 10, 11, 12]`
 
 ```
-Please assign list of one and two and tree bark to variable crazy list
+please assign list of one and two and tree bark to variable crazy list
 ```
 --> This generates: `crazy list = [1, 2, 'tree bark']`
 
 ## Spell Out a Special Word:
 
 ```
-Please spell with the first letters of Neptune unicorn moose panda Yoda
+please spell with the first letters of Neptune unicorn moose panda Yoda
 ```
 --> This evaluates to: `numpy` (NumPy is a Python library you can import: https://en.wikipedia.org/wiki/NumPy) (Also see [import examples](#import-to-add-functionality))
 
@@ -128,46 +128,46 @@ Note: capital letters are treated the same as lowercase letters. Please is case-
 ## Math:
 
 ```
-Please one plus two
+please one plus two
 ```
 --> This evaluates to: `3`
 
 ```
-Please one plus one equals two
+please one plus one equals two
 ```
 --> This evaluates to: `True`
 
 ```
-Please assign one plus two to variable result
-Please print variable result
+please assign one plus two to variable result
+please print variable result
 ```
 --> This prints out: `3`
 
 ## If Statements:
 
 ```
-Please if true then print this is a one line if statement
+please if true then print this is a one line if statement
 ```
 ---> This prints out: `this is a one line if statement`
 
 ```
-Please if one equals one then
-    Please print this should print
-Please end if
+please if one equals one then
+    please print this should print
+please end if
 ```
 --> This prints out: `this should print`
 
 ```
-Please if one equals two then
-    Please print it should not print this
-Please end if
+please if one equals two then
+    please print it should not print this
+please end if
 ```
 --> (This doesn't print anything because the if-statement evaluates to False.)
 
 Note: Please ignores whitespace and newline characters because the spoken word doesn't explicitly mark out paragraphs either. So you could type this too:
 
 ```
-Please if one equals two then please print it should not print this please end if
+please if one equals two then please print it should not print this please end if
 ```
 
 You can use library/format.py to automatically format your Please code.
@@ -175,64 +175,64 @@ You can use library/format.py to automatically format your Please code.
 ## For Loops:
 
 ```
-Please assign list from negative one to three to variable circle
-Please for each index in circle
-    Please print variable index
-Please end for
+please assign list from negative one to three to variable circle
+please for each index in circle
+    please print variable index
+please end for
 ```
 --> This prints out: `-1`, `0`, `1`, `2`, `3`
 
 ## Comments/Notes:
 
 ```
-Please note this is a comment
+please note this is a comment
 ```
 --> (The interpreter ignores this sentence.)
 
 ## Make and Use Your Own Functions:
 
 ```
-Please define function test with item
-    Please print variable item
-Please end function
-Please assign it works to other
-Please use function test on variable other
+please define function test with item
+    please print variable item
+please end function
+please assign it works to other
+please use function test on variable other
 ```
 --> This prints: `it works`
 
 ## Import to Add Functionality:
 
 ```
-Please import alternate
+please import alternate
 ```
 --> This imports: alternate.py (from the local folder)
 
 ```
-Please import test from library
+please import test from library
 ```
 --> This imports: /library/test.py
 
 ```
-Please import spelled with the first letters of Neptune unicorn moose panda Yoda
+please import spelled with the first letters of Neptune unicorn moose panda Yoda
 ```
 --> This performs: `import numpy`. (You can spell out "numpy" since it's not an everyday word, and your speech recognition software might not already be trained to recognize it.)
 
 ```
-Please import spelled with the first letters of Neptune unicorn moose panda Yoda as noodle
+please import spelled with the first letters of Neptune unicorn moose panda Yoda as noodle
 ```
 --> This performs: `import numpy as noodle`. (So no need to spell it out each time you use it.)
 
 ```
-Please import spelled with the first letters of Neptune unicorn moose panda Yoda as numb pie
+please import spelled with the first letters of Neptune unicorn moose panda Yoda as numb pie
 ```
 --> This performs: `import numpy as numb pie`. (You can also just rename it to whatever your speech recognition software thinks you're saying.)
 
 ## Use an Import Module's Function:
 
 ```
-Please import test from library
-Please use test_function of test
-Please use test_function from test
+please import test from library
+please use test_function of test
+please use test_function from test
 ```
 --> This performs twice: `test.test_function()`
 
@@ -241,10 +241,10 @@ Please use test_function from test
 ## Access List Index:
 
 ```
-Please assign list of one and two and tree bark to variable crazy list
-Please for each item in crazy list
-    Please print index variable item of crazy list
-Please end for
+please assign list of one and two and tree bark to variable crazy list
+please for each item in crazy list
+    please print index variable item of crazy list
+please end for
 ```
 --> This prints: `1`, `2`, `'tree bark'`
 
@@ -270,9 +270,9 @@ please print output of array of numb pie is variable output
 ## Terse Mode
 
 ```
-Please no need to say please
-Print this works
-Print no need to say please before each line
+please no need to say please
+print this works
+print no need to say please before each line
 ```
 --> This prints out: `this works` and `no need to say please before each line`
 
