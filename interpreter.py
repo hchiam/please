@@ -25,12 +25,38 @@ def get_text(file_name):
     return text
 
 def remove_multi_spaces(text):
-    return ' '.join(text.split())
+    # just doing ' '.join(text.split()) would not enable use of terse mode (which uses '\n')
+    newtext = ''
+    for line in text.split('\n'):
+        line = ' '.join(line.split())
+        newtext += line + '\n'
+    return newtext.strip() # remove trailing line(s)
 
 def get_sentences(text):
-    # each sentence is expected to begin with "please "
-    sentences = text.split('please ')[1:] # assume index [0] is always empty or invalid before the first "please "
+    # normally, each sentence is expected to begin with "please "
+    split_by_word = 'please '
+    # but you can turn on "terse mode" to use newline characters per line of code if your interface enables it
+    terse_mode_on = check_terse_mode(text)
+    if terse_mode_on:
+        split_by_word = '\n'
+    # split into sentences by "please " or by "\n"
+    sentences = text.split(split_by_word)[1:] # assume index [0] is always empty or invalid before the first "please " or "\n"
     return sentences
+
+def check_terse_mode(text):
+    """
+    example:
+    Please no need to say please
+    Print this works
+    Print no need to say please before each line
+    """
+    terse_mode_on = False
+    checkphrases = ['please no need to say please',
+                    'please use enter mode',
+                    'please use short mode']
+    if any(text.startswith(checkphrase) for checkphrase in checkphrases):
+        terse_mode_on = True
+    return terse_mode_on
 
 def setup_goto_locations_and_functions(sentences):
     """
