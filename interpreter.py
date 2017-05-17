@@ -500,7 +500,7 @@ def check_use_functions_imported(sentence, i):
         use_string      = matches_input_and_output.group(1)
         from_string     = matches_input_and_output.group(3).replace(' ','') # remove spaces in import names for now
         input_variables = matches_input_and_output.group(5).split(' and ') # later convert to args list with a star: *input_variables
-        variable_name   = matches_input_and_output.group(6)
+        variable_name   = matches_input_and_output.group(7)
         print_debug('USE: ' + use_string + '\n  from ' + from_string + '\n  on ' + str(input_variables) + '\n  to ' + variable_name)
         function_imported = getattr(import_dictionary[from_string], use_string)
         try:
