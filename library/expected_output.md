@@ -5,51 +5,52 @@ This file shows expected output for test input code.
 Put this code into text.txt:
 
 ```
-Please print this string of words
-Please create variable apple
-Please variable banana
-Please assign one to variable apple
-Please print variable apple
-Please assign three hundred to variable banana
-Please assign some words to variable coconut
-Please assign list from eight to twelve to durian
-Please assign list of one and two and tree bark to variable crazy list
-Please assign one plus two to variable result
-Please print variable result
-Please if true then print this is a one line if statement
-Please if one equals one then
-    Please print this should print
-Please end if
-please print there should be nothing between this line
-Please if one equals two then
-    Please print it should not print this
-Please end if
-Please if one equals two then please print it should not print this please end if
-please print and this line
-Please assign list from negative one to three to variable circle
-Please for each index in circle
-    Please print variable index
-Please end for
-Please note this is a comment
-Please define function test with item
-    Please print variable item
-Please end function
-Please assign it works to other
-Please use function test on variable other
-Please import alternate
-Please import test from library
-Please use test_function of test
-Please use test_function from test
-Please assign list of one and two and tree bark to variable crazy list
-Please for each item in crazy list
-    Please print index variable item of crazy list
-Please end for
-please import spelled with the first letters of Neptune unicorn moose panda Yoda as numb pie
-please assign list from two to four to array
-please print array is variable array
-please print use array of numb pie on variable array
-please assign use array of numb pie on variable array to output
-please print output of array of numb pie is variable output
+please no need to say please
+print this string of words
+create variable apple
+variable banana
+assign one to variable apple
+print variable apple
+assign three hundred to variable banana
+assign some words to variable coconut
+assign list from eight to twelve to durian
+assign list of one and two and tree bark to variable crazy list
+assign one plus two to variable result
+print variable result
+if true then print this is a one line if statement
+if one equals one then
+    print this should print
+end if
+print there should be nothing between this line
+if one equals two then
+    print it should not print this
+end if
+if one equals two then  print it should not print this  end if
+print and this line
+assign list from negative one to three to variable circle
+for each index in circle
+    print variable index
+end for
+note this is a comment
+define function test with item
+    print variable item
+end function
+assign it works to other
+use function test on variable other
+import alternate
+import test from library
+use test_function of test
+use test_function from test
+assign list of one and two and tree bark to variable crazy list
+for each item in crazy list
+    print index variable item of crazy list
+end for
+import spelled with the first letters of Neptune unicorn moose panda Yoda as numb pie
+assign list from two to four to array
+print array is variable array
+print use array of numb pie on variable array
+assign use array of numb pie on variable array to output
+print output of array of numb pie is variable output
 ```
 
 # Outputs
