@@ -171,16 +171,16 @@ def check_variable(sentence):
         if function_name:
             function = goto_stack[-1][1] # variable_dictionary[function_name]
             in_function = function.being_called
-    matches = re.match('.*variable (.+).*', sentence)
-    if not matches:
+    matches_variable = re.match('.*variable (.+).*', sentence)
+    if not matches_variable:
         return sentence
     else:
-        variable_name = matches.group(1) # this is substring found inside '(.+)'
-        not_print_statement = not re.match('print .*', sentence) # avoid creating variables within print statement
-        not_return_statement = not re.match('return .*', sentence) # avoid creating variables within return statements
-        not_if_statement = not re.match('if .*', sentence) # avoid creating variables within if statements
-        not_in_certain_statements = not_return_statement and not_return_statement and not_if_statement
-        assigning_value = re.match('assign (.+) to .+',sentence)
+        variable_name               = matches_variable.group(1) # this is substring found inside '(.+)'
+        not_print_statement         = not re.match('print .*', sentence) # avoid creating variables within print statement
+        not_return_statement        = not re.match('return .*', sentence) # avoid creating variables within return statements
+        not_if_statement            = not re.match('if .*', sentence) # avoid creating variables within if statements
+        not_in_certain_statements   = not_return_statement and not_return_statement and not_if_statement
+        is_assigning_value          = re.match('assign (.+) to .+',sentence)
         if not in_function and nested_blocks_ignore == 0:
             if variable_name not in variable_dictionary and not_in_certain_statements:
                 # NOTE: WORKAROUND: var_name_not_of AND var_name_not_to TO AVOID CREATING VARIABLES WHEN ACTUALLY USING "SUBVARIABLES"
@@ -192,25 +192,25 @@ def check_variable(sentence):
         elif in_function and nested_blocks_ignore == 0:
             if variable_name not in function.local_variables and variable_name not in variable_dictionary and not_in_certain_statements:
                 function.local_variables[variable_name] = None
-                if assigning_value:
-                    function.local_variables[variable_name] = check_math(assigning_value.group(1))
+                if is_assigning_value:
+                    function.local_variables[variable_name] = check_math(is_assigning_value.group(1))
                 print_debug('function.local_variables['+variable_name+']: ' + str(function.local_variables[variable_name]))
         # if assigning value then don't replace last variable name (after ' to ') because dictionary needs variable name kept in sentence
-        matches = re.match('(assign .+)( to (variable )?.+)$', sentence) # $ for end of sentence
+        matches_assign_to = re.match('(assign .+)( to (variable )?.+)$', sentence) # $ for end of sentence
         replaceable_part = sentence # intialize
         irreplaceable_part = '' # intialize
-        if matches:
-            replaceable_part = matches.group(1)
-            irreplaceable_part = matches.group(2) # put back later
+        if matches_assign_variable:
+            replaceable_part    = matches_assign_to.group(1)
+            irreplaceable_part  = matches_assign_to.group(2) # put back later
             sentence = replaceable_part
         # print_debug('---1----=='+sentence)
         # check for index of variable name to replace
         checkphrase = '(.*)index (.+) of (variable )?(.+).*'
-        matches = re.match(checkphrase, sentence)
-        if matches:
-            part_before = matches.group(1)
-            index = matches.group(2)
-            variable_name = matches.group(4)
+        matches_variable_index = re.match(checkphrase, sentence)
+        if matches_variable_index:
+            part_before     = matches_variable_index.group(1)
+            index           = matches_variable_index.group(2)
+            variable_name   = matches_variable_index.group(4)
             variable_index = eval_math(check_math(index))-1
             if not in_function:
                 variable_list = variable_dictionary[variable_name]
