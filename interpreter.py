@@ -656,10 +656,10 @@ Please end for
 def check_for(sentence, i):
     global nested_blocks_ignore
     skip_to_line = i
-    matches = re.match('for each (variable )?(.+) in (variable )?(.+)', sentence)
-    if matches:
-        element = matches.group(2)
-        list_name = matches.group(4)
+    matches_for = re.match('for each (variable )?(.+) in (variable )?(.+)', sentence)
+    if matches_for:
+        element     = matches_for.group(2)
+        list_name   = matches_for.group(4)
         print_debug('FOR: sentence = '+sentence)
         print_debug('FOR: element = ' + element)
         print_debug('FOR: list_name = ' + list_name)
@@ -676,8 +676,8 @@ def check_for(sentence, i):
         # don't skip anywhere
         skip_to_line = i
     else:
-        matches = re.match('end for', sentence)
-        if not matches:
+        matches_end_for = re.match('end for', sentence)
+        if not matches_end_for:
             # don't skip anywhere
             skip_to_line = i
         else: # check if need to loop back to header index
