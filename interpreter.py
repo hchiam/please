@@ -861,9 +861,10 @@ class Function_data:
     output_variable = ''
     def __init__(self, location, list_of_variable_names):
         self.location = location
-        for variable in list_of_variable_names:
-            self.local_variables[variable] = None
-            self.ordered_names.append(variable)
+        if list_of_variable_names != '':
+            for variable in list_of_variable_names:
+                self.local_variables[variable] = None
+                self.ordered_names.append(variable)
     def activate(self, list_of_input_values, index_called_from):
         self.being_called = True # TODO: being_called is unnecessary for functions since using a separate goto_stack; remove this prop from variable_dictionary too?
         if list_of_input_values:
