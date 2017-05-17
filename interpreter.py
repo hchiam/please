@@ -70,18 +70,26 @@ def setup_goto_locations_and_functions(sentences):
     for i in range(len(sentences)):
         sentence = sentences[i].strip()
         matches_for = re.match('for each (.+) in (.+)', sentence)
-        matches_function = re.match('define function (.+) (with |using )(inputs )?(.+)$', sentence)
+        matches_function_with_input = re.match('define function (.+) (with |using )(inputs )?(.+)$', sentence)
+        matches_function_no_input = re.match('define function (.+)', sentence)
         matches_class = re.match('define class (.+)', sentence)
         if matches_for:
             goto_locations[i] = Goto_data() # [status, list_index, list_length] = [False, 0, None]
-        elif matches_function:
+        elif matches_function_with_input or matches_function_no_input:
             # add function to goto locations
             goto_info = Goto_data() # [status, list_index, list_length] = [False, 0, None]
-            goto_info.name = matches_function.group(1)
+            if matches_function_with_input:
+                goto_info.name = matches_function_with_input.group(1)
+            elif matches_function_no_input:
+                goto_info.name = matches_function_no_input.group(1)
             goto_locations[i] = goto_info
             # add function to variable dictionary
-            function_name = matches_function.group(1)
-            function_variables = matches_function.group(4).split(' and ')
+            if matches_function_with_input:
+                function_name = matches_function.group(1)
+                function_variables = matches_function.group(4).split(' and ')
+            elif matches_function_no_input:
+                function_name = matches_function_no_input.group(1)
+                function_variables = ''
             function = Function_data(i, function_variables)
             print_debug('FUNCTION: ' + function_name + ' (' + str(function_variables) + ')')
             variable_dictionary[function_name] = function
