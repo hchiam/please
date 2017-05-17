@@ -742,7 +742,7 @@ please  use function test on variable other
 def check_function(sentence, i):
     global nested_blocks_ignore
     # input names expected to be separated by ' and '
-    matches_define_function = re.match('define function (.+)( with | using )(inputs )?(.+)$', sentence)
+    matches_define_function = re.match('define function (.+)( with | using )(inputs |input )?(.+)$', sentence)
     if matches_define_function:
         function_name   = matches_define_function.group(1)
         input_names     = matches_define_function.group(4).split(' and ')
