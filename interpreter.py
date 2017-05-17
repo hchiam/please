@@ -408,7 +408,6 @@ def check_assign_list_passed(sentence):
             function.local_variables[variable_name] = unordered_list_items
             print_debug('function.local_variables: ' + str(function.local_variables))
         return True # found assignment of list to variable
-    # TODO: '.*assign list of (.+) to (variable )?(.+)' --> group(1) --> .split(' and ') --> 'one and two and tree bark' -> [one,two,'tree bark']
     return False # did not find assignment of list to variable
 
 def translate_list_items(list_items):
@@ -768,9 +767,9 @@ def check_function(sentence, i):
                     if len(goto_stack) > 1:
                         is_a_function = goto_stack[-2][1].local_variables
                         if is_a_function:
-                            goto_stack[-2][1].local_variables[output_variable] = output_value # TODO: this should go to another function or to the variable_dictionary
-                    else: # TODO currently assume no function calling this function, so just outputting to global variable_dictionary
-                        variable_dictionary[output_variable] = output_value # TODO: this should go to another function or to the variable_dictionary
+                            goto_stack[-2][1].local_variables[output_variable] = output_value
+                    else: # TODO currently assume no function calling current function, so just outputting to global variable_dictionary
+                        variable_dictionary[output_variable] = output_value
                 # get index of where function was called
                 i = function.index_called_from
                 # then remove function from call stack
