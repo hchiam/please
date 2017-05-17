@@ -2,7 +2,7 @@ This file shows expected output for test input code.
 
 # Input Code
 
-Put this code into text.txt:
+Replace the contents of text.txt with the following code:
 
 ```
 please no need to say please
