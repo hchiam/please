@@ -574,7 +574,6 @@ def check_use(sentence, i):
         for index in goto_locations:
             if goto_locations[index].name == function_name:
                 print_debug('CALL FUNCTION: ' + function_name)
-                # function = variable_dictionary[function_name] # TODO make a copy?
                 function = copy.deepcopy(variable_dictionary[function_name]) # variable_dictionary[function_name] would point to same object
                 function.activate(input_values, i)
                 function.output_variable = output_variable
@@ -736,20 +735,16 @@ def check_function(sentence, i):
             index = goto_stack[-1][0]
             function_name = goto_locations[index].name
             function = goto_stack[-1][1] #variable_dictionary[function_name]
-            
-            if function.being_called: # TODO
-                
+            if function.being_called:
                 # get index of where function was called
                 i = function.index_called_from
-                
-                # then reset function local variables etc.
-                function.deactivate()
+                # then remove function from call stack
                 goto_stack.pop()
                 print_debug('END FUNCTION: called from i = '+str(i))
     # check return statement and setting nested_blocks_ignore -= 1 or = 0
     matches = re.match('return (variable )?(.+)', sentence)
     if matches:
-        output_value = check_math(matches.group(2))
+        output_value = check_math(matches.group(2)) # will either output the literal value "...", or the value of "variable ..."
         outputting_variable_value = matches.group(1)
         # check if there's anything on the goto_stack (like for loop or function)
         if goto_stack:
@@ -764,16 +759,21 @@ def check_function(sentence, i):
                 nested_blocks_ignore -= 1
                 if nested_blocks_ignore < 0:
                     nested_blocks_ignore = 0
-                if output_value: # otherwise could just be "please return"
+                if output_value: # (otherwise could just be "please return")
                     if outputting_variable_value:
-                        output_value =  function.local_variables[output_value]
+                        # cover both "please return variable ..." and "please return ..."
+                        output_value = function.local_variables[output_value]
                     # output return value
                     output_variable = function.output_variable
-                    variable_dictionary[output_variable] = output_value
+                    if len(goto_stack) > 1:
+                        is_a_function = goto_stack[-2][1].local_variables
+                        if is_a_function:
+                            goto_stack[-2][1].local_variables[output_variable] = output_value # TODO: this should go to another function or to the variable_dictionary
+                    else: # TODO currently assume no function calling this function, so just outputting to global variable_dictionary
+                        variable_dictionary[output_variable] = output_value # TODO: this should go to another function or to the variable_dictionary
                 # get index of where function was called
                 i = function.index_called_from
-                # then reset function local variables etc.
-                function.deactivate()
+                # then remove function from call stack
                 goto_stack.pop()
                 print_debug('RETURN FUNCTION: called from line #'+str(i+1) + ' : output =' + str(output_value) + ' --> variable =' + output_variable)
     print_debug('FUNCTION: goto_stack: '+str(goto_stack))
@@ -827,17 +827,11 @@ class Function_data:
             self.local_variables[variable] = None
             self.ordered_names.append(variable)
     def activate(self, list_of_input_values, index_called_from):
-        self.being_called = True
+        self.being_called = True # TODO: being_called is unnecessary for functions since using a separate goto_stack; remove this prop from variable_dictionary too?
         if list_of_input_values:
             for i in range(len(list_of_input_values)):
                 self.local_variables[self.ordered_names[i]] = list_of_input_values[i]
         self.index_called_from = index_called_from
-    def deactivate(self):
-        self.being_called = False
-        for name in self.local_variables:
-            self.local_variables[name] = None
-        self.index_called_from = None
-        self.output_variable = ''
 
 # recognize words for numbers, math operations, spelling checkphases, etc.
 math_words_numbers = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,
