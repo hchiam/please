@@ -46,7 +46,7 @@ def get_sentences(text):
 def check_terse_mode(text):
     """
     example:
-    please  no need to say please
+    please no need to say please
     print this works
     print no need to say please before each line
     """
@@ -128,7 +128,7 @@ def get_words(sentence):
 
 """
 example:
-please  note this is a comment
+please note this is a comment
 """
 def check_note(sentence):
     words = get_words(sentence)
@@ -139,7 +139,7 @@ def check_note(sentence):
 
 """
 example:
-please  print this string of words
+please print this string of words
 """
 def check_print(sentence):
     words = get_words(sentence)
@@ -151,7 +151,7 @@ def check_print(sentence):
 
 """
 example:
-please  spell with the first letters of Neptune unicorn moose panda Yoda
+please spell with the first letters of Neptune unicorn moose panda Yoda
 """
 def check_spell(sentence):
     global spell_checkphrases
@@ -184,8 +184,8 @@ def spell_with_first_letters(checkphrase, sentence):
 
 """
 example:
-please  create variable apple
-please  variable banana
+please create variable apple
+please variable banana
 please print you assigned variable apple to apple
 """
 def check_variable(sentence):
@@ -270,7 +270,7 @@ def dictionary_variables_in_string(string, dictionary): # dictionary could be va
 
 """
 example:
-please  one plus two
+please one plus two
 """
 def check_math(sentence):
     # if assigning value then don't replace last variable name (after ' to ') because dictionary needs variable name kept in sentence
@@ -365,9 +365,9 @@ def eval_math(expression):
 
 """
 example:
-please  assign one to variable apple
-please  assign three hundred to variable banana
-please  assign some words to variable coconut
+please assign one to variable apple
+please assign three hundred to variable banana
+please assign some words to variable coconut
 """
 def check_assign(sentence):
     in_function = False
@@ -448,9 +448,9 @@ def translate_list_items(list_items):
 
 """
 example:
-please  import alternate
-please  import test from library
-please  import numpy as nectarine pony
+please import alternate
+please import test from library
+please import numpy as nectarine pony
 """
 def check_import(sentence):
     global import_dictionary
@@ -502,8 +502,8 @@ def check_import(sentence):
 
 """
 example 1:
-please  use test_function of test
-please  use test_function from test
+please use test_function of test
+please use test_function from test
 """
 """
 example 2:
@@ -613,13 +613,13 @@ def check_use_functions_user_defined(sentence, i):
 
 """
 example:
-please  if true then print this is a one line if statement
-please  if one equals one then
-    please  print it works
-please  end if
-please  if one equals two then
-    please  print it should not print this
-please  end if
+please if true then print this is a one line if statement
+please if one equals one then
+    please print it works
+please end if
+please if one equals two then
+    please print it should not print this
+please end if
 """
 def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nesting)
     global nested_blocks_ignore
@@ -674,10 +674,10 @@ def check_if(sentence): # TO-DO: track number of if-statements and end-ifs (nest
 
 """
 example:
-please  assign list from negative one to three to variable circle
-please  for each index in circle
-    please  print variable index
-please  end for
+please assign list from negative one to three to variable circle
+please for each index in circle
+    please print variable index
+please end for
 """
 def check_for(sentence, i):
     global nested_blocks_ignore
@@ -733,11 +733,11 @@ def check_for(sentence, i):
 
 """
 example:
-please  define function test with item
-    please  print variable item
-please  end function
-please  assign it works to other
-please  use function test on variable other
+please define function test with item
+    please print variable item
+please end function
+please assign it works to other
+please use function test on variable other
 """
 def check_function(sentence, i):
     global nested_blocks_ignore
