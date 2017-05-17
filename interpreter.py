@@ -488,18 +488,19 @@ please assign it works to other
 please use function test on variable other
 """
 def check_use(sentence, i):
-    """
-    try to use imported functions
-    """
-    global import_dictionary
+    i = check_use_functions_imported(sentence, i)
+    i = check_use_functions_user_defined(sentence, i)
+    return i
+    
+def check_use_functions_imported(sentence, i):
     # check even more restrictive one first
     # assign ouput of imported function given input values/variables
-    matches = re.match('.*use (.+)( from | of )(.+)( on (.+)) to (.+)', sentence)
-    if matches:
-        use_string = matches.group(1)
-        from_string = matches.group(3).replace(' ','') # remove spaces in import names for now
-        input_variables = matches.group(5).split(' and ') # later convert to args list with a star: *input_variables
-        variable_name = matches.group(6)
+    matches_input_and_output = re.match('.*use (.+)( from | of )(.+)( on (.+)) to (variable )?(.+)', sentence)
+    if matches_input_and_output:
+        use_string      = matches_input_and_output.group(1)
+        from_string     = matches_input_and_output.group(3).replace(' ','') # remove spaces in import names for now
+        input_variables = matches_input_and_output.group(5).split(' and ') # later convert to args list with a star: *input_variables
+        variable_name   = matches_input_and_output.group(6)
         print_debug('USE: ' + use_string + '\n  from ' + from_string + '\n  on ' + str(input_variables) + '\n  to ' + variable_name)
         function_imported = getattr(import_dictionary[from_string], use_string)
         try:
@@ -512,11 +513,11 @@ def check_use(sentence, i):
         return i
     # check more restrictive one first
     # assign output of imported function to variable
-    matches = re.match('.*use (.+)( from | of )(.+) to (.+)', sentence)
-    if matches:
-        use_string = matches.group(1)
-        from_string = matches.group(3)
-        variable_name = matches.group(4)
+    matches_output_only = re.match('.*use (.+)( from | of )(.+) to (.+)', sentence)
+    if matches_output_only:
+        use_string      = matches_output_only.group(1)
+        from_string     = matches_output_only.group(3)
+        variable_name   = matches_output_only.group(4)
         print_debug('USE: ' + use_string + ' from ' + from_string + ' to ' + variable_name)
         function_imported = getattr(import_dictionary[from_string], use_string)
         try:
@@ -529,10 +530,10 @@ def check_use(sentence, i):
         return i
     # check less restrictive one after
     # use imported function
-    matches = re.match('.*use (.+)( from | of )(.+)', sentence)
-    if matches:
-        use_string = matches.group(1)
-        from_string = matches.group(3)
+    matches_no_input_or_output = re.match('.*use (.+)( from | of )(.+)', sentence)
+    if matches_no_input_or_output:
+        use_string  = matches_no_input_or_output.group(1)
+        from_string = matches_no_input_or_output.group(3)
         print_debug('USE: ' + use_string + ' from ' + from_string)
         function_imported = getattr(import_dictionary[from_string], use_string)
         try:
@@ -540,36 +541,37 @@ def check_use(sentence, i):
         except:
             print(function_imported) # in case function_imported is just an output value
         return i
-    """
-    try to use your own functions
-    """
+    # otherwise no change to i
+    return i
+
+def check_use_functions_user_defined(sentence, i):
     function_name = ''
     input_values = [None]
     output_variable = ''
     # check for output variable to assign value to
-    matches_with_output = re.match('assign use function (.+) (on|with) (.+) to (variable )?(.+)', sentence)
-    if matches_with_output:
-        output_variable = matches_with_output.group(5)
-        function_name = matches_with_output.group(1)
-        input_values = matches_with_output.group(3).split(' and ')
+    matches_input_and_output = re.match('.*use function (.+) (on|with) (.+) to (variable )?(.+)', sentence)
+    if matches_input_and_output:
+        output_variable = matches_input_and_output.group(5)
+        function_name   = matches_input_and_output.group(1)
+        input_values    = matches_input_and_output.group(3).split(' and ')
         print_debug('function_name1 = ' + str(function_name) + ' : input_values = ' + str(input_values) + ' : output_variable = ' + str(output_variable))
     # check use of function from variable_dictionary, with or without input values
     # check more restrictive phrasing first
-    matches_with_inputs = re.match('.*use function (.+) (on|with) (.+)', sentence)
-    if not matches_with_output:
-        if matches_with_inputs:
-            function_name = matches_with_inputs.group(1)
-            input_values = matches_with_inputs.group(3).split(' and ')
+    matches_with_input = re.match('.*use function (.+) (on|with) (.+)', sentence)
+    if not matches_input_and_output:
+        if matches_with_input:
+            function_name   = matches_with_input.group(1)
+            input_values    = matches_with_input.group(3).split(' and ')
             print_debug('function_name2 = ' + str(function_name) + ' : input_values = ' + str(input_values))
         else:
             # check less restrictive phrasing after
-            matches_without_inputs = re.match('.*use function (.+)', sentence)
-            if matches_without_inputs:
-                function_name = matches_without_inputs.group(1)
+            matches_without_input = re.match('.*use function (.+)', sentence)
+            if matches_without_input:
+                function_name = matches_without_input.group(1)
                 # input_values = [None]
                 print_debug('function_name3 = ' + str(function_name) + ' : (no input_values)')
     # either way, try to find function index and then skip to top of function
-    if matches_with_inputs or matches_without_inputs:
+    if matches_with_input or matches_without_input:
         for index in goto_locations:
             if goto_locations[index].name == function_name:
                 print_debug('CALL FUNCTION: ' + function_name)
@@ -580,7 +582,7 @@ def check_use(sentence, i):
                 # change output i if function found
                 i = index
         return i
-    # if not using any function, then no change to i
+    # otherwise no change to i
     return i
 
 """
