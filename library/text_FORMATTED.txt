@@ -1,19 +1,18 @@
 please no need to say please
-define function fibonacci with number
+define function fake fibonacci with number
 	if variable number equals zero then return zero
 	if variable number equals one then return one
-	assign use function fibonacci on variable number minus one to variable answer
-	print debug : answer = variable answer
+	assign use function fake fibonacci on variable number minus one to variable answer
 	return variable answer
 end function
 
-assign use function fibonacci with zero to variable output
+assign use function fake fibonacci with zero to variable output
 print step 1: output = variable output
-assign use function fibonacci with one to variable output
+assign use function fake fibonacci with one to variable output
 print step 2: output = variable output
-assign use function fibonacci with two to variable output
+assign use function fake fibonacci with two to variable output
 print step 3: output = variable output
-assign use function fibonacci with three to variable output
+assign use function fake fibonacci with three to variable output
 print step 4: output = variable output
 import format from library
-use clean from format
+use clean of format
