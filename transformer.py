@@ -1,5 +1,5 @@
-# translate() function is where you should start reading to understand this code.
-# translate() has to be called at the bottom of this file for things to work.
+# transform() function is where you should start reading to understand this code.
+# transform() has to be called at the bottom of this file for things to work.
 
 from sys import *
 import re
@@ -10,8 +10,8 @@ import importlib.util
 
 # functions:
 
-def translate():
-    file_name = argv[1] # so you can use this Terminal command: python translator.py text.txt
+def transform():
+    file_name = argv[1] # so you can use this Terminal command: python transformer.py text.txt
     text = get_text(file_name)
     text = text.lower() # lowercase
     text = remove_multi_spaces(text)
@@ -652,5 +652,5 @@ hide_debug_printouts = True
 if __name__ == '__main__':
     print('\nPLEASE WORK...\n')
     # run this interpreter:
-    translate()
+    transform()
     print('\n...THANK YOU!\n')
