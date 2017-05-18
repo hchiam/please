@@ -198,9 +198,9 @@ def replace_index_of_variable_in_print(string):
         index_string = index_found[0]
         index_value = str(index_string)
         if index_string in math_words_numbers:
-            index_value = str(math_words_numbers[index_string] - 1) # start index at one
+            index_value = str(math_words_numbers[index_string])
         elif is_digit(index_string):
-            index_value = str(int(index_string) - 1) # start index at one
+            index_value = str(int(index_string))
         elif index_string.startswith('variable '):
             index_value = index_value.replace('variable ', '')
         variable_name = index_found[1]
