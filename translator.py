@@ -94,8 +94,6 @@ def modify_sentence(sentence):
         # don't bother checking the rest
         return sentence
     
-    # sentence = check_math(sentence)
-    
     [sentence, is_variable] = check_variable(sentence)
     if is_variable:
         recognized = True
@@ -179,7 +177,7 @@ def check_note(sentence):
 example:
 please print this string of words
 """
-def check_print(sentence):
+def check_print(sentence): # TODO: enable replacing string '... variable <...> ...' with '...' + <..> + '...'
     word = 'print' + ' '
     word_len = len(word)
     if sentence.startswith(word):
@@ -203,7 +201,7 @@ def check_import(sentence):
     matches_as_from = re.match('import (.+) as (.+) from (.+)', sentence)
     if matches_as_from:
         import_name = matches_as_from.group(1)
-        import_as   = matches_as_from.group(2)
+        import_as   = matches_as_from.group(2).replace(' ','_') # import names can't have spaces
         import_from = matches_as_from.group(3)
         sentence = '\t'*num_indents + 'from ' + import_from + ' import ' + import_name + ' as ' + import_as
         return [sentence, True]
@@ -211,7 +209,7 @@ def check_import(sentence):
     matches_as = re.match('import (.+) as (.+)', sentence)
     if matches_as:
         import_name = matches_as.group(1)
-        import_as   = matches_as.group(2).replace(' ','')
+        import_as   = matches_as.group(2).replace(' ','_') # import names can't have spaces
         sentence = '\t'*num_indents + 'import ' + import_name + ' as ' + import_as
         return [sentence, True]
     
@@ -246,19 +244,19 @@ def check_variable(sentence):
         
         matches_variable_only = re.match('variable (.+)', sentence)
         if matches_variable_only:
-            variable_name = matches_variable_only.group(1)
+            variable_name = matches_variable_only.group(1).replace(' ','_') # variable names can't have spaces (use underscores to avoid name collisions)
             sentence = '\t'*num_indents + variable_name + ' = None'
             return [sentence, True]
         
         matches_variable_only = re.match('create variable (.+)', sentence)
         if matches_variable_only:
-            variable_name = matches_variable_only.group(1)
+            variable_name = matches_variable_only.group(1).replace(' ','_') # variable names can't have spaces
             sentence = '\t'*num_indents + variable_name + ' = None'
             return [sentence, True]
         
         matches_variable_only = re.match('.* variable (.+).*', sentence)
         if matches_variable_only:
-            variable_name = matches_variable_only.group(1)
+            variable_name = matches_variable_only.group(1).replace(' ','_') # variable names can't have spaces
             replace_over = ' variable ' + variable_name
             replace_with = ' ' + variable_name
             sentence = sentence.replace(replace_over, replace_with)
@@ -266,7 +264,7 @@ def check_variable(sentence):
         
         matches_variable_index = re.match('.* index (.+) of variable (.+).*', sentence)
         if matches_variable_index:
-            variable_name = matches_variable_index.group(2)
+            variable_name = matches_variable_index.group(2).replace(' ','_') # variable names can't have spaces
             variable_index = matches_variable_index.group(1)
             replace_over = ' index ' + variable_index + ' of variable ' + variable_name
             replace_with = variable_name + '[' + variable_index + ']'
@@ -338,8 +336,10 @@ def check_list(sentence):
     if matches_list_ordered:
         list_start = matches_list_ordered.group(1)
         list_stop = matches_list_ordered.group(2)
+        ordered_list_items = list(range(int(list_start), int(list_stop) + 1))
+        ordered_list_items = create_list_string(ordered_list_items)
         replace_over = ' list from ' + list_start + ' to ' + list_stop
-        replace_with = ' ' + str(list(range(int(list_start), int(list_stop) + 1))) # + 1 so that the number spoken actually appears in the list
+        replace_with = ' ' + ordered_list_items # + 1 so that the number spoken actually appears in the list
         sentence = sentence.replace(replace_over, replace_with)
         return [sentence, True]
     
@@ -358,17 +358,21 @@ def check_list(sentence):
     return [sentence, False]
 
 def create_list_string(list_items):
-    list_string = '['
+    # note: spaces between '[ ', ' ]', and ' , ' because need to identify list items as numbers/strings
+    list_string = '[ '
     for item in list_items:
-        words = item.split()
+        try:
+            words = item.split()
+        except:
+            words = str(item)
         if all(word in math_words_numbers for word in words):
             for word in words:
                 list_string += str(math_words_numbers[word])
         else:
-            list_string += '\'' + item + '\''
-        list_string += ', '
-    list_string = list_string[:-2] # remove last comma and space
-    list_string += ']'
+            list_string += '\'' + str(item) + '\''
+        list_string += ' , '
+    list_string = list_string[:-3] # remove last comma and space
+    list_string += ' ]'
     return list_string
 
 """
@@ -392,24 +396,24 @@ def check_use(sentence):
     
     matches_from_and_input = re.match('.*use (function )?(.+)( (from|of) (.+))+?( (on|with) (.+))+?', sentence)
     if matches_from_and_input:
-        function_name = matches_from_and_input.group(2).replace(' ','')
-        function_from = matches_from_and_input.group(5).replace(' ','')
-        function_input = matches_from_and_input.group(8).replace(' ','')
+        function_name = matches_from_and_input.group(2).replace(' ','_')
+        function_from = matches_from_and_input.group(5).replace(' ','_')
+        function_input = matches_from_and_input.group(8).replace(' ','_')
         sentence = '\t'*num_indents + function_from + '.' + function_name + '(' + function_input + ')'
         recognized = True
         return [sentence, recognized]
     
     matches_from = re.match('.*use (function )?(.+) (from|of) (.+)', sentence)
     if matches_from:
-        function_name = matches_from.group(2).replace(' ','')
-        function_from = matches_from.group(4).replace(' ','')
+        function_name = matches_from.group(2).replace(' ','_')
+        function_from = matches_from.group(4).replace(' ','_')
         sentence = '\t'*num_indents + function_from + '.' + function_name + '()'
         recognized = True
         return [sentence, recognized]
     
     matches_input = re.match('.*use (function )?(.+) (on|with) (.+)', sentence)
     if matches_input:
-        function_name = matches_input.group(2).replace(' ','')
+        function_name = matches_input.group(2).replace(' ','_')
         function_input = matches_input.group(4)
         sentence = '\t'*num_indents + function_name + '(' + function_input + ')'
         recognized = True
@@ -417,7 +421,7 @@ def check_use(sentence):
     
     matches_name = re.match('.*use (function )?(.+)', sentence)
     if matches_name:
-        function_name = matches_name.group(2).replace(' ','')
+        function_name = matches_name.group(2).replace(' ','_')
         sentence = '\t'*num_indents + function_name + '()'
         recognized = True
         return [sentence, recognized]
@@ -436,32 +440,20 @@ def check_assign(sentence):
     if not matches_assign:
         return [sentence, False]
     else:
-        variable_name = matches_assign.group(3).replace(' ','')
+        variable_name = matches_assign.group(3).replace(' ','_') # variable names can't have spaces
         variable_value = matches_assign.group(1)
-        variable_value = check_if_just_string(variable_value) # TODO need to put quotation marks around strings being assigned
+        first_word_is_string = check_if_just_string(variable_value)
+        # if the first word is not math, then just make the whole variable value a string (otherwise leave as is)
+        if first_word_is_string:
+            variable_value = '\'' + variable_value + '\'' # need to put quotation marks around strings being assigned
         sentence = '\t'*num_indents + variable_name + ' = ' + variable_value
         return [sentence, True]
 
 def check_if_just_string(variable_value):
-    variable_value = check_math(variable_value)[0]
-    # list_string = ''
-    # words = variable_value.split()
-    # if all(word in math_words_numbers for word in words):
-    #     for word in words:
-    #         list_string += str(math_words_numbers[word])
-    #     else:
-    #         list_string += '\'' + word + '\''
-    #         
-    # for item in list_items:
-    #     words = item.split()
-    #     if all(word in math_words_numbers for word in words):
-    #         for word in words:
-    #             list_string += str(math_words_numbers[word])
-    #     else:
-    #         list_string += '\'' + item + '\''
-    #     list_string += ', '
-    # list_string = list_string[:-2] # remove last comma and space
-    return variable_value
+    first_word = variable_value.split(' ',1)[0]
+    first_word_is_math = first_word in math_words_numbers or first_word in math_words_boolean or is_digit(first_word) or first_word in math_punctuation
+    first_word_is_string = not first_word_is_math
+    return first_word_is_string
 
 """
 example:
@@ -517,7 +509,7 @@ def check_for(sentence):
     matches_for = re.match('for each (.+) in (.+)', sentence)
     if matches_for:
         for_what = matches_for.group(1)
-        for_in = matches_for.group(2)
+        for_in = matches_for.group(2).replace(' ','_') # variable names can't have spaces
         sentence = '\t'*num_indents + 'for ' + for_what + ' in ' + for_in + ':'
         num_indents += 1 # affect indents for later lines, not current line
         return [sentence, True]
@@ -597,6 +589,7 @@ math_words_operators = {'plus':'+','positive':'+','minus':'-','negative':'-',
                         'equals':'==','equal':'==','over':'>','above':'>','under':'<','below':'<',
                         'not':'!',
                         'modulus':'%','modulo':'%'} # add more functions later as needed
+math_punctuation = '()[]{},.:-+=/*><!%'
 spell_checkphrases = ['spell with first letters of',
                       'spell with first letter of',
                       'spelled with first letters of',
