@@ -263,10 +263,13 @@ def check_variable(sentence):
     else:
         # order matters; start with most restrictive first
         
-        matches_variable_only = re.match('variable (.+)', sentence)
-        if matches_variable_only:
-            variable_name = matches_variable_only.group(1).replace(' ','_') # variable names can't have spaces (use underscores to avoid name collisions)
-            sentence = '\t'*num_indents + variable_name + ' = None'
+        matches_variable_index = re.match('.* index (.+) of variable (.+).*', sentence)
+        if matches_variable_index:
+            variable_name = matches_variable_index.group(2).replace(' ','_') # variable names can't have spaces
+            variable_index = matches_variable_index.group(1)
+            replace_over = ' index ' + variable_index + ' of variable ' + variable_name
+            replace_with = variable_name + '[' + variable_index + ']'
+            sentence = sentence.replace(replace_over, replace_with)
             return [sentence, True]
         
         matches_variable_only = re.match('create variable (.+)', sentence)
@@ -275,20 +278,17 @@ def check_variable(sentence):
             sentence = '\t'*num_indents + variable_name + ' = None'
             return [sentence, True]
         
+        matches_variable_only = re.match('variable (.+)', sentence)
+        if matches_variable_only:
+            variable_name = matches_variable_only.group(1).replace(' ','_') # variable names can't have spaces (use underscores to avoid name collisions)
+            sentence = '\t'*num_indents + variable_name + ' = None'
+            return [sentence, True]
+        
         matches_variable_only = re.match('.* variable (.+).*', sentence)
         if matches_variable_only:
             variable_name = matches_variable_only.group(1).replace(' ','_') # variable names can't have spaces
             replace_over = ' variable ' + variable_name
             replace_with = ' ' + variable_name
-            sentence = sentence.replace(replace_over, replace_with)
-            return [sentence, True]
-        
-        matches_variable_index = re.match('.* index (.+) of variable (.+).*', sentence)
-        if matches_variable_index:
-            variable_name = matches_variable_index.group(2).replace(' ','_') # variable names can't have spaces
-            variable_index = matches_variable_index.group(1)
-            replace_over = ' index ' + variable_index + ' of variable ' + variable_name
-            replace_with = variable_name + '[' + variable_index + ']'
             sentence = sentence.replace(replace_over, replace_with)
             return [sentence, True]
         
