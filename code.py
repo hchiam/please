@@ -46,5 +46,5 @@ import numpy as numb_pie
 array = [ 2 , 3 , 4 ]
 print("array is " + str(array))
 print("use array of numb pie on " + str(array))
-output = 'use array of numb pie on variable array'
+output = numb_pie.array(array)
 print("output of array of numb pie is " + str(output))
