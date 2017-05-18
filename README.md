@@ -32,7 +32,7 @@ No speech recognition software? No Python? Just type code in your browser: https
 
 ## B) On Your Computer (Full Version):
 
-1. Download this project from GitHub. https://github.com/hchiam/please/archive/master.zip --> master branch.
+1. Download this project from GitHub. https://github.com/hchiam/please/archive/master.zip --> master branch. Or get a different version at https://github.com/hchiam/please/releases
 
 2. Open the folder using Terminal or Command-line.
 
