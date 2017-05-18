@@ -352,7 +352,7 @@ def check_math(sentence):
             recognized = True
         # also account for end of sentence as escape signal
         if i == len(words)-1:
-            replace_expression = replace_expression # do NOT use strip() so final math word just gets appended to variable name
+            replace_expression = replace_expression.strip() # use strip() to make sure replaces properly
             sentence = sentence.replace(replace_expression, math_expression)
             math_expression = '' # reset for next sequence
             replace_expression = '' # reset for next sequence
@@ -446,44 +446,53 @@ def check_use(sentence):
     
     # order matters; start with most restrictive first
     
-    matches_from_and_input = re.match('.*assign use (function )?(.+)( (from|of) (.+))+?( (on|with) (variable )?(.+))+? to (variable )?(.+)', sentence)
+    matches_from_and_input = re.match('.*assign use (.+) (from|of) (.+) (on|with) (.+) to (.+)', sentence)
     if matches_from_and_input:
-        function_name = matches_from_and_input.group(2).replace(' ','_')
-        function_from = matches_from_and_input.group(5).replace(' ','_')
-        function_input = matches_from_and_input.group(9).replace(' ','_')
-        function_ouput = matches_from_and_input.group(11).replace(' ','_')
+        function_name = matches_from_and_input.group(1).replace('function ', '').replace(' ','_')
+        function_from = matches_from_and_input.group(3).replace(' ','_')
+        function_input = matches_from_and_input.group(5).replace('variable ', '')
+        function_ouput = matches_from_and_input.group(6).replace('variable ', '')
         sentence = '\t'*num_indents + function_ouput + ' = ' + function_from + '.' + function_name + '(' + function_input + ')'
         recognized = True
         return [sentence, recognized]
     
-    matches_from_and_input = re.match('.*use (function )?(.+)( (from|of) (.+))+?( (on|with) (.+))+?', sentence)
+    matches_from_and_input = re.match('.*assign use (.+) (on|with) (.+) to (.+)', sentence)
     if matches_from_and_input:
-        function_name = matches_from_and_input.group(2).replace(' ','_')
-        function_from = matches_from_and_input.group(5).replace(' ','_')
-        function_input = matches_from_and_input.group(8).replace(' ','_')
+        function_name = matches_from_and_input.group(1).replace('function ', '').replace(' ','_')
+        function_input = matches_from_and_input.group(3).replace('variable ', '')
+        function_ouput = matches_from_and_input.group(4).replace('variable ', '')
+        sentence = '\t'*num_indents + function_ouput + ' = ' + function_name + '(' + function_input + ')'
+        recognized = True
+        return [sentence, recognized]
+    
+    matches_from_and_input = re.match('.*use (.+)( (from|of) (.+))+?( (on|with) (.+))+?', sentence)
+    if matches_from_and_input:
+        function_name = matches_from_and_input.group(1).replace('function ', '').replace(' ','_')
+        function_from = matches_from_and_input.group(4).replace(' ','_')
+        function_input = matches_from_and_input.group(7).replace('variable ', '')
         sentence = '\t'*num_indents + function_from + '.' + function_name + '(' + function_input + ')'
         recognized = True
         return [sentence, recognized]
     
-    matches_from = re.match('.*use (function )?(.+) (from|of) (.+)', sentence)
+    matches_from = re.match('.*use (.+) (from|of) (.+)', sentence)
     if matches_from:
-        function_name = matches_from.group(2).replace(' ','_')
-        function_from = matches_from.group(4).replace(' ','_')
+        function_name = matches_from.group(1).replace('function ', '').replace(' ','_')
+        function_from = matches_from.group(3).replace(' ','_')
         sentence = '\t'*num_indents + function_from + '.' + function_name + '()'
         recognized = True
         return [sentence, recognized]
     
-    matches_input = re.match('.*use (function )?(.+) (on|with) (.+)', sentence)
+    matches_input = re.match('.*use (.+) (on|with) (.+)', sentence)
     if matches_input:
-        function_name = matches_input.group(2).replace(' ','_')
-        function_input = matches_input.group(4)
+        function_name = matches_input.group(1).replace('function ', '').replace(' ','_')
+        function_input = matches_input.group(3).replace('variable ', '')
         sentence = '\t'*num_indents + function_name + '(' + function_input + ')'
         recognized = True
         return [sentence, True]
     
-    matches_name = re.match('.*use (function )?(.+)', sentence)
+    matches_name = re.match('.*use (.+)', sentence)
     if matches_name:
-        function_name = matches_name.group(2).replace(' ','_')
+        function_name = matches_name.group(1).replace('function ', '').replace(' ','_')
         sentence = '\t'*num_indents + function_name + '()'
         recognized = True
         return [sentence, recognized]
@@ -553,14 +562,14 @@ def check_if(sentence):
     matches_oneliner = re.match('if (.+) then (.+)', sentence) # space after 'then' WITHOUT $ because sentence continues
     
     if matches_multiliner:
-        condition = matches_multiliner.group(1)
+        condition = matches_multiliner.group(1).replace('variable ', '')
         sentence = '\t'*num_indents + 'if ' + condition + ':'
         num_indents += 1 # affect indents for later lines, not current line
         return [sentence, True]
     
     if matches_oneliner:
-        condition = matches_oneliner.group(1)
-        then = modify_sentence(matches_oneliner.group(2))
+        condition = matches_oneliner.group(1).replace('variable ', '')
+        then = matches_oneliner.group(2)
         sentence = '\t'*num_indents + 'if ' + condition + ':' + '\n' + '\t'*(num_indents+1) + then + '\n' + '\t'*num_indents
         return [sentence, True]
     
@@ -606,7 +615,7 @@ def check_function(sentence):
     
     matches_define_function_with_input = re.match('define function (.+) (with|using) (inputs |input )?(.+)$', sentence)
     if matches_define_function_with_input:
-        function_name = matches_define_function_with_input.group(1)
+        function_name = matches_define_function_with_input.group(1).replace(' ','_') # function names can't have spaces
         input_names = ','.join(matches_define_function_with_input.group(4).split(' and '))
         sentence = '\t'*num_indents + 'def ' + function_name + '(' + input_names + '):'
         num_indents += 1 # affect indents for later lines, not current line
@@ -614,7 +623,7 @@ def check_function(sentence):
     
     matches_define_function = re.match('define function (.+)$', sentence)
     if matches_define_function:
-        function_name = matches_define_function.group(1)
+        function_name = matches_define_function.group(1).replace(' ','_') # function names can't have spaces
         sentence = '\t'*num_indents + 'def ' + function_name + '():'
         num_indents += 1 # affect indents for later lines, not current line
         return [sentence, True]
@@ -624,10 +633,13 @@ def check_function(sentence):
         sentence = '\t'*num_indents
         return [sentence, True]
     
-    matches_return = re.match('return (variable )?(.+)', sentence)
+    matches_return = re.match('return (.+)', sentence)
     if matches_return:
-        output_value = check_math(matches_return.group(2)) # will either output the literal value "...", or the value of "variable ..."
-        sentence = '\t'*num_indents + 'return ' + output_value
+        output_value = matches_return.group(1) # will either output the literal value "...", or the value of "variable ..."
+        if output_value.startswith('variable '):
+            output_value = output_value.replace('variable ', '').replace(' ','_')
+        output_value = check_math(output_value)[0] # will either output the literal value "...", or the value of "variable ..."
+        sentence = '\t'*num_indents + 'return ' + str(output_value)
         num_indents -= 1 # affect indents for later lines, not current line
         return [sentence, True]
     

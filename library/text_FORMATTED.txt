@@ -6,6 +6,7 @@ define function fake fibonacci with number
 	return variable answer
 end function
 
+
 assign use function fake fibonacci with zero to variable output
 print step 1: output = variable output
 assign use function fake fibonacci with one to variable output
@@ -14,5 +15,9 @@ assign use function fake fibonacci with two to variable output
 print step 3: output = variable output
 assign use function fake fibonacci with three to variable output
 print step 4: output = variable output
+
+
+
+create variable apple one
 import format from library
 use clean of format
