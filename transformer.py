@@ -483,9 +483,16 @@ def check_assign(sentence):
         return [sentence, True]
 
 def check_if_just_string(variable_value):
+    # get first word
     first_word = variable_value.split(' ',1)[0]
-    first_word_is_math = first_word in math_words_numbers or first_word in math_words_boolean or is_digit(first_word) or first_word in math_punctuation
-    first_word_is_string = not first_word_is_math
+    # do various checks
+    not_variable = first_word != 'variable'
+    not_number = first_word not in math_words_numbers
+    not_boolean = first_word not in math_words_boolean
+    not_math_punctuation = first_word not in math_punctuation
+    first_few_characters_are_math = is_digit(first_word[0]) or is_digit(first_word[:2])
+    # put those checks together
+    first_word_is_string = not_variable and not_number and not_boolean and not first_few_characters_are_math and not_math_punctuation
     return first_word_is_string
 
 """
