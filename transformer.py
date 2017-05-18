@@ -443,10 +443,18 @@ please assign it works to other
 please use function test on variable other
 """
 def check_use(sentence):
-    if not sentence.startswith('use '):
-        return [sentence, False]
     
     # order matters; start with most restrictive first
+    
+    matches_from_and_input = re.match('.*assign use (function )?(.+)( (from|of) (.+))+?( (on|with) (variable )?(.+))+? to (variable )?(.+)', sentence)
+    if matches_from_and_input:
+        function_name = matches_from_and_input.group(2).replace(' ','_')
+        function_from = matches_from_and_input.group(5).replace(' ','_')
+        function_input = matches_from_and_input.group(9).replace(' ','_')
+        function_ouput = matches_from_and_input.group(11).replace(' ','_')
+        sentence = '\t'*num_indents + function_ouput + ' = ' + function_from + '.' + function_name + '(' + function_input + ')'
+        recognized = True
+        return [sentence, recognized]
     
     matches_from_and_input = re.match('.*use (function )?(.+)( (from|of) (.+))+?( (on|with) (.+))+?', sentence)
     if matches_from_and_input:
@@ -498,8 +506,10 @@ def check_assign(sentence):
         variable_value = matches_assign.group(1)
         first_word_is_string = check_if_just_string(variable_value)
         # if the first word is not math, then just make the whole variable value a string (otherwise leave as is)
-        if first_word_is_string:
+        if first_word_is_string and not variable_value.startswith('variable '):
             variable_value = '\'' + variable_value + '\'' # need to put quotation marks around strings being assigned
+        elif variable_value.startswith('variable '):
+            variable_value = variable_value.replace('variable ', '')
         sentence = '\t'*num_indents + variable_name + ' = ' + variable_value
         return [sentence, True]
 
