@@ -371,10 +371,10 @@ def check_list(sentence):
     if matches_list_ordered:
         list_start = matches_list_ordered.group(1)
         list_stop = matches_list_ordered.group(2)
-        ordered_list_items = list(range(int(list_start), int(list_stop) + 1))
+        ordered_list_items = list(range(int(list_start), int(list_stop) + 1)) # + 1 so that the number spoken actually appears in the list
         ordered_list_items = create_list_string(ordered_list_items)
         replace_over = ' list from ' + list_start + ' to ' + list_stop
-        replace_with = ' ' + ordered_list_items # + 1 so that the number spoken actually appears in the list
+        replace_with = ' ' + ordered_list_items
         sentence = sentence.replace(replace_over, replace_with)
         return [sentence, True]
     
