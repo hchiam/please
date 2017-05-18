@@ -182,12 +182,26 @@ def check_print(sentence):
     word_len = len(word)
     if sentence.startswith(word):
         string = sentence[word_len:]
+        string = replace_index_of_variable_in_print(string) # do this before replace variable to check more restrictive match first
         string = '"' + replace_variables_in_print(string) + '"' # enables replacing string '...variable <...> ...' with '...' + str(<..>) + '...'
         string = remove_empty_start_end(string)
         sentence = '\t'*num_indents + 'print(' + string + ')'
         return [sentence, True]
     else:
         return [sentence, False]
+
+def replace_index_of_variable_in_print(string):
+    # add spaces to make it easier to cover all cases (only, start, mid, end) in single search regexes
+    string = ' ' + string + ' '
+    indexes_found = re.findall('index (.+) of variable (.+) ', string)
+    for index_found in indexes_found:
+        index_string = index_found[0]
+        index_value = str(math_words_numbers[index_string] - 1) # start index at one
+        variable_name = index_found[1]
+        replace_over = 'index ' + index_string + ' of variable ' + variable_name
+        replace_with = ' ' + '" + ' + variable_name + '[' + index_value + ']' + ' + "'
+        string = string.replace(replace_over, replace_with)
+    return string
 
 def replace_variables_in_print(string): # TODO: enable replace multi-word variable names (would require tracking a list of variable names)
     # add spaces to make it easier to cover all cases (only, start, mid, end) in single search regexes
