@@ -181,10 +181,28 @@ def check_print(sentence): # TODO: enable replacing string '... variable <...> .
     word = 'print' + ' '
     word_len = len(word)
     if sentence.startswith(word):
-        sentence = '\t'*num_indents + 'print("' + sentence[word_len:] + '")'
+        string = sentence[word_len:]
+        string = '"' + replace_variables_in_print(string) + '"'
+        string = remove_empty_start_end(string)
+        sentence = '\t'*num_indents + 'print(' + string + ')'
         return [sentence, True]
     else:
         return [sentence, False]
+
+def replace_variables_in_print(string):
+    # add spaces to make it easier to cover all cases (only, start, mid, end) in single search regexes
+    string = ' ' + string + ' '
+    if 'variable ' in string:
+        variables_found = re.findall('.* variable (.+) .*', string)
+        for variable_found in variables_found:
+            string = string.replace(' variable ' + variable_found, '" + str(' + variable_found + ') + "')
+    return string.strip()
+
+def remove_empty_start_end(string):
+    false_start = '"" + '
+    false_end = ' + ""'
+    string = string.replace(false_start, '').replace(false_end, '')
+    return string
 
 """
 example:
