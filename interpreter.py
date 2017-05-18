@@ -76,6 +76,7 @@ def setup_goto_locations_and_functions(sentences):
         if matches_for:
             goto_locations[i] = Goto_data() # [status, list_index, list_length] = [False, 0, None]
         elif matches_function_with_input or matches_function_no_input:
+            
             # add function to goto locations
             goto_info = Goto_data() # [status, list_index, list_length] = [False, 0, None]
             if matches_function_with_input:
@@ -83,16 +84,18 @@ def setup_goto_locations_and_functions(sentences):
             elif matches_function_no_input:
                 goto_info.name = matches_function_no_input.group(1)
             goto_locations[i] = goto_info
+            
             # add function to variable dictionary
             if matches_function_with_input:
-                function_name = matches_function.group(1)
-                function_variables = matches_function.group(4).split(' and ')
+                function_name = matches_function_with_input.group(1)
+                function_variables = matches_function_with_input.group(4).split(' and ')
             elif matches_function_no_input:
                 function_name = matches_function_no_input.group(1)
                 function_variables = ''
             function = Function_data(i, function_variables)
             print_debug('FUNCTION: ' + function_name + ' (' + str(function_variables) + ')')
             variable_dictionary[function_name] = function
+            
         elif matches_class:
             goto_info = Goto_data() # [status, list_index, list_length] = [False, 0, None]
             goto_locations[i] = goto_info
