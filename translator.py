@@ -177,25 +177,28 @@ def check_note(sentence):
 example:
 please print this string of words
 """
-def check_print(sentence): # TODO: enable replacing string '... variable <...> ...' with '...' + <..> + '...'
+def check_print(sentence):
     word = 'print' + ' '
     word_len = len(word)
     if sentence.startswith(word):
         string = sentence[word_len:]
-        string = '"' + replace_variables_in_print(string) + '"'
+        string = '"' + replace_variables_in_print(string) + '"' # enables replacing string '...variable <...> ...' with '...' + str(<..>) + '...'
         string = remove_empty_start_end(string)
         sentence = '\t'*num_indents + 'print(' + string + ')'
         return [sentence, True]
     else:
         return [sentence, False]
 
-def replace_variables_in_print(string):
+def replace_variables_in_print(string): # TODO: enable replace multi-word variable names (would require tracking a list of variable names)
     # add spaces to make it easier to cover all cases (only, start, mid, end) in single search regexes
     string = ' ' + string + ' '
     if 'variable ' in string:
-        variables_found = re.findall('.* variable (.+) .*', string)
+        variables_found = re.findall('variable (.+?) ', string) # get ALL non-overlapping matches
         for variable_found in variables_found:
-            string = string.replace(' variable ' + variable_found, '" + str(' + variable_found + ') + "')
+            replace_over = ' variable ' + variable_found
+            replace_with = ' ' + '" + str(' + variable_found + ') + "'
+            # note: add an initial space to replace_with so that words between variables get spaces between them
+            string = string.replace(replace_over, replace_with)
     return string.strip()
 
 def remove_empty_start_end(string):
