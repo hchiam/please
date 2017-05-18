@@ -2,13 +2,13 @@ print("this string of words")
 apple = None
 banana = None
 apple = 1
-print("variable apple")
+print(str(apple))
 banana = 300
 coconut = 'some words'
 durian = [ 8 , 9 , 10 , 11 , 12 ]
 crazy_list = [ 1 , 2 , 'tree bark' ]
-result = '1+2'
-print("variable result")
+result = 1+2
+print(str(result))
 if True:
 	print("this is a 1 line if statement")
 
@@ -25,11 +25,11 @@ if 1==2:
 print("and this line")
 circle = [ -1 , 0 , 1 , 2 , 3 ]
 for index in circle:
-	print("variable index")
+	print(str(index))
 
 # this is a comment
 def test(item):
-	print("variable item")
+	print(str(item))
 
 other = 'it works'
 test(other)
@@ -39,11 +39,11 @@ test.test_function()
 test.test_function()
 crazy_list = [ 1 , 2 , 'tree bark' ]
 for item in crazy_list:
-	print("index variable item of crazy list")
+	print("index " + str(item) + " of crazy list")
 
 import numpy as numb_pie
 array = [ 2 , 3 , 4 ]
-print("array is variable array")
-print("use array of numb pie on variable array")
+print("array is " + str(array))
+print("use array of numb pie on " + str(array))
 output = 'use array of numb pie on variable array'
-print("output of array of numb pie is variable output")
+print("output of array of numb pie is " + str(output))
