@@ -42,7 +42,8 @@ import test from library
 use test_function of test
 use test_function from test
 assign list of one and two and tree bark to variable crazy list
-for each item in crazy list
+assign list from zero to two to sequence
+for each item in sequence
     print index variable item of crazy list
 end for
 import spelled with the first letters of Neptune unicorn moose panda Yoda as numb pie
@@ -55,34 +56,20 @@ print output of array of numb pie is variable output
 
 # Outputs
 
-**Instructions:**
-
-1. At the bottom of interpreter.py, change these lines:
-  * `print_debug(str(variable_dictionary))` -> `print_debug(str(import_dictionary))`
-  * `print_debug(str(variable_dictionary))` -> `print_debug(str(import_dictionary))`
-2. Use Terminal/Commandline/Bash: `python interpreter.py text.txt`
+Use Terminal/Commandline/Bash: `python transformer.py text.txt`
 
 <br>
-
-The variable dictionary should look like this:
-
-```
-{'test':<…>, 'apple':1, 'banana':300, 'coconut':'some words', 'durian':[8,9,10,11,12], 'crazy list':[1,2,'tree bark'], 'result':3,'circle':[-1,0,1,2,3], 'other':'it works', 'array':[2,3,4], 'output':[2,3,4]}
-```
-
-The import dictionary should look like this:
-
-```
-{'alternate':<…>,'test':<…>,'numbpie':<…>}
-```
 
 The Terminal should print this out:
 
 ```
+
+PLEASE WORK...
+
 this string of words
 1
 3
-this is a one line if statement
+this is a 1 line if statement
 this should print
 there should be nothing between this line
 and this line
@@ -99,5 +86,8 @@ Yay the import test_function() of test.py from the "library" folder works!
 tree bark
 array is [2, 3, 4]
 use array of numb pie on [2, 3, 4]
-output of array of numb pie is [2, 3, 4]
+output of array of numb pie is [2 3 4]
+
+...THANK YOU!
+
 ```
