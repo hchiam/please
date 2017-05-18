@@ -361,13 +361,25 @@ def create_list_string(list_items):
     # note: spaces between '[ ', ' ]', and ' , ' because need to identify list items as numbers/strings
     list_string = '[ '
     for item in list_items:
-        try:
-            words = item.split()
-        except:
-            words = str(item)
-        if all(word in math_words_numbers for word in words):
-            for word in words:
-                list_string += str(math_words_numbers[word])
+        if is_digit(item):
+            list_string += str(item)
+        elif item in math_words_numbers:
+            list_string += str(math_words_numbers[item])
+        elif item in math_words_boolean:
+            list_string += str(math_words_boolean[item])
+        elif ' ' in str(item) and all((is_digit(word) or word in math_words_numbers or word in math_words_operators or word in math_words_boolean) for word in item.split()):
+            # need this condition to account for things like negative numbers in (un)ordered lists
+            
+            # if composed of multiple words that are all math words
+            for word in item.split():
+                if is_digit(word):
+                    list_string += str(word)
+                elif word in math_words_numbers:
+                    list_string += str(math_words_numbers[word])
+                elif word in math_words_boolean:
+                    list_string += str(math_words_boolean[word])
+                elif word in math_words_operators: # use this because could contain minus/plus/etc.
+                    list_string += str(math_words_operators[word])
         else:
             list_string += '\'' + str(item) + '\''
         list_string += ' , '
