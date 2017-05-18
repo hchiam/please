@@ -193,13 +193,20 @@ def check_print(sentence):
 def replace_index_of_variable_in_print(string):
     # add spaces to make it easier to cover all cases (only, start, mid, end) in single search regexes
     string = ' ' + string + ' '
-    indexes_found = re.findall('index (.+) of variable (.+) ', string)
+    indexes_found = re.findall(' index (.+) of (.+) ', string)
     for index_found in indexes_found:
         index_string = index_found[0]
-        index_value = str(math_words_numbers[index_string] - 1) # start index at one
+        index_value = str(index_string)
+        if index_string in math_words_numbers:
+            index_value = str(math_words_numbers[index_string] - 1) # start index at one
+        elif is_digit(index_string):
+            index_value = str(int(index_string) - 1) # start index at one
+        elif index_string.startswith('variable '):
+            index_value = index_value.replace('variable ', '')
         variable_name = index_found[1]
-        replace_over = 'index ' + index_string + ' of variable ' + variable_name
-        replace_with = ' ' + '" + ' + variable_name + '[' + index_value + ']' + ' + "'
+        variable_name_replacer = index_found[1].replace(' ','_') # variable names can't have spaces
+        replace_over = 'index ' + index_string + ' of ' + variable_name
+        replace_with = ' ' + '" + ' + variable_name_replacer + '[' + index_value + ']' + ' + "'
         string = string.replace(replace_over, replace_with)
     return string
 
