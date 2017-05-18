@@ -692,6 +692,12 @@ please end for
 """
 def check_for(sentence, i):
     global nested_blocks_ignore
+    in_function = False
+    if goto_stack:
+        function_name = goto_locations[goto_stack[-1][0]].name
+        if function_name:
+            function = goto_stack[-1][1] # variable_dictionary[function_name]
+            in_function = function.being_called
     skip_to_line = i
     matches_for = re.match('for each (variable )?(.+) in (variable )?(.+)', sentence)
     if matches_for:
@@ -701,6 +707,9 @@ def check_for(sentence, i):
         print_debug('FOR: element = ' + element)
         print_debug('FOR: list_name = ' + list_name)
         # create loop variable for element to go through the list range
+        # TODO: for loop should check if in_function
+        # TODO: maybe separate goto list for functions?
+        # print('in_function = ' + str(in_function))
         variable_dictionary[element] = variable_dictionary[list_name][0]
         print_debug('VAR DICT: ' + str(variable_dictionary))
         # activate this loop (no need to evaluate true right now)
