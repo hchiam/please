@@ -35,7 +35,8 @@ import test from library
 use test_function of test
 use test_function from test
 assign list of one and two and tree bark to variable crazy list
-for each item in crazy list
+assign list from zero to two to sequence
+for each item in sequence
     print index variable item of crazy list
 end for
 import spelled with the first letters of Neptune unicorn moose panda Yoda as numb pie
