@@ -6,6 +6,7 @@ Replace the contents of text.txt with the following code:
 
 ```
 please no need to say please
+note this is just sample code
 print this string of words
 create variable apple
 variable banana
