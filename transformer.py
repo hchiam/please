@@ -585,9 +585,9 @@ please end for
 def check_for(sentence):
     global num_indents
     
-    matches_for = re.match('for each (.+) in (.+)', sentence)
+    matches_for = re.match('for (.+) in (.+)', sentence)
     if matches_for:
-        for_what = matches_for.group(1)
+        for_what = matches_for.group(1).replace('each ', '')
         for_in = matches_for.group(2).replace(' ','_') # variable names can't have spaces
         sentence = '\t'*num_indents + 'for ' + for_what + ' in ' + for_in + ':'
         num_indents += 1 # affect indents for later lines, not current line
