@@ -30,7 +30,7 @@ this string of words
 
 No speech recognition software? No Python? Just type code in your browser: https://trinket.io/python3/41bbf92052 (go to the text.txt tab to write code in Please).
 
-(Currently runs an old version of release v0.1.0.)
+(Currently runs an old version of release [v0.1.0](https://github.com/hchiam/please/releases).)
 
 ## B) On Your Computer (Full Version):
 
