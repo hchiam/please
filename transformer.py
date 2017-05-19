@@ -569,7 +569,7 @@ def check_if(sentence):
     
     if matches_oneliner:
         condition = matches_oneliner.group(1).replace('variable ', '')
-        then = matches_oneliner.group(2)
+        then = check_print(matches_oneliner.group(2))[0] # because check_print() only activates if 'print ' starts the string
         sentence = '\t'*num_indents + 'if ' + condition + ':' + '\n' + '\t'*(num_indents+1) + then + '\n' + '\t'*num_indents
         return [sentence, True]
     
