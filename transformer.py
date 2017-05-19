@@ -178,10 +178,9 @@ example:
 please print this string of words
 """
 def check_print(sentence):
-    word = 'print' + ' '
-    word_len = len(word)
-    if sentence.startswith(word):
-        string = sentence[word_len:]
+    matches_print = re.match('print (.+)', sentence)
+    if matches_print:
+        string = matches_print.group(1)
         string = replace_index_of_variable_in_print(string) # do this before replace variable to check more restrictive match first
         string = '"' + replace_variables_in_print(string) + '"' # enables replacing string '...variable <...> ...' with '...' + str(<..>) + '...'
         string = remove_empty_start_end(string)
@@ -558,7 +557,7 @@ def check_if(sentence):
         return [sentence, False]
     
     # note: force 'if ' to be first word; DO NOT start regex with '.*'
-    matches_multiliner = re.match('if (.+) then$', sentence) # $ for end of sentence
+    matches_multiliner = re.match('if (.+) then ?$', sentence) # $ for end of sentence
     matches_oneliner = re.match('if (.+) then (.+)', sentence) # space after 'then' WITHOUT $ because sentence continues
     
     if matches_multiliner:
@@ -628,7 +627,8 @@ def check_function(sentence):
         num_indents += 1 # affect indents for later lines, not current line
         return [sentence, True]
     
-    if sentence == 'end function':
+    matches_end_function = re.match('end function', sentence)
+    if matches_end_function:
         num_indents -= 1
         sentence = '\t'*num_indents
         return [sentence, True]
