@@ -113,12 +113,12 @@ Note: variables automatically get created if you didn't already create them.
 ```
 please assign list from eight to twelve to durian
 ```
---> This generates: `durian = [8, 9, 10, 11, 12]`
+--> This generates: `durian = [ 8 , 9 , 10 , 11 , 12 ]`
 
 ```
 please assign list of one and two and tree bark to variable crazy list
 ```
---> This generates: `crazy list = [1, 2, 'tree bark']`
+--> This generates: `crazy_list = [ 1 , 2 , 'tree bark' ]`
 
 ## Spell Out a Special Word:
 
@@ -152,7 +152,7 @@ please print variable result
 ```
 please if true then print this is a one line if statement
 ```
----> This prints out: `this is a one line if statement`
+---> This prints out: `this is a 1 line if statement`
 
 ```
 please if one equals one then
@@ -214,6 +214,7 @@ please import alternate
 ```
 please import test from library
 ```
+--> This performs: `from library import test`
 --> This imports: /library/test.py
 
 ```
@@ -229,14 +230,14 @@ please import spelled with the first letters of Neptune unicorn moose panda Yoda
 ```
 please import spelled with the first letters of Neptune unicorn moose panda Yoda as numb pie
 ```
---> This performs: `import numpy as numb pie`. (You can also just rename it to whatever your speech recognition software thinks you're saying.)
+--> This performs: `import numpy as numb_pie`. (You can also just rename it to whatever your speech recognition software thinks you're saying.)
 
 ## Use an Import Module's Function:
 
 ```
 please import test from library
-please use test_function of test
-please use test_function from test
+please use test function of test
+please use test function from test
 ```
 --> This performs twice: `test.test_function()`
 
@@ -245,10 +246,12 @@ please use test_function from test
 ## Access List Index:
 
 ```
-please assign list of one and two and tree bark to variable crazy list
-please for each item in crazy list
-    please print index variable item of crazy list
-please end for
+please no need to say please
+assign list of one and two and tree bark to variable crazy list
+assign list from zero to two to sequence
+for each item in sequence
+    print index variable item of crazy list
+end for
 ```
 --> This prints: `1`, `2`, `'tree bark'`
 
@@ -267,9 +270,9 @@ please assign use array of numb pie on variable array to output
 
 please print output of array of numb pie is variable output
 ```
---> This imports `numpy`, creates `array = [2,3,4]`, and runs `output = numpy.array([2,3,4])`
+--> This imports `numpy`, creates `array = [ 2 , 3 , 4 ]`, and runs `output = numb_pie.array(array)`
 
---> This also prints `array is [2, 3, 4]`, `use array of numb pie on [2, 3, 4]`, and `output of array of numb pie is [2, 3, 4]`
+--> This also prints `array is [2, 3, 4]`, `use array of numb pie on [2, 3, 4]`, and `output of array of numb pie is [2 3 4]`
 
 ## Terse Mode
 
