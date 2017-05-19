@@ -547,7 +547,7 @@ please end if
 def check_if(sentence):
     global num_indents
     
-    if sentence == 'end if':
+    if sentence == 'end if' or sentence == 'done if':
         num_indents -= 1
         sentence = '\t'*num_indents
         return [sentence, True]
@@ -593,7 +593,7 @@ def check_for(sentence):
         num_indents += 1 # affect indents for later lines, not current line
         return [sentence, True]
     
-    if sentence == 'end for':
+    if sentence == 'end for' or sentence == 'done for':
         num_indents -= 1
         sentence = '\t'*num_indents
         return [sentence, True]
@@ -628,7 +628,8 @@ def check_function(sentence):
         return [sentence, True]
     
     matches_end_function = re.match('end function', sentence)
-    if matches_end_function:
+    matches_end_function2 = re.match('done function', sentence)
+    if matches_end_function or matches_end_function2:
         num_indents -= 1
         sentence = '\t'*num_indents
         return [sentence, True]
