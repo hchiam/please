@@ -39,10 +39,10 @@ No speech recognition software? No Python? Just type code in your browser: https
 3. Then input the following command and hit enter:
 
 ```
-python interpreter.py text.txt
+python transformer.py text.txt
 ```
 
-The *interpreter* will interpret and run the *text* file as "source code" written in Please.
+The *transformer* will take the *text* file "source code" written in Please, translate it into Python code, and then run that Python code.
 
 Requires Python 3: https://www.python.org/downloads
 
@@ -54,7 +54,7 @@ What if you could easily write code just by talking with speech recognition soft
 
 Please is an attempt at that.
 
-Here are 3 ground rules to make commands easier to say, but also easier for speech recognition software and Please's code interpreter to understand:
+Here are 3 ground rules to make commands easier to say, but also easier for speech recognition software and Please's code transformer to understand:
 
 1. **Just say words that use your ABCs and spaces between**. No special non-letter characters like "?". Why? Speed and recognition. Saying "question mark" just to type out "?" is slow and could be faulty if the speech recognition software thinks you literally want the words "question mark". Please also doesn't differentiate (non-)capital letters because it's a speech-based language (vs. a "written language").
 2. **Avoid specialized words or names**. Why? So you don't have to specifically train your speech recognition software to recognize uncommon words like "numpy" (mine thought I said "numb pie"). Workaround/trade-off: you have to spell it out, maybe using the first letters of more common words, like "**N**eptune **u**nicorn **m**oose **p**anda **Y**oda" to spell out "numpy". Afterwards, you can reassign "numpy" to a shorter label that uses more common words, like "numb pie" or "pneumatic".
@@ -187,7 +187,7 @@ please end for
 ```
 please note this is a comment
 ```
---> (The interpreter ignores this sentence.)
+--> (The transformer ignores this sentence.)
 
 ## Make and Use Your Own Functions:
 
