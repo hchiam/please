@@ -209,7 +209,7 @@ def replace_index_of_variable_in_print(string):
         string = string.replace(replace_over, replace_with)
     return string
 
-def replace_variables_in_print(string): # TODO: enable replace multi-word variable names (would require tracking a list of variable names)
+def replace_variables_in_print(string):
     # add spaces to make it easier to cover all cases (only, start, mid, end) in single search regexes
     string = ' ' + string + ' '
     if 'variable ' in string:
