@@ -289,7 +289,7 @@ https://github.com/hchiam/programmingByVoice
 
 https://github.com/AnotherTest/-English
 
-https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0
+https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0 (especially for [v0.1.0](https://github.com/hchiam/please/releases))
 
 <br>
 
