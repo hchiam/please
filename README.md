@@ -4,7 +4,7 @@
 
 **Simply put:** Program by talking to your computer using common English words. 
 
-**More technically:** You can easily write code in Please using speech recognition software (like Mac Dictation or Google Voice) out-of-the-box, without having to train the software to recognize esoteric jargon and special keywords for symbols. As of release v0.2.0: transformer.py compiles Please into Python code and runs that. 
+**More technically:** You can easily write code in Please using speech recognition software (like Mac Dictation or Google Voice Typing) out-of-the-box, without having to train the software to recognize esoteric jargon and special keywords for symbols. As of release v0.2.0: transformer.py compiles Please into Python code and runs that. 
 
 <br>
 
