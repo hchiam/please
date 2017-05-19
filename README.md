@@ -48,6 +48,8 @@ The *transformer* will take the *text* file "source code" written in Please, tra
 
 Requires Python 3: https://www.python.org/downloads
 
+This project was built with Python 3.6.0
+
 <br>
 
 # Why?
