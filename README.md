@@ -30,6 +30,8 @@ this string of words
 
 No speech recognition software? No Python? Just type code in your browser: https://trinket.io/python3/41bbf92052 (go to the text.txt tab to write code in Please).
 
+(Currently runs an old version of release v0.1.0.)
+
 ## B) On Your Computer (Full Version):
 
 1. Download this project from GitHub. https://github.com/hchiam/please/archive/master.zip --> master branch. Or get a different version at https://github.com/hchiam/please/releases
