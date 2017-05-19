@@ -272,6 +272,40 @@ please print output of array of numb pie is variable output
 
 --> This also prints `array is [2, 3, 4]`, `use array of numb pie on [2, 3, 4]`, and `output of array of numb pie is [2 3 4]`
 
+## Example Fibonacci
+
+```
+Please define function Fibonacci with number
+Please if number under two then return number
+Please assign use function Fibonacci on number -1 to Apple
+Please assign use function Fibonacci on number -2 TO banana
+Please assign variable Apple Plus variable banana to coconut
+Please return variable coconut
+Please done function
+Please assign list from 0 to 8 to input
+Please for each Number in input
+Please assign use function Fibonacci on number to output
+Please print variable output
+Please done for
+```
+--> This compiles to:
+
+```
+def fibonacci(number):
+	if number <2:
+		return number
+	
+	apple = fibonacci(number -1)
+	banana = fibonacci(number -2)
+	coconut = apple + banana
+	return coconut
+
+input = [ 0 , 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 ]
+for number in input:
+	output = fibonacci(number)
+print(str(output))
+```
+
 ## Terse Mode
 
 ```
