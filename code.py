@@ -1,3 +1,4 @@
+# this is just sample code
 print("this string of words")
 apple = None
 banana = None
