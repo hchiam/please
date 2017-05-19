@@ -641,7 +641,6 @@ def check_function(sentence):
             output_value = output_value.replace('variable ', '').replace(' ','_')
         output_value = check_math(output_value)[0] # will either output the literal value "...", or the value of "variable ..."
         sentence = '\t'*num_indents + 'return ' + str(output_value)
-        num_indents -= 1 # affect indents for later lines, not current line
         return [sentence, True]
     
     # just in case
