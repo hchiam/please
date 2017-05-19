@@ -557,11 +557,13 @@ def check_if(sentence):
         return [sentence, False]
     
     # note: force 'if ' to be first word; DO NOT start regex with '.*'
-    matches_multiliner = re.match('if (.+) then ?$', sentence) # $ for end of sentence
+    matches_multiliner = re.match('if (.+)$', sentence) # '$' is for end of sentence
     matches_oneliner = re.match('if (.+) then (.+)', sentence) # space after 'then' WITHOUT $ because sentence continues
     
     if matches_multiliner:
         condition = matches_multiliner.group(1).replace('variable ', '')
+        if condition.endswith(' then'): # so you can say both "if ... then" or "if ..." to start the multiliner
+            condition = condition[:-5]
         sentence = '\t'*num_indents + 'if ' + condition + ':'
         num_indents += 1 # affect indents for later lines, not current line
         return [sentence, True]
