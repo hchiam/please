@@ -42,7 +42,7 @@ No speech recognition software? No Python? Just type code in your browser: https
 python transformer.py text.txt
 ```
 
-The *transformer* will take the *text* file "source code" written in Please, translate it into Python code, and then run that Python code.
+The *transformer* will turn the *text* file (Please "source code") into Python code, and then run that. 
 
 Requires Python 3: https://www.python.org/downloads
 
