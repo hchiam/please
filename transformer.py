@@ -122,6 +122,10 @@ def modify_sentence(sentence):
     if is_for:
         recognized = True
     
+    [sentence, is_class] = check_class(sentence)
+    if is_class:
+        recognized = True
+    
     [sentence, is_function] = check_function(sentence)
     if is_function:
         recognized = True
@@ -594,6 +598,26 @@ def check_for(sentence):
         return [sentence, True]
     
     if sentence.startswith('end for') or sentence.startswith('done for'):
+        num_indents -= 1
+        sentence = '\t'*num_indents
+        return [sentence, True]
+    
+    # just in case
+    return [sentence, False]
+
+def check_class(sentence):
+    global num_indents
+    
+    matches_define_class = re.match('(define |create )(a )?class (named )?(.+)', sentence)
+    if matches_define_class:
+        class_name = matches_define_class.group(4).replace(' ','_') # class names can't have spaces
+        sentence = '\t'*num_indents + 'class ' + class_name + ':'
+        num_indents += 1 # affect indents for later lines, not current line
+        return [sentence, True]
+    
+    matches_end_class = re.match('end class', sentence)
+    matches_end_class2 = re.match('done class', sentence)
+    if matches_end_class or matches_end_class2:
         num_indents -= 1
         sentence = '\t'*num_indents
         return [sentence, True]
