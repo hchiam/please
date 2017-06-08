@@ -328,7 +328,7 @@ def check_math(sentence):
     words = sentence.split()
     math_expression = ''
     replace_expression = ''
-    escape_signals = ['print','variable','assign','if','then','to','of','from','import','for','as','end','each','in','list','use','function','return']
+    escape_signals = ['print','variable','assign','if','then','to','of','starting','from','import','for','as','end','ending','each','in','list','use','function','return']
     # need to find math expressions word-by-word (since typically embedded in sentences like assign...to...)
     for i, word in enumerate(words):
         if word in math_words_numbers:
@@ -374,8 +374,23 @@ def is_digit(string):
 example:
 please assign list from eight to twelve to durian
 please assign list of one and two and tree bark to variable crazy list
+please assign list starting from one ending at three to my list
+please assign my list the value of list starting from one ending at three
+please assign list starting from one ending at four to my list
 """
 def check_list(sentence):
+    # check if ordered list of items from int to int
+    matches_list_ordered = re.match('.* list starting from (.+) ending at (.+?)( to .+)*?', sentence) # alternate phrasing to avoid 'to' read as '2'
+    if matches_list_ordered:
+        list_start = matches_list_ordered.group(1)
+        list_stop = matches_list_ordered.group(2)
+        ordered_list_items = list(range(int(list_start), int(list_stop) + 1)) # + 1 so that the number spoken actually appears in the list
+        ordered_list_items = create_list_string(ordered_list_items)
+        replace_over = ' list starting from ' + list_start + ' ending at ' + list_stop
+        replace_with = ' ' + ordered_list_items
+        sentence = sentence.replace(replace_over, replace_with)
+        return [sentence, True]
+    
     # check if ordered list of items from int to int
     matches_list_ordered = re.match('.* list from (.+) to (.+)( to )+?.*', sentence) # ( to )+? to account for assignment wrapping it
     if matches_list_ordered:
@@ -389,7 +404,18 @@ def check_list(sentence):
         return [sentence, True]
     
     # check if unordered list of items separated by ' and '
-    matches_list_unordered = re.match('.* list of (.+)( to )+?.*', sentence) # ( to )+? to account for assignment wrapping it
+    matches_list_unordered = re.match('.* list of (.+) to .*', sentence) # in case "assign ... to ..."
+    if matches_list_unordered:
+        string_of_list_items = matches_list_unordered.group(1)
+        unordered_list_items = string_of_list_items.split(' and ') # items separated by ' and '
+        unordered_list_items = create_list_string(unordered_list_items)
+        replace_over = ' list of ' + string_of_list_items
+        replace_with = ' ' + unordered_list_items
+        sentence = sentence.replace(replace_over, replace_with)
+        return [sentence, True]
+    
+    # check if unordered list of items separated by ' and '
+    matches_list_unordered = re.match('.* list of (.+)', sentence) # in case "assign ... the value ..."
     if matches_list_unordered:
         string_of_list_items = matches_list_unordered.group(1)
         unordered_list_items = string_of_list_items.split(' and ') # items separated by ' and '
@@ -508,12 +534,12 @@ example:
 please assign one to variable apple
 please assign three hundred to variable banana
 please assign some words to variable coconut
+please assign durian the value four
+please assign to variable durian the value of five
 """
 def check_assign(sentence):
     matches_assign = re.match('.*assign (.+) to (variable )?(.+)', sentence)
-    if not matches_assign:
-        return [sentence, False]
-    else:
+    if matches_assign:
         variable_name = matches_assign.group(3).replace(' ','_') # variable names can't have spaces
         variable_value = matches_assign.group(1)
         first_word_is_string = check_if_just_string(variable_value)
@@ -524,6 +550,22 @@ def check_assign(sentence):
             variable_value = variable_value.replace('variable ', '')
         sentence = '\t'*num_indents + variable_name + ' = ' + variable_value
         return [sentence, True]
+    
+    matches_assign2 = re.match('.*assign (to )?(variable )?(.+) the value (of )?(.+)', sentence)
+    if matches_assign2:
+        variable_name = matches_assign2.group(3).replace(' ','_') # variable names can't have spaces
+        variable_value = matches_assign2.group(5)
+        first_word_is_string = check_if_just_string(variable_value)
+        # if the first word is not math, then just make the whole variable value a string (otherwise leave as is)
+        if first_word_is_string and not variable_value.startswith('variable '):
+            variable_value = '\'' + variable_value + '\'' # need to put quotation marks around strings being assigned
+        elif variable_value.startswith('variable '):
+            variable_value = variable_value.replace('variable ', '')
+        sentence = '\t'*num_indents + variable_name + ' = ' + variable_value
+        return [sentence, True]
+    
+    # just in case
+    return [sentence, False]
 
 def check_if_just_string(variable_value):
     # get first word
