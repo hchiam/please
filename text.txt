@@ -3,13 +3,13 @@ note this is just sample code
 print this string of words
 create variable apple
 variable banana
-assign one to variable apple
+assign apple the value one
 print variable apple
-assign three hundred to variable banana
-assign some words to variable coconut
-assign list from eight to twelve to durian
-assign list of one and two and tree bark to variable crazy list
-assign one plus two to variable result
+assign variable banana the value three hundred
+assign to coconut the value of some words
+assign dragon fruit the value list starting from eight ending at twelve
+assign crazy list the value list of one and two and tree bark
+assign result the value one plus two
 print variable result
 if true then print this is a one line if statement
 if one equals one then
@@ -21,7 +21,7 @@ if one equals two then
 end if
 if one equals two then  print it should not print this  end if
 print and this line
-assign list from negative one to three to variable circle
+assign circle the value list starting from negative one ending at three
 for each index in circle
     print variable index
 end for
@@ -29,19 +29,20 @@ note this is a comment
 define function test with item
     print variable item
 end function
-assign it works to other
+assign other the value it works
 use function test on variable other
 import alternate
 import test from library
 use test_function of test
 use test_function from test
-assign list of one and two and tree bark to variable crazy list
-for each item in crazy list
-    print variable item
+assign crazy list the value list of one and two and tree bark
+assign sequence the value list starting from zero ending at two
+for each item in sequence
+    print index variable item of crazy list
 end for
 import spelled with the first letters of Neptune unicorn moose panda Yoda as numb pie
-assign list from two to four to array
+assign array the value list starting from two ending at four
 print array is variable array
 print use array of numb pie on variable array
-assign use array of numb pie on variable array to output
+assign output the value of using array of numb pie on variable array
 print output of array of numb pie is variable output

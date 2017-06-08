@@ -372,15 +372,12 @@ def is_digit(string):
 
 """
 example:
-please assign list from eight to twelve to durian
-please assign list of one and two and tree bark to variable crazy list
-please assign list starting from one ending at three to my list
-please assign my list the value of list starting from one ending at three
-please assign list starting from one ending at four to my list
+please assign durian the value of list starting from eight ending at twelve
+please assign variable crazy list the value list of one and two and tree bark
 """
 def check_list(sentence):
     # check if ordered list of items from int to int
-    matches_list_ordered = re.match('.* list starting from (.+) ending at (.+?)( to .+)*?', sentence) # alternate phrasing to avoid 'to' read as '2'
+    matches_list_ordered = re.match('.* list starting from (.+) ending at (.+)', sentence)
     if matches_list_ordered:
         list_start = matches_list_ordered.group(1)
         list_stop = matches_list_ordered.group(2)
@@ -391,31 +388,8 @@ def check_list(sentence):
         sentence = sentence.replace(replace_over, replace_with)
         return [sentence, True]
     
-    # check if ordered list of items from int to int
-    matches_list_ordered = re.match('.* list from (.+) to (.+)( to )+?.*', sentence) # ( to )+? to account for assignment wrapping it
-    if matches_list_ordered:
-        list_start = matches_list_ordered.group(1)
-        list_stop = matches_list_ordered.group(2)
-        ordered_list_items = list(range(int(list_start), int(list_stop) + 1)) # + 1 so that the number spoken actually appears in the list
-        ordered_list_items = create_list_string(ordered_list_items)
-        replace_over = ' list from ' + list_start + ' to ' + list_stop
-        replace_with = ' ' + ordered_list_items
-        sentence = sentence.replace(replace_over, replace_with)
-        return [sentence, True]
-    
     # check if unordered list of items separated by ' and '
-    matches_list_unordered = re.match('.* list of (.+) to .*', sentence) # in case "assign ... to ..."
-    if matches_list_unordered:
-        string_of_list_items = matches_list_unordered.group(1)
-        unordered_list_items = string_of_list_items.split(' and ') # items separated by ' and '
-        unordered_list_items = create_list_string(unordered_list_items)
-        replace_over = ' list of ' + string_of_list_items
-        replace_with = ' ' + unordered_list_items
-        sentence = sentence.replace(replace_over, replace_with)
-        return [sentence, True]
-    
-    # check if unordered list of items separated by ' and '
-    matches_list_unordered = re.match('.* list of (.+)', sentence) # in case "assign ... the value ..."
+    matches_list_unordered = re.match('.* list of (.+)', sentence)
     if matches_list_unordered:
         string_of_list_items = matches_list_unordered.group(1)
         unordered_list_items = string_of_list_items.split(' and ') # items separated by ' and '
@@ -468,61 +442,66 @@ example 2:
 please define function test with item
     please print variable item
 please end function
-please assign it works to other
+please assign other the value it works
 please use function test on variable other
 """
 def check_use(sentence):
     
     # order matters; start with most restrictive first
     
-    matches_from_and_input = re.match('.*assign use (.+) (from|of) (.+) (on|with) (.+) to (.+)', sentence)
+    matches_from_and_input = re.match('assign (.+) (use|using) (.+) (from|of) (.+) (on|with) (.+)', sentence)
     if matches_from_and_input:
-        function_name = matches_from_and_input.group(1).replace('function ', '').replace(' ','_')
-        function_from = matches_from_and_input.group(3).replace(' ','_')
-        function_input = matches_from_and_input.group(5).replace('variable ', '')
-        function_ouput = matches_from_and_input.group(6).replace('variable ', '')
-        sentence = '\t'*num_indents + function_ouput + ' = ' + function_from + '.' + function_name + '(' + function_input + ')'
-        recognized = True
-        return [sentence, recognized]
-    
-    matches_from_and_input = re.match('.*assign use (.+) (on|with) (.+) to (.+)', sentence)
-    if matches_from_and_input:
-        function_name = matches_from_and_input.group(1).replace('function ', '').replace(' ','_')
-        function_input = matches_from_and_input.group(3).replace('variable ', '')
-        function_ouput = matches_from_and_input.group(4).replace('variable ', '')
-        sentence = '\t'*num_indents + function_ouput + ' = ' + function_name + '(' + function_input + ')'
-        recognized = True
-        return [sentence, recognized]
-    
-    matches_from_and_input = re.match('.*use (.+)( (from|of) (.+))+?( (on|with) (.+))+?', sentence)
-    if matches_from_and_input:
-        function_name = matches_from_and_input.group(1).replace('function ', '').replace(' ','_')
-        function_from = matches_from_and_input.group(4).replace(' ','_')
+        function_output = matches_from_and_input.group(1).replace('variable ', '')
+        function_name = matches_from_and_input.group(3).replace('function ', '').replace(' ','_')
+        function_from = matches_from_and_input.group(5).replace(' ','_')
         function_input = matches_from_and_input.group(7).replace('variable ', '')
-        sentence = '\t'*num_indents + function_from + '.' + function_name + '(' + function_input + ')'
+        replace_over = matches_from_and_input.group()
+        # check assignment
+        function_output = re.match('(to )?(.+) the value (of )?', function_output)
+        if function_output:
+            function_output = function_output.group(2) + ' = '
+        replace_with = '\t'*num_indents + function_output + function_from + '.' + function_name + '(' + function_input + ')'
+        sentence = sentence.replace(replace_over, replace_with)
         recognized = True
         return [sentence, recognized]
     
-    matches_from = re.match('.*use (.+) (from|of) (.+)', sentence)
+    matches_from_and_input = re.match('(use|using) (.+) (from|of) (.+) (on|with) (.+)', sentence)
+    if matches_from_and_input:
+        function_name = matches_from_and_input.group(2).replace('function ', '').replace(' ','_')
+        function_from = matches_from_and_input.group(4).replace(' ','_')
+        function_input = matches_from_and_input.group(6).replace('variable ', '')
+        replace_over = matches_from_and_input.group()
+        replace_with = '\t'*num_indents + function_from + '.' + function_name + '(' + function_input + ')'
+        sentence = sentence.replace(replace_over, replace_with)
+        recognized = True
+        return [sentence, recognized]
+    
+    matches_from = re.match('(use|using) (.+) (from|of) (.+)', sentence)
     if matches_from:
-        function_name = matches_from.group(1).replace('function ', '').replace(' ','_')
-        function_from = matches_from.group(3).replace(' ','_')
-        sentence = '\t'*num_indents + function_from + '.' + function_name + '()'
+        function_name = matches_from.group(2).replace('function ', '').replace(' ','_')
+        function_from = matches_from.group(4).replace(' ','_')
+        replace_over = matches_from.group()
+        replace_with = '\t'*num_indents + function_from + '.' + function_name + '()'
+        sentence = sentence.replace(replace_over, replace_with)
         recognized = True
         return [sentence, recognized]
     
-    matches_input = re.match('.*use (.+) (on|with) (.+)', sentence)
+    matches_input = re.match('(use|using) (.+) (on|with) (.+)', sentence)
     if matches_input:
-        function_name = matches_input.group(1).replace('function ', '').replace(' ','_')
-        function_input = matches_input.group(3).replace('variable ', '')
-        sentence = '\t'*num_indents + function_name + '(' + function_input + ')'
+        function_name = matches_input.group(2).replace('function ', '').replace(' ','_')
+        function_input = matches_input.group(4).replace('variable ', '')
+        replace_over = matches_input.group()
+        replace_with = '\t'*num_indents + function_name + '(' + function_input + ')'
+        sentence = sentence.replace(replace_over, replace_with)
         recognized = True
         return [sentence, True]
     
-    matches_name = re.match('.*use (.+)', sentence)
+    matches_name = re.match('(use|using) (.+)', sentence)
     if matches_name:
-        function_name = matches_name.group(1).replace('function ', '').replace(' ','_')
-        sentence = '\t'*num_indents + function_name + '()'
+        function_name = matches_name.group(2).replace('function ', '').replace(' ','_')
+        replace_over = matches_name.group()
+        replace_with = '\t'*num_indents + function_name + '()'
+        sentence = sentence.replace(replace_over, replace_with)
         recognized = True
         return [sentence, recognized]
     
@@ -531,30 +510,19 @@ def check_use(sentence):
 
 """
 example:
-please assign one to variable apple
-please assign three hundred to variable banana
-please assign some words to variable coconut
+please assign to variable apple the value of one
+please assign to banana the value three hundred
+please assign coconut the value of some words
 please assign durian the value four
-please assign to variable durian the value of five
+
+NOTE DEPRECATED/OBSOLTE:
+please assign one to apple
 """
 def check_assign(sentence):
-    matches_assign = re.match('.*assign (.+) to (variable )?(.+)', sentence)
-    if matches_assign:
-        variable_name = matches_assign.group(3).replace(' ','_') # variable names can't have spaces
-        variable_value = matches_assign.group(1)
-        first_word_is_string = check_if_just_string(variable_value)
-        # if the first word is not math, then just make the whole variable value a string (otherwise leave as is)
-        if first_word_is_string and not variable_value.startswith('variable '):
-            variable_value = '\'' + variable_value + '\'' # need to put quotation marks around strings being assigned
-        elif variable_value.startswith('variable '):
-            variable_value = variable_value.replace('variable ', '')
-        sentence = '\t'*num_indents + variable_name + ' = ' + variable_value
-        return [sentence, True]
-    
-    matches_assign2 = re.match('.*assign (to )?(variable )?(.+) the value (of )?(.+)', sentence)
+    matches_assign2 = re.match('.*assign (to )?(variable )?(.+) (the )+?value (of )?(.+)', sentence)
     if matches_assign2:
         variable_name = matches_assign2.group(3).replace(' ','_') # variable names can't have spaces
-        variable_value = matches_assign2.group(5)
+        variable_value = matches_assign2.group(6)
         first_word_is_string = check_if_just_string(variable_value)
         # if the first word is not math, then just make the whole variable value a string (otherwise leave as is)
         if first_word_is_string and not variable_value.startswith('variable '):
@@ -623,7 +591,7 @@ def check_if(sentence):
 
 """
 example:
-please assign list from negative one to three to variable circle
+please assign variable circle the value of list from negative one to three
 please for each index in circle
     please print variable index
 please end for
@@ -672,7 +640,7 @@ example:
 please define function test with item
     please print variable item
 please end function
-please assign it works to other
+please assign to other the value it works
 please use function test on variable other
 """
 def check_function(sentence):

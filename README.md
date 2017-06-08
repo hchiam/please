@@ -78,7 +78,7 @@ please print this string of words
 --> This prints out: `this string of words`
 
 ```
-please assign one to variable apple
+please assign apple the value one
 please print variable apple
 ```
 --> This prints out: `1`
@@ -100,21 +100,21 @@ please variable banana
 ## Assign Values/Lists to Variables:
 
 ```
-please assign one to variable apple
-please assign three hundred to variable banana
-please assign some words to variable coconut
+please assign apple the value one
+please assign variable banana the value three hundred
+please assign to coconut the value of some words
 ```
 --> This generates: `apple = 1`, `banana = 300`, `coconut = 'some words'`
 
 Note: variables automatically get created if you didn't already create them.
 
 ```
-please assign list from eight to twelve to durian
+please assign dragon fruit the value list starting from eight ending at twelve
 ```
---> This generates: `durian = [ 8 , 9 , 10 , 11 , 12 ]`
+--> This generates: `dragon fruit = [ 8 , 9 , 10 , 11 , 12 ]`
 
 ```
-please assign list of one and two and tree bark to variable crazy list
+please assign crazy list the value list of one and two and tree bark
 ```
 --> This generates: `crazy_list = [ 1 , 2 , 'tree bark' ]`
 
@@ -140,7 +140,7 @@ please one plus one equals two
 --> This evaluates to: `True`
 
 ```
-please assign one plus two to variable result
+please assign result the value one plus two
 please print variable result
 ```
 --> This prints out: `3`
@@ -169,7 +169,7 @@ please end if
 Note: Please ignores whitespace and newline characters because the spoken word doesn't explicitly mark out paragraphs either. So you could type this too:
 
 ```
-please if one equals two then please print it should not print this please end if
+please if one equals two then  print it should not print this  end if
 ```
 
 You can use library/format.py to automatically format your Please code.
@@ -177,7 +177,7 @@ You can use library/format.py to automatically format your Please code.
 ## For Loops:
 
 ```
-please assign list from negative one to three to variable circle
+assign circle the value list starting from negative one ending at three
 please for each index in circle
     please print variable index
 please end for
@@ -197,7 +197,7 @@ please note this is a comment
 please define function test with item
     please print variable item
 please end function
-please assign it works to other
+please assign other the value it works
 please use function test on variable other
 ```
 --> This prints: `it works`
@@ -245,8 +245,8 @@ please use test function from test
 
 ```
 please no need to say please
-assign list of one and two and tree bark to variable crazy list
-assign list from zero to two to sequence
+assign crazy list the value list of one and two and tree bark
+assign sequence the value list starting from zero ending at two
 for each item in sequence
     print index variable item of crazy list
 end for
@@ -260,11 +260,11 @@ Requires numpy already installed to work:
 ```
 please import spelled with the first letters of Neptune unicorn moose panda Yoda as numb pie
 
-please assign list from two to four to array
+assign array the value list starting from two ending at four
 please print array is variable array
 
 please print use array of numb pie on variable array
-please assign use array of numb pie on variable array to output
+please assign output the value of using array of numb pie on variable array
 
 please print output of array of numb pie is variable output
 ```
@@ -277,14 +277,14 @@ please print output of array of numb pie is variable output
 ```
 Please define function Fibonacci with number
 Please if number under two then return number
-Please assign use function Fibonacci on number -1 to Apple
-Please assign use function Fibonacci on number -2 TO banana
-Please assign variable Apple Plus variable banana to coconut
+Please assign apple the value of using function Fibonacci on number -1
+Please assign banana the value of using function Fibonacci on number -2
+Please assign coconut the value of variable apple plus variable banana
 Please return variable coconut
 Please done function
-Please assign list from 0 to 8 to input
+Please assign input the value list starting from 0 ending at 8
 Please for each Number in input
-Please assign use function Fibonacci on number to output
+Please assign output the value of using function Fibonacci on number
 Please print variable output
 Please done for
 ```

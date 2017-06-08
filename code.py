@@ -6,7 +6,7 @@ apple = 1
 print(str(apple))
 banana = 300
 coconut = 'some words'
-durian = [ 8 , 9 , 10 , 11 , 12 ]
+dragon_fruit = [ 8 , 9 , 10 , 11 , 12 ]
 crazy_list = [ 1 , 2 , 'tree bark' ]
 result = 1+2
 print(str(result))
@@ -39,8 +39,9 @@ from library import test
 test.test_function()
 test.test_function()
 crazy_list = [ 1 , 2 , 'tree bark' ]
-for item in crazy_list:
-	print(str(item))
+sequence = [ 0 , 1 , 2 ]
+for item in sequence:
+	print(crazy_list[item])
 
 import numpy as numb_pie
 array = [ 2 , 3 , 4 ]
