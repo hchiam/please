@@ -372,7 +372,7 @@ def is_digit(string):
 
 """
 example:
-please assign durian the value of list starting from eight ending at twelve
+please assign dragon fruit the value of list starting from eight ending at twelve
 please assign variable crazy list the value list of one and two and tree bark
 """
 def check_list(sentence):
@@ -513,7 +513,7 @@ example:
 please assign to variable apple the value of one
 please assign to banana the value three hundred
 please assign coconut the value of some words
-please assign durian the value four
+please assign dragon fruit the value four
 
 NOTE DEPRECATED/OBSOLTE:
 please assign one to apple
