@@ -28,7 +28,7 @@ this string of words
 
 ## A) In Your Browser (Mini Version):
 
-No speech recognition software? No Python? Just type code in your browser: https://trinket.io/python3/2e54691927 (go to the text.txt tab to write code in Please).
+No speech recognition software? No Python? Just type code in your browser: https://trinket.io/python3/7f75bfc5c8 (go to the text.txt tab to write code in Please).
 
 ## B) On Your Computer (Full Version):
 
