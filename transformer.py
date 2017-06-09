@@ -102,8 +102,12 @@ def modify_sentence(sentence):
     if is_math:
         recognized = True
     
-    [sentence, is_list] = check_list(sentence) # this relies on math replacing integers
+    [sentence, is_list] = check_list(sentence) # this can rely on math replacing integers
     if is_list:
+        recognized = True
+    
+    [sentence, is_dictionary] = check_dictionary(sentence)
+    if is_dictionary:
         recognized = True
     
     [sentence, is_use] = check_use(sentence)
@@ -217,7 +221,7 @@ def replace_variables_in_print(string):
     # add spaces to make it easier to cover all cases (only, start, mid, end) in single search regexes
     string = ' ' + string + ' '
     if 'variable ' in string:
-        variables_found = re.findall('variable (.+?) ', string) # get ALL non-overlapping matches
+        variables_found = re.findall('variable (.+?) ', string) # .findall() = get ALL non-overlapping matches
         for variable_found in variables_found:
             replace_over = ' variable ' + variable_found
             replace_with = ' ' + '" + str(' + variable_found + ') + "'
@@ -328,7 +332,6 @@ def check_math(sentence):
     words = sentence.split()
     math_expression = ''
     replace_expression = ''
-    escape_signals = ['print','variable','assign','if','then','to','of','starting','from','import','for','as','end','ending','each','in','list','use','function','return']
     # need to find math expressions word-by-word (since typically embedded in sentences like assign...to...)
     for i, word in enumerate(words):
         if word in math_words_numbers:
@@ -396,6 +399,30 @@ def check_list(sentence):
         unordered_list_items = create_list_string(unordered_list_items)
         replace_over = ' list of ' + string_of_list_items
         replace_with = ' ' + unordered_list_items
+        sentence = sentence.replace(replace_over, replace_with)
+        return [sentence, True]
+    
+    # just in case
+    return [sentence, False]
+
+"""
+example:
+please assign my dictionary the value dictionary key one value apple
+please assign my dictionary the value dictionary key one value apple key two value banana
+"""
+def check_dictionary(sentence):
+    
+    matches_dictionary = re.match('.* (dictionary( key .+ value .+)+)', sentence)
+    if matches_dictionary:
+        pairs = matches_dictionary.group(2).split(' key ') # returns ['', '<keyval> value <value>', ...]
+        pairs = list(filter(None,pairs)) # filter(None,...) is shorthand for filter(lambda x:x, ...)
+        replace_with = []
+        for pair in pairs:
+            key = pair.split(' value ')[0]
+            val = pair.split(' value ')[1]
+            replace_with.append(key + ':' + '"' + val + '"')
+        replace_with = '{ ' + ', '.join(replace_with) + ' }'
+        replace_over = matches_dictionary.group(1)
         sentence = sentence.replace(replace_over, replace_with)
         return [sentence, True]
     
@@ -691,6 +718,9 @@ def print_debug(string):
 num_indents = 0
 code_file_name = 'code.py'
 # recognize words for numbers, math operations, spelling checkphases, etc.
+escape_signals = ['print','variable','assign','if','then','to','of','starting','from',
+                  'import','for','as','end','ending','each','in','list','use','function','return',
+                  'key','value']
 math_words_numbers = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,
                       'six':6,'seven':7,'eight':8,'nine':9,'ten':10,
                       'eleven':11,'twelve':12,'thirteen':13,'fourteen':14,'fifteen':15,
