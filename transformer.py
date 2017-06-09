@@ -65,6 +65,7 @@ def compile_code(sentences):
     global nested_blocks_ignore
     i = 0
     for sentence in sentences: # use i to access sentence indices for go-to locations
+        sentence = sentence.strip() # remove '\n' and leading/trailing spaces
         sentence = modify_sentence(sentence)
         with open(code_file_name, 'a') as f:
             f.write(sentence+'\n')
@@ -211,6 +212,7 @@ def replace_index_of_variable_in_print(string):
         elif index_string.startswith('variable '):
             index_value = index_value.replace('variable ', '')
         variable_name = index_found[1]
+        update_variable_names_list(variable_name)
         variable_name_replacer = index_found[1].replace(' ','_') # variable names can't have spaces
         replace_over = 'index ' + index_string + ' of ' + variable_name
         replace_with = ' ' + '" + ' + variable_name_replacer + '[' + index_value + ']' + ' + "'
@@ -221,6 +223,13 @@ def replace_variables_in_print(string):
     # add spaces to make it easier to cover all cases (only, start, mid, end) in single search regexes
     string = ' ' + string + ' '
     if 'variable ' in string:
+        for variable_name in variable_names:
+            variable_name_spaced = variable_name.replace('_',' ')
+            if variable_name_spaced in string:
+                replace_over = ' variable ' + variable_name_spaced
+                replace_with = ' ' + '" + str(' + variable_name + ') + "'
+                # note: add an initial space to replace_with so that words between variables get spaces between them
+                string = string.replace(replace_over, replace_with)
         variables_found = re.findall('variable (.+?) ', string) # .findall() = get ALL non-overlapping matches
         for variable_found in variables_found:
             replace_over = ' variable ' + variable_found
@@ -285,7 +294,7 @@ please variable banana
 please print you assigned variable apple to apple
 """
 def check_variable(sentence):
-    has_variable = re.match('.*variable (.+).*', sentence)
+    has_variable = 'variable ' in sentence
     if not has_variable:
         return [sentence, False]
     else:
@@ -294,6 +303,7 @@ def check_variable(sentence):
         matches_variable_index = re.match('.* index (.+) of variable (.+).*', sentence)
         if matches_variable_index:
             variable_name = matches_variable_index.group(2).replace(' ','_') # variable names can't have spaces
+            update_variable_names_list(variable_name)
             variable_index = matches_variable_index.group(1)
             replace_over = ' index ' + variable_index + ' of variable ' + variable_name
             replace_with = variable_name + '[' + variable_index + ']'
@@ -303,18 +313,21 @@ def check_variable(sentence):
         matches_variable_only = re.match('create variable (.+)', sentence)
         if matches_variable_only:
             variable_name = matches_variable_only.group(1).replace(' ','_') # variable names can't have spaces
+            update_variable_names_list(variable_name)
             sentence = '\t'*num_indents + variable_name + ' = None'
             return [sentence, True]
         
         matches_variable_only = re.match('variable (.+)', sentence)
         if matches_variable_only:
             variable_name = matches_variable_only.group(1).replace(' ','_') # variable names can't have spaces (use underscores to avoid name collisions)
+            update_variable_names_list(variable_name)
             sentence = '\t'*num_indents + variable_name + ' = None'
             return [sentence, True]
         
         matches_variable_only = re.match('.* variable (.+).*', sentence)
         if matches_variable_only:
             variable_name = matches_variable_only.group(1).replace(' ','_') # variable names can't have spaces
+            update_variable_names_list(variable_name)
             replace_over = ' variable ' + variable_name
             replace_with = ' ' + variable_name
             sentence = sentence.replace(replace_over, replace_with)
@@ -549,6 +562,7 @@ def check_assign(sentence):
     matches_assign2 = re.match('.*assign (to )?(variable )?(.+) (the )+?value (of )?(.+)', sentence)
     if matches_assign2:
         variable_name = matches_assign2.group(3).replace(' ','_') # variable names can't have spaces
+        update_variable_names_list(variable_name)
         variable_value = matches_assign2.group(6)
         first_word_is_string = check_if_just_string(variable_value)
         # if the first word is not math, then just make the whole variable value a string (otherwise leave as is)
@@ -574,6 +588,10 @@ def check_if_just_string(variable_value):
     # put those checks together
     first_word_is_string = not_variable and not_number and not_boolean and not first_few_characters_are_math and not_math_punctuation
     return first_word_is_string
+
+def update_variable_names_list(variable_name):
+    if variable_name not in variable_names:
+        variable_names.append(variable_name)
 
 """
 example:
@@ -717,6 +735,8 @@ def print_debug(string):
 
 num_indents = 0
 code_file_name = 'code.py'
+# track variable names
+variable_names = []
 # recognize words for numbers, math operations, spelling checkphases, etc.
 escape_signals = ['print','variable','assign','if','then','to','of','starting','from',
                   'import','for','as','end','ending','each','in','list','use','function','return',
