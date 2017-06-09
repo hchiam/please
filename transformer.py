@@ -436,7 +436,7 @@ def check_dictionary(sentence):
         for pair in pairs:
             key = pair.split(' value ')[0]
             val = pair.split(' value ')[1]
-            replace_with.append(key + ':' + '"' + val + '"')
+            replace_with.append('\'' + key + '\'' + ':' + '\'' + val + '\'')
         replace_with = '{ ' + ', '.join(replace_with) + ' }'
         replace_over = matches_dictionary.group(1)
         sentence = sentence.replace(replace_over, replace_with)
