@@ -195,6 +195,9 @@ def check_print(sentence):
         string = remove_empty_start_end(string)
         sentence = '\t'*num_indents + 'print(' + string + ')'
         return [sentence, True]
+    elif sentence == 'print':
+        sentence = 'print()'
+        return [sentence, True]
     else:
         return [sentence, False]
 
