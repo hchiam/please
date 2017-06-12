@@ -153,8 +153,8 @@ def check_spell(sentence):
     # find matches in sentence:
     for phrase_start in spell_checkphrases:
         for phrase_stop in spell_finish_words:
-            checkphrase = '.*' + phrase_start + ' (.+)' + phrase_stop
-            matches = re.match(checkphrase, sentence)
+            checkphrase = phrase_start + ' (.+)' + phrase_stop
+            matches = re.search(checkphrase, sentence)
             if matches:
                 words_to_spell_with = matches.group(1) # this is substring found inside '(.+)'
                 spelt_word = spell_with_first_letters(checkphrase, words_to_spell_with)
@@ -303,7 +303,7 @@ def check_variable(sentence):
     else:
         # order matters; start with most restrictive first
         
-        matches_variable_index = re.match('.* index (.+) of variable (.+).*', sentence)
+        matches_variable_index = re.search(' index (.+) of variable (.+)', sentence)
         if matches_variable_index:
             variable_name = matches_variable_index.group(2).replace(' ','_') # variable names can't have spaces
             update_variable_names_list(variable_name)
@@ -327,7 +327,7 @@ def check_variable(sentence):
             sentence = '\t'*num_indents + variable_name + ' = None'
             return [sentence, True]
         
-        matches_variable_only = re.match('.* variable (.+).*', sentence)
+        matches_variable_only = re.search('.* variable (.+).*', sentence)
         if matches_variable_only:
             variable_name = matches_variable_only.group(1).replace(' ','_') # variable names can't have spaces
             update_variable_names_list(variable_name)
@@ -396,7 +396,7 @@ please assign variable crazy list the value list of one and two and tree bark
 """
 def check_list(sentence):
     # check if ordered list of items from int to int
-    matches_list_ordered = re.match('.* list starting from (.+) ending at (.+)', sentence)
+    matches_list_ordered = re.search(' list starting from (.+) ending at (.+)', sentence)
     if matches_list_ordered:
         list_start = matches_list_ordered.group(1)
         list_stop = matches_list_ordered.group(2)
@@ -408,7 +408,7 @@ def check_list(sentence):
         return [sentence, True]
     
     # check if unordered list of items separated by ' and '
-    matches_list_unordered = re.match('.* list of (.+)', sentence)
+    matches_list_unordered = re.search(' list of (.+)', sentence)
     if matches_list_unordered:
         string_of_list_items = matches_list_unordered.group(1)
         unordered_list_items = string_of_list_items.split(' and ') # items separated by ' and '
@@ -428,7 +428,7 @@ please assign my dictionary the value dictionary key one value apple key two val
 """
 def check_dictionary(sentence):
     
-    matches_dictionary = re.match('.* (dictionary( key .+ value .+)+)', sentence)
+    matches_dictionary = re.search(' (dictionary( key .+ value .+)+)', sentence)
     if matches_dictionary:
         pairs = matches_dictionary.group(2).split(' key ') # returns ['', '<keyval> value <value>', ...]
         pairs = list(filter(None,pairs)) # filter(None,...) is shorthand for filter(lambda x:x, ...)
@@ -562,7 +562,7 @@ NOTE DEPRECATED/OBSOLTE:
 please assign one to apple
 """
 def check_assign(sentence):
-    matches_assign2 = re.match('.*assign (to )?(variable )?(.+) (the )+?value (of )?(.+)', sentence)
+    matches_assign2 = re.match('assign (to )?(variable )?(.+) (the )+?value (of )?(.+)', sentence)
     if matches_assign2:
         variable_name = matches_assign2.group(3).replace(' ','_') # variable names can't have spaces
         update_variable_names_list(variable_name)
