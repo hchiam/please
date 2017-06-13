@@ -40,8 +40,8 @@ assign other the value it works
 use function test on variable other
 import alternate
 import test from library
-use test_function of test
-use test_function from test
+use test function of test
+use test function from test
 assign crazy list the value list of one and two and tree bark
 assign sequence the value list starting from zero ending at two
 for each item in sequence
@@ -53,6 +53,23 @@ print array is variable array
 print use array of numb pie on variable array
 assign output the value of using array of numb pie on variable array
 print output of array of numb pie is variable output
+
+
+define function fibonacci with number
+    if variable number equals zero then return zero
+    if variable number equals one then return one
+    assign answer one the value of using function fibonacci on variable number minus one
+    assign answer two the value of using function fibonacci on variable number minus two
+    return variable answer one plus variable answer two
+end function
+assign output the value of use function fibonacci with zero
+print step 1: output = variable output
+assign output the value of use function fibonacci with one
+print step 2: output = variable output
+assign output the value of use function fibonacci with two
+print step 3: output = variable output
+assign output the value of use function fibonacci with three
+print step 4: output = variable output
 ```
 
 # Outputs
@@ -88,6 +105,10 @@ tree bark
 array is [2, 3, 4]
 use array of numb pie on [2, 3, 4]
 output of array of numb pie is [2 3 4]
+step 1: output = 0
+step 2: output = 1
+step 3: output = 1
+step 4: output = 2
 
 ...THANK YOU!
 

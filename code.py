@@ -51,22 +51,22 @@ output = numb_pie.array(array)
 print("output of array of numb pie is " + str(output))
 
 
-def fake_fibonacci(number):
+def fibonacci(number):
 	if number == 0:
 		return 0
 	
 	if number == 1:
 		return 1
 	
-	answer_1 = fake_fibonacci(number - 1)
-	answer_2 = fake_fibonacci(number - 2)
+	answer_1 = fibonacci(number - 1)
+	answer_2 = fibonacci(number - 2)
 	return answer_1 + answer_2
 
-output = fake_fibonacci(0)
+output = fibonacci(0)
 print("step 1: output = " + str(output))
-output = fake_fibonacci(1)
+output = fibonacci(1)
 print("step 2: output = " + str(output))
-output = fake_fibonacci(2)
+output = fibonacci(2)
 print("step 3: output = " + str(output))
-output = fake_fibonacci(3)
+output = fibonacci(3)
 print("step 4: output = " + str(output))
