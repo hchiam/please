@@ -46,3 +46,20 @@ print array is variable array
 print use array of numb pie on variable array
 assign output the value of using array of numb pie on variable array
 print output of array of numb pie is variable output
+
+
+define function fake fibonacci with number
+    if variable number equals zero then return zero
+    if variable number equals one then return one
+    assign answer one the value of using function fake fibonacci on variable number minus one
+    assign answer two the value of using function fake fibonacci on variable number minus two
+    return variable answer one plus variable answer two
+end function
+assign output the value of use function fake fibonacci with zero
+print step 1: output = variable output
+assign output the value of use function fake fibonacci with one
+print step 2: output = variable output
+assign output the value of use function fake fibonacci with two
+print step 3: output = variable output
+assign output the value of use function fake fibonacci with three
+print step 4: output = variable output

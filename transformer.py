@@ -327,7 +327,7 @@ def check_variable(sentence):
             sentence = '\t'*num_indents + variable_name + ' = None'
             return [sentence, True]
         
-        matches_variable_only = re.search('.* variable (.+).*', sentence)
+        matches_variable_only = re.search('variable (.+)', sentence)
         if matches_variable_only:
             variable_name = matches_variable_only.group(1).replace(' ','_') # variable names can't have spaces
             update_variable_names_list(variable_name)
@@ -351,33 +351,17 @@ def check_math(sentence):
     # need to find math expressions word-by-word (since typically embedded in sentences like assign...to...)
     for i, word in enumerate(words):
         if word in math_words_numbers:
-            math_expression += str(math_words_numbers[word])
-            replace_expression += ' ' + word
-            recognized = True
-        elif is_digit(word):
-            math_expression += str(word)
-            replace_expression += ' ' + word
+            sentence = sentence.replace(word, str(math_words_numbers[word]))
             recognized = True
         elif word in math_words_boolean:
-            math_expression += str(math_words_boolean[word])
-            replace_expression += ' ' + word
+            sentence = sentence.replace(word, str(math_words_boolean[word]))
             recognized = True
         elif word in math_words_operators:
-            math_expression += math_words_operators[word] # no str() because already string, just need to add to expression
-            replace_expression += ' ' + word
-            recognized = True
-        elif word in escape_signals:
-            replace_expression = replace_expression.strip() # use strip() to make sure replaces properly
-            sentence = sentence.replace(replace_expression, math_expression)
-            math_expression = '' # reset for next sequence
-            replace_expression = '' # reset for next sequence
-            recognized = True
-        # also account for end of sentence as escape signal
-        if i == len(words)-1:
-            replace_expression = replace_expression.strip() # use strip() to make sure replaces properly
-            sentence = sentence.replace(replace_expression, math_expression)
-            math_expression = '' # reset for next sequence
-            replace_expression = '' # reset for next sequence
+            replace_over = word
+            if word == 'negative': # "- 1" --> "-1" for check_list(sentence) to work
+                replace_over = 'negative '
+            sentence = sentence.replace(replace_over, math_words_operators[word])
+            # no str() because already string, just need to add to expression
             recognized = True
     return [sentence, recognized]
 
@@ -402,7 +386,7 @@ def check_list(sentence):
         list_stop = matches_list_ordered.group(2)
         ordered_list_items = list(range(int(list_start), int(list_stop) + 1)) # + 1 so that the number spoken actually appears in the list
         ordered_list_items = create_list_string(ordered_list_items)
-        replace_over = ' list starting from ' + list_start + ' ending at ' + list_stop
+        replace_over = matches_list_ordered.group()
         replace_with = ' ' + ordered_list_items
         sentence = sentence.replace(replace_over, replace_with)
         return [sentence, True]
@@ -413,7 +397,7 @@ def check_list(sentence):
         string_of_list_items = matches_list_unordered.group(1)
         unordered_list_items = string_of_list_items.split(' and ') # items separated by ' and '
         unordered_list_items = create_list_string(unordered_list_items)
-        replace_over = ' list of ' + string_of_list_items
+        replace_over = matches_list_unordered.group()
         replace_with = ' ' + unordered_list_items
         sentence = sentence.replace(replace_over, replace_with)
         return [sentence, True]
@@ -488,7 +472,7 @@ please end function
 please assign other the value it works
 please use function test on variable other
 """
-def check_use(sentence):
+def check_use(sentence): # TODO: make into one regex
     
     # order matters; start with most restrictive first
     
@@ -502,13 +486,43 @@ def check_use(sentence):
         # check assignment
         function_output = re.match('(to )?(.+) the value (of )?', function_output)
         if function_output:
-            function_output = function_output.group(2) + ' = '
+            function_output = function_output.group(2).replace(' ','_') + ' = '
         replace_with = '\t'*num_indents + function_output + function_from + '.' + function_name + '(' + function_input + ')'
         sentence = sentence.replace(replace_over, replace_with)
         recognized = True
         return [sentence, recognized]
     
-    matches_from_and_input = re.match('(use|using) (.+) (from|of) (.+) (on|with) (.+)', sentence)
+    matches_from_and_input = re.match('assign (.+) (use|using) (.+) (from|of) (.+)', sentence)
+    if matches_from_and_input:
+        function_output = matches_from_and_input.group(1).replace('variable ', '')
+        function_name = matches_from_and_input.group(3).replace('function ', '').replace(' ','_')
+        function_from = matches_from_and_input.group(5).replace(' ','_')
+        replace_over = matches_from_and_input.group()
+        # check assignment
+        function_output = re.match('(to )?(.+) the value (of )?', function_output)
+        if function_output:
+            function_output = function_output.group(2).replace(' ','_') + ' = '
+        replace_with = '\t'*num_indents + function_output + function_from + '.' + function_name + '()'
+        sentence = sentence.replace(replace_over, replace_with)
+        recognized = True
+        return [sentence, recognized]
+    
+    matches_from_and_input = re.match('assign (.+) (use|using) (.+) (on|with) (.+)', sentence)
+    if matches_from_and_input:
+        function_output = matches_from_and_input.group(1).replace('variable ', '')
+        function_name = matches_from_and_input.group(3).replace('function ', '').replace(' ','_')
+        function_input = matches_from_and_input.group(5).replace('variable ', '')
+        replace_over = matches_from_and_input.group()
+        # check assignment
+        function_output = re.match('(to )?(.+) the value (of )?', function_output)
+        if function_output:
+            function_output = function_output.group(2).replace(' ','_') + ' = '
+        replace_with = '\t'*num_indents + function_output + function_name + '(' + function_input + ')'
+        sentence = sentence.replace(replace_over, replace_with)
+        recognized = True
+        return [sentence, recognized]
+    
+    matches_from_and_input = re.search('(use|using) (.+) (from|of) (.+) (on|with) (.+)', sentence)
     if matches_from_and_input:
         function_name = matches_from_and_input.group(2).replace('function ', '').replace(' ','_')
         function_from = matches_from_and_input.group(4).replace(' ','_')
@@ -519,7 +533,7 @@ def check_use(sentence):
         recognized = True
         return [sentence, recognized]
     
-    matches_from = re.match('(use|using) (.+) (from|of) (.+)', sentence)
+    matches_from = re.search('(use|using) (.+) (from|of) (.+)', sentence)
     if matches_from:
         function_name = matches_from.group(2).replace('function ', '').replace(' ','_')
         function_from = matches_from.group(4).replace(' ','_')
@@ -529,7 +543,7 @@ def check_use(sentence):
         recognized = True
         return [sentence, recognized]
     
-    matches_input = re.match('(use|using) (.+) (on|with) (.+)', sentence)
+    matches_input = re.search('(use|using) (.+) (on|with) (.+)', sentence)
     if matches_input:
         function_name = matches_input.group(2).replace('function ', '').replace(' ','_')
         function_input = matches_input.group(4).replace('variable ', '')
@@ -539,7 +553,7 @@ def check_use(sentence):
         recognized = True
         return [sentence, True]
     
-    matches_name = re.match('(use|using) (.+)', sentence)
+    matches_name = re.search('(use|using) (.+)', sentence)
     if matches_name:
         function_name = matches_name.group(2).replace('function ', '').replace(' ','_')
         replace_over = matches_name.group()
@@ -568,11 +582,14 @@ def check_assign(sentence):
         update_variable_names_list(variable_name)
         variable_value = matches_assign2.group(6)
         first_word_is_string = check_if_just_string(variable_value)
+        
         # if the first word is not math, then just make the whole variable value a string (otherwise leave as is)
-        if first_word_is_string and not variable_value.startswith('variable '):
+        if first_word_is_string and not variable_value.startswith('variable ') and not variable_value.startswith('list '):
             variable_value = '\'' + variable_value + '\'' # need to put quotation marks around strings being assigned
         elif variable_value.startswith('variable '):
             variable_value = variable_value.replace('variable ', '')
+        elif is_digit(variable_value.replace(' ','')): # TODO need better way to detect that it's not a string
+            variable_value = variable_value.replace(' ','') # so "3 00" becomes "300"
         sentence = '\t'*num_indents + variable_name + ' = ' + variable_value
         return [sentence, True]
     
@@ -720,13 +737,37 @@ def check_function(sentence):
     if matches_return:
         output_value = matches_return.group(1) # will either output the literal value "...", or the value of "variable ..."
         if output_value.startswith('variable '):
-            output_value = output_value.replace('variable ', '').replace(' ','_')
+            # print(variable_names) # TODO: some variables it has should not have been created
+            output_value = replace_variables_in_return(output_value)
+            # for variable_name in variable_names:
+            #     if 'variable ' + variable_name.replace('_',' ') in output_value:
+            #         output_value = output_value.replace('variable ' + variable_name.replace('_',' '), variable_name)
+            # output_value = output_value.replace('variable ', '') #.replace(' ','_')
         output_value = check_math(output_value)[0] # will either output the literal value "...", or the value of "variable ..."
         sentence = '\t'*num_indents + 'return ' + str(output_value)
         return [sentence, True]
     
     # just in case
     return [sentence, False]
+
+def replace_variables_in_return(string):
+    # add spaces to make it easier to cover all cases (only, start, mid, end) in single search regexes
+    string = ' ' + string + ' '
+    if 'variable ' in string:
+        for variable_name in variable_names:
+            variable_name_spaced = variable_name.replace('_',' ')
+            if variable_name_spaced in string:
+                replace_over = ' variable ' + variable_name_spaced
+                replace_with = variable_name
+                # note: add an initial space to replace_with so that words between variables get spaces between them
+                string = string.replace(replace_over, replace_with)
+        variables_found = re.findall('variable ([\w ]+) ', string) # .findall() = get ALL non-overlapping matches
+        for variable_found in variables_found:
+            replace_over = 'variable ' + variable_found
+            replace_with = variable_found.replace(' ', '_')
+            # note: add an initial space to replace_with so that words between variables get spaces between them
+            string = string.replace(replace_over, replace_with)
+    return string.strip()
 
 def print_debug(string):
     if hide_debug_printouts == False:
@@ -741,9 +782,6 @@ code_file_name = 'code.py'
 # track variable names
 variable_names = []
 # recognize words for numbers, math operations, spelling checkphases, etc.
-escape_signals = ['print','variable','assign','if','then','to','of','starting','from',
-                  'import','for','as','end','ending','each','in','list','use','function','return',
-                  'key','value']
 math_words_numbers = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,
                       'six':6,'seven':7,'eight':8,'nine':9,'ten':10,
                       'eleven':11,'twelve':12,'thirteen':13,'fourteen':14,'fifteen':15,
