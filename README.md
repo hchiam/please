@@ -28,7 +28,7 @@ this string of words
 
 ## A) In Your Browser (Mini Version):
 
-No speech recognition software? No Python? Just type code in your browser: https://trinket.io/python3/7f75bfc5c8 (go to the text.txt tab to write code in Please).
+No speech recognition software? No Python? Just type code in your browser: https://trinket.io/python3/b5fe236ba9 (go to the text.txt tab to write code in Please).
 
 ## B) On Your Computer (Full Version):
 
@@ -292,7 +292,7 @@ Please done for
 
 ```
 def fibonacci(number):
-	if number <2:
+	if number < 2:
 		return number
 	
 	apple = fibonacci(number -1)
@@ -303,7 +303,7 @@ def fibonacci(number):
 input = [ 0 , 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 ]
 for number in input:
 	output = fibonacci(number)
-print(str(output))
+	print(str(output))
 ```
 
 ## Terse Mode
