@@ -384,8 +384,13 @@ def check_list(sentence):
     if matches_list_ordered:
         list_start = matches_list_ordered.group(1).replace(' ','') # 1 00 should become 100
         list_stop = matches_list_ordered.group(2).replace(' ','') # 2 00 should become 200
-        ordered_list_items = list(range(int(list_start), int(list_stop) + 1)) # + 1 so that the number spoken actually appears in the list
-        ordered_list_items = create_list_string(ordered_list_items)
+        if int(list_stop)-int(list_start) <= 10:
+            # list of 10 or less integers? just show each individual item
+            ordered_list_items = list(range(int(list_start), int(list_stop) + 1)) # + 1 so that the number spoken actually appears in the list
+            ordered_list_items = create_list_string(ordered_list_items)
+        else:
+            # list of more than 10 integers? show as a list(range(..., ...))
+            ordered_list_items = 'list(range(' + list_start + ',' + str(int(list_stop)+1) + '))'
         replace_over = matches_list_ordered.group()
         replace_with = ' ' + ordered_list_items
         sentence = sentence.replace(replace_over, replace_with)
@@ -584,9 +589,9 @@ def check_assign(sentence):
         first_word_is_string = check_if_just_string(variable_value)
         
         # if the first word is not math, then just make the whole variable value a string (otherwise leave as is)
-        if first_word_is_string and not variable_value.startswith('variable ') and not variable_value.startswith('list '):
+        if first_word_is_string and not variable_value.startswith('variable') and not variable_value.startswith('list'):
             variable_value = '\'' + variable_value + '\'' # need to put quotation marks around strings being assigned
-        elif variable_value.startswith('variable '):
+        elif variable_value.startswith('variable'):
             variable_value = variable_value.replace('variable ', '')
         elif is_digit(variable_value.replace(' ','')): # TODO need better way to detect that it's not a string
             variable_value = variable_value.replace(' ','') # so "3 00" becomes "300"
