@@ -384,7 +384,7 @@ def check_list(sentence):
     if matches_list_ordered:
         list_start = matches_list_ordered.group(1).replace(' ','') # 1 00 should become 100
         list_stop = matches_list_ordered.group(2).replace(' ','') # 2 00 should become 200
-        if int(list_stop)-int(list_start) <= 10:
+        if int(list_stop)-int(list_start) < 10:
             # list of 10 or less integers? just show each individual item
             ordered_list_items = list(range(int(list_start), int(list_stop) + 1)) # + 1 so that the number spoken actually appears in the list
             ordered_list_items = create_list_string(ordered_list_items)
