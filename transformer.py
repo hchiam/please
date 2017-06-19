@@ -196,7 +196,7 @@ def check_print(sentence):
         sentence = '\t'*num_indents + 'print(' + string + ')'
         return [sentence, True]
     elif sentence == 'print':
-        sentence = 'print()'
+        sentence = '\t'*num_indents + 'print()'
         return [sentence, True]
     else:
         return [sentence, False]
