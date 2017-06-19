@@ -214,7 +214,7 @@ def replace_index_of_variable_in_print(string):
             index_value = str(int(index_string)) # start index at zero (so don't add +1 here)
         elif index_string.startswith('variable '):
             index_value = index_value.replace('variable ', '')
-        variable_name = index_found[1]
+        variable_name = index_found[1].replace('variable ', '')
         update_variable_names_list(variable_name)
         variable_name_replacer = index_found[1].replace(' ','_') # variable names can't have spaces
         replace_over = 'index ' + index_string + ' of ' + variable_name
