@@ -382,8 +382,8 @@ def check_list(sentence):
     # check if ordered list of items from int to int
     matches_list_ordered = re.search(' list starting from (.+) ending at (.+)', sentence)
     if matches_list_ordered:
-        list_start = matches_list_ordered.group(1)
-        list_stop = matches_list_ordered.group(2)
+        list_start = matches_list_ordered.group(1).replace(' ','') # 1 00 should become 100
+        list_stop = matches_list_ordered.group(2).replace(' ','') # 2 00 should become 200
         ordered_list_items = list(range(int(list_start), int(list_stop) + 1)) # + 1 so that the number spoken actually appears in the list
         ordered_list_items = create_list_string(ordered_list_items)
         replace_over = matches_list_ordered.group()
