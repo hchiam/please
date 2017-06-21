@@ -52,6 +52,8 @@ This project was built with Python 3.6.0
 
 # Why?
 
+Less carpal tunnel syndrome? More accessible programming for people with a mobility impairment? Code while you exercise?
+
 What if you could easily write code just by talking with speech recognition software? What if code could be *more* like English sentences? How might you combine these two things (easy-to-parse and easy-to-say code)?
 
 Please is an attempt at that.
