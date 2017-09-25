@@ -6,6 +6,8 @@
 
 **More technically:** You can easily write code in Please using speech recognition software (like Dragon NaturallySpeaking, Mac Dictation, or Google Voice Typing) out-of-the-box, without having to train the software to recognize esoteric jargon and special keywords for symbols. As of release [v0.2.0](https://github.com/hchiam/please/releases): transformer.py compiles Please into Python code and runs that. 
 
+Presentation at [Round 13](https://www.meetup.com/Toronto-Hack-and-Tell/events/239650451/?_cookie-check=p9kqjtLjZT2eIqkU) of Toronto Hack && Tell: https://goo.gl/mcdLYH
+
 <br>
 
 # Example Code in Please:
