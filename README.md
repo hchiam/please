@@ -331,7 +331,7 @@ https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0 (especi
 
 You may also like: 
 * https://github.com/hchiam/language-user-interface
-* https://codepen.io/hchiam/pen/LQqPYY
+* https://github.com/hchiam/how
 
 <br>
 
