@@ -331,9 +331,13 @@ https://github.com/AnotherTest/-English
 
 https://www.youtube.com/playlist?list=PLBOh8f9FoHHiKx3ZCPxOZWUtZswrj2zI0 (especially for [v0.1.0](https://github.com/hchiam/please/releases))
 
-You may also like: 
-* https://github.com/hchiam/language-user-interface
-* https://github.com/hchiam/how
+# You may also like: 
+
+https://github.com/hchiam/code-tutor
+
+https://github.com/hchiam/language-user-interface
+
+https://github.com/hchiam/how
 
 <br>
 
